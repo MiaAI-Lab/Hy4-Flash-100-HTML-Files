@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Furnace Organ — Boiler Room No. 6</title>
+<style>
+  :root{--coal:#171412;--ember:#E85D2A;--brass:#C9A24D;--ash:#8C8378;--deep:#0B0908}
+  *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--coal);color:var(--brass);overflow-x:hidden}
+  body{font-family:"Courier New",Courier,monospace;background-image:repeating-linear-gradient(90deg,transparent 0 82px,rgba(201,162,77,.035) 82px 83px),radial-gradient(ellipse at 50% 105%,rgba(232,93,42,.13),transparent 55%)}
+  .shell{max-width:1500px;margin:auto;min-height:100vh;padding:clamp(14px,2.2vw,30px);display:grid;grid-template-rows:auto 1fr auto;gap:12px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid rgba(201,162,77,.35);padding-bottom:10px}
+  h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(31px,5.4vw,76px);line-height:.9;letter-spacing:-.04em;margin:0;color:var(--brass)}
+  header .meta{font-size:9px;letter-spacing:.22em;line-height:1.7;text-align:right;color:var(--ash)}
+  .sound{font:inherit;font-size:10px;letter-spacing:.18em;background:transparent;color:var(--brass);border:1px solid var(--brass);padding:8px 11px;cursor:pointer}
+  .sound:hover,.sound:focus-visible{background:var(--brass);color:var(--coal);outline:none}
+  .sound[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:#1a0d07}
+  .pipes{position:relative;min-height:390px;height:min(66vh,720px);border:1px solid rgba(201,162,77,.28);background:radial-gradient(ellipse at 50% 100%,rgba(232,93,42,.10),transparent 60%),linear-gradient(#0D0B0A,#171412 70%);overflow:hidden}
+  #flames{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .pipes svg{position:relative;width:100%;height:100%;display:block}
+  #furnace{position:absolute;left:50%;bottom:-70px;width:min(62vw,720px);height:190px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 100%,rgba(232,93,42,.55),rgba(232,93,42,.08) 58%,transparent 72%);filter:blur(12px);opacity:.55;animation:idle 4.2s ease-in-out infinite;pointer-events:none}
+  @keyframes idle{50%{opacity:.82;transform:translateX(-50%) scaleX(1.08)}}
+  .wave{position:absolute;inset:0 0 auto;height:65%;background:linear-gradient(180deg,rgba(232,93,42,.34),transparent);opacity:0;transition:opacity .5s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+  body.chord .wave{opacity:1}
+  .pipe{transform-origin:50% 100%;animation:rise .95s cubic-bezier(.16,.9,.2,1) both;transition:transform .18s cubic-bezier(.2,.9,.3,1)}
+  @keyframes rise{from{transform:translateY(130%) scaleY(.5);opacity:0}to{transform:none;opacity:1}}
+  .pipe.active{animation:pipeVibe .14s linear infinite;transform:translateY(-9px)}
+  @keyframes pipeVibe{50%{transform:translateY(-9px) translateX(1.3px)}}
+  .pipe text{font:10px "Courier New",monospace;letter-spacing:.16em;fill:var(--brass);transition:fill .5s ease}
+  .pipe.active text{fill:#4A2415}
+  .pipe .mouth{fill:#0B0908;transition:fill .2s ease}
+  .pipe.active .mouth{fill:var(--ember)}
+  .console{border:1px solid rgba(201,162,77,.35);background:linear-gradient(#1F1A16,#100D0B);padding:12px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px}
+  .monitor{border:1px solid rgba(201,162,77,.5);padding:9px 12px;min-width:190px;font-size:10px;letter-spacing:.16em;color:var(--ember);background:#0A0807}
+  .keys{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .key{font:inherit;cursor:pointer;border:1px solid var(--brass);border-bottom-width:5px;background:linear-gradient(#E8DDBF,#B99A55);color:#17120D;min-height:58px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .09s ease,background .15s ease}
+  .key b{font:400 15px Georgia,serif}.key small{font-size:8px;letter-spacing:.12em;opacity:.75}
+  .key:hover,.key:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+  .key.on{transform:translateY(4px);border-bottom-width:1px;background:linear-gradient(var(--ember),#9D3A17);color:#F7E3C7}
+  .stoplist{font-size:9px;line-height:1.6;letter-spacing:.14em;color:var(--ash);text-align:right;max-width:210px}
+  @media(max-width:790px){.console{grid-template-columns:1fr}.monitor{min-width:0}.stoplist{text-align:left;max-width:none}.key{min-height:52px}.header .meta{display:none}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <h1>FURNACE ORGAN</h1>
+    <div class="meta">BOILER ROOM NO. 6 · PLATE 19 · 214°C<br><button class="sound" id="sound" type="button" aria-pressed="false">SOUND: OFF</button></div>
+  </header>
+  <section class="pipes" aria-label="Seven organ pipes">
+    <div class="wave"></div><div id="furnace"></div>
+    <canvas id="flames" aria-hidden="true"></canvas>
+    <svg viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><defs>
+      <linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#6D5325"/><stop offset=".35" stop-color="#E0C075"/><stop offset=".62" stop-color="#9B7736"/><stop offset="1" stop-color="#4A371B"/></linearGradient>
+    </defs><g id="pipeLayer"></g></svg>
+  </section>
+  <section class="console">
+    <div class="monitor">NOW HOLDING<br><span id="monitor">NOTHING · 000 Hz</span></div>
+    <div class="keys" id="keys" aria-label="Organ keys"></div>
+    <div class="stoplist">PRESS KEYS · SOUND STAYS OFF UNTIL OPENED<br>A S D F G H J · STOPS: CINDER QUIET / BOILER WHISPER / ASH TROMBONE</div>
+  </section>
+</div>
+<script>
+(function(){
+  const notes=[{k:'a',n:'C3',f:130.81,s:'CINDER QUIET'},{k:'s',n:'D3',f:146.83,s:'BOILER WHISPER'},{k:'d',n:'E3',f:164.81,s:'SOOT FLUTE'},{k:'f',n:'F3',f:174.61,s:'LOW GRATE'},{k:'g',n:'G3',f:196.00,s:'ASH TROMBONE'},{k:'h',n:'A3',f:220.00,s:'BRASS CHIMNEY'},{k:'j',n:'B3',f:246.94,s:'PILOT LIGHT'}];
+  const NS='http://www.w3.org/2000/svg',pipeLayer=document.getElementById('pipeLayer'),keys=document.getElementById('keys'),monitor=document.getElementById('monitor'),soundBtn=document.getElementById('sound'),canvas=document.getElementById('flames'),ctx=canvas.getContext('2d'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heights=[380,440,350,500,410,460,370],voices=new Map(),active=new Set();let audioOn=false,ac=null,noiseBuf=null,parts=[];
+  notes.forEach((o,i)=>{
+    const x=70+i*132,w=72,h=heights[i],y=560-h;
+    const g=document.createElementNS(NS,'g');g.className='pipe';g.style.animationDelay=(i*70)+'ms';g.dataset.i=i;
+    g.innerHTML=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="url(#brass)" stroke="#4A371B"/><ellipse class="mouth" cx="${x+w/2}" cy="${y+3}" rx="${w/2-4}" ry="9"/><rect x="${x+9}" y="${y+34}" width="4" height="${h-60}" fill="#F2D994" opacity=".18"/><text x="${x+36}" y="${y+86}" text-anchor="middle">${String(i+1).padStart(2,'0')}</text><text x="${x+36}" y="${y+106}" text-anchor="middle" font-size="8">${o.n}</text>`;
+    pipeLayer.appendChild(g);
+    const b=document.createElement('button');b.type='button';b.className='key';b.dataset.i=i;b.innerHTML=`<b>${o.k.toUpperCase()}</b><small>${o.n}</small>`;b.setAttribute('aria-label',`Play ${o.n}, ${o.s}`);keys.appendChild(b);
+  });
+  const pipes=[...pipeLayer.children],keyEls=[...keys.children];
+  function ensureAudio(){
+    if(ac)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    ac=new AC();noiseBuf=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.35;
+  }
+  soundBtn.addEventListener('click',()=>{
+    audioOn=!audioOn;if(audioOn)ensureAudio();if(ac&&audioOn)ac.resume();
+    soundBtn.setAttribute('aria-pressed',String(audioOn));soundBtn.textContent='SOUND: '+(audioOn?'ON':'OFF');
+    if(!audioOn)voices.forEach(v=>stopVoice(v));voices.clear();
+  });
+  function startVoice(i){
+    if(!audioOn||!ac||voices.has(i))return;
+    const t=ac.currentTime,o=notes[i],g=ac.createGain(),f=ac.createBiquadFilter();
+    f.type='lowpass';f.frequency.setValueAtTime(700,t);f.frequency.linearRampToValueAtTime(1500,t+.18);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.045);
+    const a=ac.createOscillator(),b=ac.createOscillator(),ng=ac.createGain(),noise=ac.createBufferSource();
+    a.type='sine';a.frequency.value=o.f;b.type='triangle';b.frequency.value=o.f*2.004;ng.gain.value=.17;
+    a.connect(f);b.connect(ng);ng.connect(f);f.connect(g);g.connect(ac.destination);
+    noise.buffer=noiseBuf;noise.loop=true;const nf=ac.createBiquadFilter();nf.type='bandpass';nf.frequency.value=o.f*3;const nGain=ac.createGain();nGain.gain.value=.025;
+    noise.connect(nf);nf.connect(nGain);nGain.connect(g);
+    a.start();b.start();noise.start();voices.set(i,{a,b,noise,g});
+  }
+  function stopVoice(v){const t=ac.currentTime;v.g.gain.cancelScheduledValues(t);v.g.gain.setValueAtTime(v.g.gain.value,t);v.g.gain.linearRampToValueAtTime(0,t+.14);[v.a,v.b,v.noise].forEach(n=>{try{n.stop(t+.16)}catch(e){}});}
+  function on(i){
+    if(active.has(i))return;active.add(i);pipes[i].classList.add('active');keyEls[i].classList.add('on');
+    monitor.textContent=notes[i].n+' · '+Math.round(notes[i].f)+' Hz · '+notes[i].s;
+    document.body.classList.toggle('chord',active.size>=3);startVoice(i);
+    if(reduced)return;for(let p=0;p<12;p++)parts.push({x:(i+.5)/7*canvas.width,y:canvas.height*.83,vx:(Math.random()-.5)*1.3,vy:-2-Math.random()*3,life:0,max:35+Math.random()*35});
+  }
+  function off(i){
+    if(!active.has(i))return;active.delete(i);pipes[i].classList.remove('active');keyEls[i].classList.remove('on');
+    document.body.classList.toggle('chord',active.size>=3);
+    if(!active.size)monitor.textContent='NOTHING · 000 Hz';
+    const v=voices.get(i);if(v){stopVoice(v);voices.delete(i);}
+  }
+  keyEls.forEach((b,i)=>{
+    b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);on(i);});
+    b.addEventListener('pointerup',()=>off(i));b.addEventListener('pointercancel',()=>off(i));
+    b.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();on(i);}});
+    b.addEventListener('keyup',e=>{if(e.key==='Enter'||e.key===' ')off(i);});
+  });
+  window.addEventListener('keydown',e=>{const i=notes.findIndex(n=>n.k===e.key.toLowerCase());if(i>=0&&!e.repeat){e.preventDefault();on(i);}});
+  window.addEventListener('keyup',e=>{const i=notes.findIndex(n=>n.k===e.key.toLowerCase());if(i>=0)off(i);});
+  function size(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=r.width*d;canvas.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);}
+  size();addEventListener('resize',size);
+  function frame(){
+    const w=canvas.width/(Math.min(devicePixelRatio||1,2)),h=canvas.height/(Math.min(devicePixelRatio||1,2));
+    ctx.clearRect(0,0,w,h);
+    if(!reduced){parts=parts.slice(-220);parts.forEach(p=>{
+      p.life++;p.x+=p.vx;p.y+=p.vy;p.vy*=.985;
+      const a=Math.max(0,1-p.life/p.max)*.5;
+      const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);gr.addColorStop(0,`rgba(255,189,83,${a})`);gr.addColorStop(1,'rgba(232,93,42,0)');
+      ctx.fillStyle=gr;ctx.beginPath();ctx.arc(p.x,p.y,10,0,6.283);ctx.fill();
+    });parts=parts.filter(p=>p.life<p.max);}
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>

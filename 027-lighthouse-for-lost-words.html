@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Lighthouse for Lost Words — Beam Study 27</title>
+<style>
+:root{--sea:#0F2B24;--chalk:#E9E2CB;--amber:#F0A93B;--dim:#2C4A3F}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--sea);color:var(--chalk);font-family:Georgia,serif;user-select:none}
+#stage{position:relative;width:100%;height:100%;overflow:hidden;outline:none;cursor:crosshair}
+#stage:focus-visible{box-shadow:inset 0 0 0 4px var(--amber)}
+.beam{position:absolute;width:180vmax;height:180vmax;left:14%;bottom:21%;pointer-events:none;transform-origin:50% 50%;background:conic-gradient(from -7deg,transparent 0 18deg,rgba(240,169,59,.02) 24deg,rgba(240,169,59,.3) 34deg 46deg,rgba(240,169,59,.03) 56deg,transparent 62deg 360deg);mix-blend-mode:screen;opacity:.85;z-index:1}
+h1{position:absolute;top:28px;right:34px;margin:0;font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.26em;text-align:right;z-index:5}
+.count{position:absolute;top:64px;right:34px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--amber);z-index:5}
+.word{position:absolute;z-index:3;font:italic 400 clamp(24px,3.5vw,56px)/1 Georgia,serif;color:var(--dim);cursor:pointer;white-space:nowrap;transition:color .35s,text-shadow .35s,transform .35s;border-bottom:1px solid transparent;padding:2px 4px}
+.word.lit{color:var(--chalk);text-shadow:0 0 26px rgba(240,169,59,.5);border-bottom-color:var(--amber);transform:translateY(-3px)}
+.word.done{pointer-events:none;opacity:0}
+.word.fly{animation:fly .7s cubic-bezier(.5,-.2,.8,.4) forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(.12);opacity:0}}
+.tower{position:absolute;left:calc(14% - 34px);bottom:0;width:68px;height:22vh;min-height:130px;z-index:4;pointer-events:none}
+.tower .body{position:absolute;bottom:0;width:68px;height:100%;background:var(--chalk);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%)}
+.tower .stripe{position:absolute;bottom:0;width:68px;height:100%;background:var(--amber);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%);opacity:.9;mask-image:repeating-linear-gradient(to bottom,transparent 0 22px,#000 22px 34px)}
+.tower .lamp{position:absolute;top:-18px;left:18px;width:32px;height:26px;background:var(--amber);box-shadow:0 0 30px 10px rgba(240,169,59,.45)}
+.tower .roof{position:absolute;top:-31px;left:11px;width:46px;height:15px;background:var(--chalk);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.log{position:absolute;left:0;right:0;bottom:0;height:64px;border-top:1px solid var(--dim);background:rgba(15,43,36,.92);display:flex;align-items:center;gap:18px;padding:0 26px;overflow:hidden;z-index:6;font:11px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+.log b{color:var(--amber);font-weight:400}
+.saved{color:var(--chalk);font:italic 19px Georgia,serif;letter-spacing:normal}
+.hint{position:absolute;left:28px;bottom:76px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--dim);z-index:5}
+@media(max-width:600px){h1{font-size:8px}.word{font-size:20px}.log{height:52px;gap:10px}.saved{font-size:14px}.tower{height:15vh;min-height:100px}}
+@media(prefers-reduced-motion:reduce){.word{transition:none}.word.fly{animation:none}}
+</style>
+</head>
+<body>
+<div id="stage" tabindex="0" role="application" aria-label="Lighthouse beam. Drag or use arrow keys to steer; click a lit word to salvage it.">
+  <div class="beam" id="beam"></div>
+  <h1>WHAT THE TIDE<br>BROUGHT IN</h1>
+  <div class="count">SALVAGED <span id="num">00</span>/12</div>
+  <div class="tower"><div class="body"></div><div class="stripe"></div><div class="lamp" id="lamp"></div><div class="roof"></div></div>
+  <div class="log"><b>LOG</b><span id="saved">EMPTY. THE SEA IS PATIENT.</span></div>
+  <div class="hint">DRAG TO STEER THE LIGHT · CLICK A LIT WORD</div>
+</div>
+<script>
+const stage=document.getElementById('stage'),beam=document.getElementById('beam'),lamp=document.getElementById('lamp'),num=document.getElementById('num'),saved=document.getElementById('saved');
+const words=[['VESPERTINE',62,16],['APRICITY',78,31],['HALCYON',49,26],['NUSJA',88,56],['SAUDADE',34,13],['PETRICHOR',68,68],['DRIZZLE',24,42],['LUMEN',52,47],['KEFUDING',82,79],['MORROW',43,72],['GLOAMING',29,83],['ELEGIE',91,16]];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const nodes=words.map(([text,x,y],i)=>{const el=document.createElement('div');el.className='word';el.textContent=text;el.style.left=x+'%';el.style.top=y+'%';el.style.fontSize=`clamp(20px,${2.2+(i%4)*.55}vw,${26+i%4*10}px)`;stage.appendChild(el);return el});
+let angle=-1.5,sweeping=true,held=false,holdUntil=0,salvaged=0,current=0;
+function origin(){const r=lamp.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
+function update(){
+  const now=performance.now();
+  if(!reduce&&!held){angle+=sweeping?.018:.0035;if(sweeping&&angle>.55){sweeping=false;holdUntil=now+600}}
+  if(now<holdUntil)held=true;else if(holdUntil)held=false;
+  beam.style.transform=`translate(-50%,-50%) rotate(${angle+Math.PI/2}rad)`;
+  const o=origin();let best=Infinity,bestIndex=0;
+  nodes.forEach((el,i)=>{if(el.classList.contains('done'))return;const r=el.getBoundingClientRect(),a=Math.atan2(r.top+r.height/2-o.y,r.left+r.width/2-o.x);let d=Math.abs(Math.atan2(Math.sin(a-angle),Math.cos(a-angle)));const lit=reduce||d<.13;el.classList.toggle('lit',lit);if(d<best){best=d;bestIndex=i}});
+  current=bestIndex;requestAnimationFrame(update)
+}
+function steer(e){const o=origin();angle=Math.atan2(e.clientY-o.y,e.clientX-o.x);sweeping=false}
+stage.addEventListener('pointerdown',e=>{if(e.target.classList.contains('word'))return;held=true;steer(e);stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointermove',e=>{if(held)steer(e)});
+stage.addEventListener('pointerup',()=>{held=false;holdUntil=performance.now()+900});
+stage.addEventListener('pointercancel',()=>held=false);
+stage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();angle+=e.key==='ArrowRight'?.12:-.12;sweeping=false;holdUntil=performance.now()+2000}else if(e.key==='Enter'){e.preventDefault();salvage(nodes[current])}});
+function salvage(el){if(!el||el.classList.contains('done')||(!reduce&&!el.classList.contains('lit')))return;const r=el.getBoundingClientRect(),o=origin();el.style.setProperty('--dx',(o.x-r.left-r.width/2)+'px');el.style.setProperty('--dy',(o.y-r.top-r.height/2)+'px');el.classList.add('fly');setTimeout(()=>el.classList.add('done'),700);salvaged++;num.textContent=String(salvaged).padStart(2,'0');saved.textContent=words[nodes.indexOf(el)][0].toLowerCase()+' — filed at the lantern, still damp';}
+nodes.forEach(el=>el.addEventListener('click',()=>salvage(el)));
+update();
+</script>
+</body>
+</html>

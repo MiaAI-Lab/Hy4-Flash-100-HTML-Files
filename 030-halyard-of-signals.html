@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halyard of Signals — A Sentence in Flags</title>
+<style>
+:root{--cream:#F6F0E2;--navy:#17324D;--red:#D8402B}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--cream);color:var(--navy);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+#stage{position:relative;height:100%;width:100%}
+h1{position:absolute;left:28px;top:22px;font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.24em;margin:0;z-index:5}
+.rope{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.rope path{stroke:var(--navy);stroke-width:2;fill:none;stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.horizon{position:absolute;left:0;right:0;bottom:17%;height:2px;background:var(--navy);opacity:.35;z-index:0}
+.horizon.flash{background:var(--red);opacity:1;transition:opacity .1s}
+.mast{position:absolute;right:8%;top:8%;width:14px;height:14px;background:var(--navy);transform:rotate(45deg);z-index:2}
+.cleat{position:absolute;left:8%;bottom:12%;width:34px;height:10px;background:var(--navy);z-index:2;border-radius:0}
+.cleat:before{content:'';position:absolute;left:6px;top:-7px;width:7px;height:24px;background:var(--navy)}
+.flag{position:absolute;width:44px;height:30px;z-index:3;transform:translate(-50%,-100%) translateY(160px);animation:rise .75s cubic-bezier(.18,1.35,.32,1) forwards;animation-delay:var(--d);cursor:pointer;outline:none}
+.flag.down{animation:lower .55s cubic-bezier(.5,0,.8,.6) forwards;animation-delay:var(--d)}
+@keyframes rise{to{transform:translate(-50%,-100%) translateY(0)}}
+@keyframes lower{to{transform:translate(-50%,-100%) translateY(190px);opacity:.2}}
+.flag:focus-visible{outline:3px solid var(--red)}
+.cloth{width:100%;height:100%;animation:flutter 1.6s ease-in-out infinite alternate;clip-path:polygon(0 0,100% 0,100% 74%,86% 100%,0 100%);background:var(--cream);border:1px solid var(--navy);animation-delay:var(--f)}
+@keyframes flutter{to{transform:skewY(var(--wind,2deg)) rotate(.8deg)}}
+.p0{background:var(--cream)}.p0 .cloth{background:var(--cream)}
+.p1 .cloth{background:repeating-linear-gradient(90deg,var(--red) 0 7px,var(--cream) 7px 14px)}
+.p2 .cloth{background:var(--navy)}
+.p3 .cloth{background:var(--cream);background-image:radial-gradient(circle at 50% 50%,var(--red) 0 7px,transparent 8px)}
+.p4 .cloth{background:var(--red)}
+.p5 .cloth{background:var(--cream);background-image:linear-gradient(135deg,transparent 42%,var(--navy) 43% 57%,transparent 58%),linear-gradient(45deg,transparent 42%,var(--navy) 43% 57%,transparent 58%)}
+.controls{position:absolute;left:28px;bottom:20px;z-index:6;display:flex;align-items:center;gap:10px}
+input{background:transparent;border:0;border-bottom:2px solid var(--navy);color:var(--navy);font:15px ui-monospace,Menlo,monospace;letter-spacing:.15em;width:min(34vw,300px);padding:8px 2px;outline:none}
+input:focus{border-bottom-color:var(--red)}
+button{background:var(--navy);color:var(--cream);border:0;padding:10px 14px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;cursor:pointer}
+button.alt{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+button:focus-visible{outline:3px solid var(--red)}
+.dict{position:absolute;right:0;top:0;bottom:0;width:min(300px,25vw);border-left:1px solid var(--navy);padding:80px 22px 22px;background:rgba(246,240,226,.92);z-index:5}
+.dict .k{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--red)}
+.dict h2{font:400 clamp(28px,3vw,42px)/1 Georgia,serif;margin:14px 0 12px;letter-spacing:-.03em}
+.dict p{font:italic 14px/1.6 Georgia,serif;margin:0;max-width:22ch}
+.dict .idx{position:absolute;bottom:22px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+@media(max-width:700px){.dict{width:34vw;padding:60px 12px}.dict h2{font-size:23px}.flag{width:34px;height:24px}input{width:30vw}button{padding:8px}}
+@media(prefers-reduced-motion:reduce){.rope path{stroke-dashoffset:0;animation:none}.flag,.flag.down{animation:none;transform:translate(-50%,-100%) translateY(0)}.cloth{animation:none}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <h1>HALYARD OF SIGNALS / STATION 30</h1>
+  <svg class="rope" viewBox="0 0 100 100" preserveAspectRatio="none"><path id="ropePath" d="M8 88 C32 70 58 44 92 14"/></svg>
+  <div class="horizon" id="horizon"></div><div class="mast"></div><div class="cleat"></div>
+  <div class="dict"><div class="k">FLAG DICTIONARY</div><h2 id="letter">A</h2><p id="meaning">Anchor-shaped patience. Hoisted when a harbour refuses to say goodbye.</p><div class="idx" id="idx">SIGNAL 01 / 21</div></div>
+  <div class="controls"><input id="phrase" value="ALL WEATHER IS LOCAL" aria-label="Message to signal" maxlength="24"><button id="raise" type="button">RAISE</button><button id="send" class="alt" type="button">SEND</button></div>
+</div>
+<script>
+const stage=document.getElementById('stage'),path=document.getElementById('ropePath'),phrase=document.getElementById('phrase'),raise=document.getElementById('raise'),send=document.getElementById('send'),letter=document.getElementById('letter'),meaning=document.getElementById('meaning'),idx=document.getElementById('idx'),horizon=document.getElementById('horizon');
+const meanings={A:'Anchor-shaped patience. Hoisted when a harbour refuses to say goodbye.',B:'A bell rung once for weather that has not arrived yet.',C:'Cordage, damp. The Captain prefers a dry rope and a wet day.',D:'Dawn observed from the wrong side of the ship.',E:'Empty net, full attention.',F:'Fog expected; all distances are temporary.',G:'Glass collected from four harbours.',H:'Hold fast. The word is older than the ship.',I:'Inland wind, carrying the smell of someone else’s garden.',J:'Journey delayed by an argument with a gull.',K:'Knots counted twice; still one short.',L:'Light seen where no lamp has been installed.',M:'Milk taken aboard at 04:10, still warm.',N:'Nothing to report, reported carefully.',O:'Open water. No opinions.',P:'Paper saved from a letter never sent.',Q:'Question addressed to the horizon; no answer expected.',R:'Rain, but the cheerful kind.',S:'Salt on the lens. The view improves.',T:'Two hats seen on one head. A celebration.',U:'Unobserved, but observant.',V:'Very small fish, very large story.',W:'Wind shifting. Mind your sentences.',X:'Unknown quantity, politely greeted.',Y:'Yesterday’s course corrected by yesterday’s mistake.',Z:'Zero visibility; continue by memory.'};
+let flags=[],lastX=0,lastY=0,lastT=performance.now(),wind=2;
+function meaningsFor(){return meanings}
+function clear(){flags.forEach(f=>f.remove());flags=[]}
+function place(){const r=stage.getBoundingClientRect(),len=path.getTotalLength();flags.forEach((f,i)=>{const p=path.getPointAtLength(len*(flags.length===1?.5:i/(flags.length-1)));f.style.left=(p.x/100*r.width)+'px';f.style.top=(p.y/100*r.height-16)+'px'})}
+function build(text){clear();const chars=(text||' ').toUpperCase().replace(/[^A-Z]/g,'').slice(0,24)||'A';chars.split('').forEach((ch,i)=>{const f=document.createElement('div');f.className='flag p'+(ch.charCodeAt(0)%6);f.style.setProperty('--d',(i*.075)+'s');f.style.setProperty('--f',(i%5*.21)+'s');f.tabIndex=0;f.setAttribute('role','button');f.setAttribute('aria-label','Flag '+ch+': '+meanings[ch]);const cloth=document.createElement('div');cloth.className='cloth';f.appendChild(cloth);const pick=()=>{letter.textContent=ch;meaning.textContent=meanings[ch];idx.textContent='SIGNAL '+String(i+1).padStart(2,'0')+' / '+String(chars.length).padStart(2,'0')};f.addEventListener('pointerenter',pick);f.addEventListener('focus',pick);f.addEventListener('click',pick);f.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}});stage.appendChild(f);flags.push(f)});place()}
+raise.addEventListener('click',()=>build(phrase.value));
+send.addEventListener('click',()=>{flags.forEach((f,i)=>{f.classList.remove('down');void f.offsetWidth;f.style.setProperty('--d',(i*.055)+'s');f.classList.add('down')});horizon.classList.add('flash');setTimeout(()=>horizon.classList.remove('flash'),500)});
+phrase.addEventListener('keydown',e=>{if(e.key==='Enter')build(phrase.value)});
+stage.addEventListener('pointermove',e=>{const now=performance.now(),dt=Math.max(16,now-lastT),speed=Math.hypot(e.clientX-lastX,e.clientY-lastY)/dt;wind=Math.min(9,2+speed*2.4);stage.style.setProperty('--wind',wind+'deg');lastX=e.clientX;lastY=e.clientY;lastT=now});
+window.addEventListener('resize',place);
+build(phrase.value);
+</script>
+</body>
+</html>

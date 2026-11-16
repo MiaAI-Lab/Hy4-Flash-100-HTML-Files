@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reverse Weather — The Department of Consequence</title>
+<style>
+:root{--yellow:#E8FF3B;--blue:#1A2BE6;--red:#FF4A1C;--paper:#F7F5EE;--ink:#10137A}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--yellow);color:var(--blue);font-family:Arial,Helvetica,sans-serif}
+body{padding:clamp(18px,3vw,44px);display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,34vw);gap:clamp(24px,4vw,72px);align-items:start}
+h1{font:900 clamp(34px,5.4vw,82px)/.88 Arial,sans-serif;letter-spacing:-.055em;text-transform:uppercase;margin:0 0 12px}
+h1 span{display:block}
+.kicker{font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.22em;text-transform:uppercase;border-top:5px solid var(--red);padding-top:9px;margin-bottom:28px;display:inline-block}
+.list{border-top:3px solid var(--blue)}
+.row{display:grid;grid-template-columns:1.3fr 1fr .85fr 72px;gap:12px;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid rgba(26,43,230,.38);padding:13px 8px;color:var(--blue);cursor:pointer;font:11px/1.3 ui-monospace,Menlo,monospace;letter-spacing:.04em;animation:slideL .55s cubic-bezier(.2,.85,.2,1) both;animation-delay:calc(var(--i)*.055s)}
+.row:nth-child(even){animation-name:slideR}
+@keyframes slideL{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@keyframes slideR{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.row:hover{background:rgba(255,255,255,.42)}
+.row.on,.row.on:hover{background:var(--blue);color:var(--yellow)}
+.row b{font:800 15px/1 Arial,sans-serif;letter-spacing:-.02em}
+.row .val{font:900 18px/1 Arial,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+.row:focus-visible{outline:3px solid var(--red);outline-offset:-3px}
+.legend{font:10px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.1em;margin-top:16px;max-width:62ch;text-transform:uppercase}
+.right{position:sticky;top:clamp(18px,3vw,44px)}
+.wheel{position:relative;width:min(100%,430px);aspect-ratio:1;margin:0 auto;animation:wheelIn 1s cubic-bezier(.16,.9,.2,1.15) both}
+@keyframes wheelIn{from{opacity:0;transform:scale(.35) rotate(-80deg)}to{opacity:1;transform:none}}
+.ticks{position:absolute;inset:-16px;border-radius:50%;background:repeating-conic-gradient(from 0deg,var(--blue) 0 1deg,transparent 1deg 11.25deg);-webkit-mask:radial-gradient(circle,transparent 0 48%,#000 48% 50%,transparent 50%);mask:radial-gradient(circle,transparent 0 48%,#000 48% 50%,transparent 50%);transition:transform .75s cubic-bezier(.2,1.35,.3,1)}
+.disc{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -22.5deg,var(--blue) 0 12.5%,var(--paper) 12.5% 25%,var(--red) 25% 37.5%,var(--yellow) 37.5% 50%,var(--blue) 50% 62.5%,var(--paper) 62.5% 75%,var(--red) 75% 87.5%,var(--yellow) 87.5% 100%);border:4px solid var(--blue);box-shadow:12px 12px 0 var(--red)}
+.pointer{position:absolute;inset:0;transition:transform .78s cubic-bezier(.2,1.4,.3,1)}
+.pointer:before{content:"";position:absolute;left:50%;top:-30px;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:26px solid var(--red);transform:translateX(-50%)}
+.hub{position:absolute;inset:23%;border-radius:50%;background:var(--paper);display:grid;place-items:center;text-align:center;border:3px solid var(--blue)}
+.hub strong{font:900 clamp(56px,7vw,100px)/.8 Arial,sans-serif;letter-spacing:-.08em;color:var(--blue);font-variant-numeric:tabular-nums}
+.hub small{display:block;font:700 9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.statement{border-top:4px solid var(--blue);margin-top:34px;padding-top:14px;min-height:100px}
+.statement .label{font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.statement p{font:400 clamp(17px,1.6vw,23px)/1.4 Georgia,serif;margin:10px 0 0}
+@media(max-width:900px){body{grid-template-columns:1fr}.right{position:static}.wheel{width:min(78vw,390px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<section>
+  <div class="kicker">Department of Consequence / Bulletin 08</div>
+  <h1><span>Weather</span><span>caused by places</span></h1>
+  <div class="list" id="list" role="group" aria-label="Districts and the weather they cause">
+    <button class="row on" style="--i:0" data-a="0" data-n="62" data-s="Vesper Quay keeps the river warm enough to fog at dawn. The fog is not natural; neither is the shipping that makes it."><b>VESPER QUAY</b><span>freight idling</span><span>night minimum</span><span class="val">+0.62°</span></button>
+    <button class="row" style="--i:1" data-a="45" data-n="14" data-s="Cinder Row reverses its chimneys on still Sundays. Fourteen days a year the soot comes back down the street instead of going up it."><b>CINDER ROW</b><span>chimney reversal</span><span>soot days/year</span><span class="val">14</span></button>
+    <button class="row" style="--i:2" data-a="90" data-n="31" data-s="Larkspur Market hoses the stones before opening. By ten the evaporated water has added thirty-one humid hours to the district."><b>LARKSPUR MARKET</b><span>wet paving</span><span>humid hours</span><span class="val">31</span></button>
+    <button class="row" style="--i:3" data-a="135" data-n="80" data-s="Foundry Gate changes shift at four in the morning. Eight hundred bicycles and one tram line lift the road by eight tenths of a degree."><b>FOUNDRY GATE</b><span>shift change</span><span>road excess</span><span class="val">+0.80°</span></button>
+    <button class="row" style="--i:4" data-a="180" data-n="27" data-s="The Orchard Ward burns its prunings on the first cold night. The smoke lies in a layer exactly as high as the orchard wall."><b>ORCHARD WARD</b><span>pruning fires</span><span>smoke hours</span><span class="val">27</span></button>
+    <button class="row" style="--i:5" data-a="225" data-n="45" data-s="Nine glass towers at North Light throw a forty-five minute shadow over the bus stop. The stop has never had a clock."><b>NORTH LIGHT</b><span>glass towers</span><span>lost sun/min</span><span class="val">45</span></button>
+    <button class="row" style="--i:6" data-a="270" data-n="9" data-s="Salt Steps grits the stairs before every storm. Nine tonnes a winter end up in the bay and bloom as green water in March."><b>SALT STEPS</b><span>road grit</span><span>green tides</span><span class="val">09</span></button>
+    <button class="row" style="--i:7" data-a="315" data-n="58" data-s="Bell Field mows at midnight to avoid the heat. The mowers make more noise than the heat they avoid, and the grass grows back regardless."><b>BELL FIELD</b><span>night mowing</span><span>noise events</span><span class="val">58</span></button>
+  </div>
+  <p class="legend">Eight districts · eight manufactured conditions · readings taken between 04:00 and 07:00, local time. This bulletin does not predict weather. It assigns responsibility.</p>
+</section>
+<aside class="right">
+  <div class="wheel" id="wheel">
+    <div class="ticks" id="ticks"></div>
+    <div class="disc"></div>
+    <div class="pointer" id="pointer"></div>
+    <div class="hub"><div><strong id="num">62</strong><small>HUNDREDTHS</small></div></div>
+  </div>
+  <div class="statement" aria-live="polite"><span class="label">Cause statement / <span id="who">VESPER QUAY</span></span><p id="say">Vesper Quay keeps the river warm enough to fog at dawn. The fog is not natural; neither is the shipping that makes it.</p></div>
+</aside>
+<script>
+const rows=[...document.querySelectorAll('.row')],pointer=document.getElementById('pointer'),ticks=document.getElementById('ticks'),num=document.getElementById('num'),who=document.getElementById('who'),say=document.getElementById('say');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let raf=0;
+function count(to){cancelAnimationFrame(raf);if(reduce){num.textContent=String(to).padStart(2,'0');return}const t0=performance.now();const step=now=>{const p=Math.min(1,(now-t0)/620),e=1-(1-p)**3;num.textContent=String(Math.round(to*e)).padStart(2,'0');if(p<1)raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
+function select(btn){rows.forEach(r=>r.classList.toggle('on',r===btn));const a=+btn.dataset.a;pointer.style.transform=`rotate(${a}deg)`;ticks.style.transform=`rotate(${a/2}deg)`;who.textContent=btn.querySelector('b').textContent;say.textContent=btn.dataset.s;count(+btn.dataset.n)}
+rows.forEach(b=>{b.addEventListener('click',()=>select(b));b.addEventListener('focus',()=>select(b))});
+</script>
+</body>
+</html>

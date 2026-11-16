@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Folio Wheel — An Analog Pagination Machine</title>
+<style>
+:root{--paper:#EFE9DA;--ink:#232421;--orange:#D55D32}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 28px;background-image:repeating-linear-gradient(0deg,rgba(35,36,33,.025) 0 1px,transparent 1px 4px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.machine{display:flex;gap:46px;height:calc(100vh - 110px);min-height:470px;align-items:center;justify-content:center}
+.wheel{position:relative;width:188px;height:188px;border-radius:50%;border:3px solid var(--ink);background:repeating-conic-gradient(var(--orange) 0 3deg,transparent 3deg 18deg),var(--paper);cursor:pointer;touch-action:none;box-shadow:0 0 0 10px rgba(213,93,50,.12)}
+.wheel:after{content:'';position:absolute;inset:42px;border:10px solid var(--ink);border-radius:50%;background:var(--paper)}
+.wheel:focus-visible{outline:2px dashed var(--orange);outline-offset:14px}
+.reels{display:flex;gap:6px;margin-top:24px;border:2px solid var(--ink);padding:8px;background:var(--ink)}
+.reel{position:relative;width:42px;height:64px;overflow:hidden;background:var(--paper);font:34px/64px ui-monospace,Menlo,monospace;text-align:center}
+.reel div{position:absolute;left:0;right:0;top:0;transition:transform .45s cubic-bezier(.2,1,.3,1)}
+.reel span{display:block;height:64px}
+.stack{position:relative;width:340px;height:380px;perspective:900px}
+.sheet{position:absolute;left:30px;top:20px;width:280px;height:340px;background:var(--paper);border:1px solid rgba(35,36,33,.55);transform-origin:left center;transition:transform .65s cubic-bezier(.3,1,.4,1),opacity .4s;box-shadow:4px 5px 0 rgba(35,36,33,.12)}
+.sheet:after{content:'';position:absolute;right:0;top:0;bottom:0;width:12px;background:repeating-linear-gradient(0deg,rgba(35,36,33,.18) 0 1px,transparent 1px 6px)}
+.sheet .num{position:absolute;right:22px;top:18px;font:10px ui-monospace,Menlo,monospace;color:var(--orange)}
+.sheet .line{position:absolute;left:26px;right:30px;height:1px;background:rgba(35,36,33,.18)}
+.counter{position:absolute;left:0;bottom:-28px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.counter b{color:var(--orange);font-weight:400}
+@media(max-width:700px){body{padding:12px}.machine{flex-direction:column;gap:24px}.wheel{width:130px;height:130px}.wheel:after{inset:30px}.stack{width:300px;height:300px}.sheet{width:240px;height:280px;left:20px}.reel{width:34px;height:50px;font-size:26px;line-height:50px}.reel span{height:50px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Folio Wheel</h1><span class="meta">NUMBERING MACHINE 095 · IMPRESSION COUNT ACTIVE</span></header>
+<div class="machine">
+ <div><div class="wheel" id="wheel" tabindex="0" role="button" aria-label="Turn the folio wheel"></div><div class="reels" id="reels"></div></div>
+ <div class="stack" id="stack"><div class="counter">IMPRESSIONS <b id="impressions">000</b></div></div>
+</div>
+<script>
+const wheel=document.getElementById('wheel'),reels=document.getElementById('reels'),stack=document.getElementById('stack'),impressions=document.getElementById('impressions'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const reelsEls=[0,1,2].map(()=>{const r=document.createElement('div');r.className='reel';const inner=document.createElement('div');for(let n=0;n<10;n++){const s=document.createElement('span');s.textContent=n;inner.appendChild(s)}r.appendChild(inner);reels.appendChild(r);return inner});
+let folio=1,ac=null,startY=null;
+function click(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(70,t+.04);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+.07);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.08)}
+function render(){const digits=String(folio).padStart(3,'0');reelsEls.forEach((r,i)=>r.style.transform='translateY(-'+digits[i]*64+'px)');impressions.textContent=String(folio-1).padStart(3,'0');const existing=[...stack.querySelectorAll('.sheet')];existing.forEach((s,i)=>{s.style.transform='rotateY('+Math.min(0,-6-(existing.length-i)*2)+'deg) translateZ('+(i*0.4)+'px)';s.style.zIndex=i;s.querySelector('.num').textContent=String(i+1).padStart(3,'0')})}
+function addSheet(){const s=document.createElement('div');s.className='sheet';s.innerHTML='<span class="num">001</span><div class="line" style="top:90px"></div><div class="line" style="top:140px"></div><div class="line" style="top:190px"></div><div class="line" style="top:240px"></div><div class="line" style="top:290px;width:60%"></div>';s.style.transform='rotateY(-96deg)';stack.insertBefore(s,stack.querySelector('.counter'));requestAnimationFrame(()=>{s.style.transform='rotateY(0deg)';setTimeout(render,650)})}
+function turn(dir,auto){if(!auto){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}if(dir>0){if(folio>=99)return;folio++;if(!auto)click();addSheet()}else{const all=stack.querySelectorAll('.sheet'),s=all[all.length-1];if(folio>1)folio--;if(s)s.remove();if(!auto)click()}render()}
+wheel.addEventListener('click',()=>{if(startY===null)turn(1)});
+wheel.addEventListener('pointerdown',e=>{startY=e.clientY;wheel.setPointerCapture(e.pointerId)});
+wheel.addEventListener('pointermove',e=>{if(startY!==null&&e.clientY-startY>24){turn(-1);startY=null}});
+wheel.addEventListener('pointerup',()=>{setTimeout(()=>startY=null,30)});
+wheel.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowUp'){e.preventDefault();turn(1)}if(e.key==='ArrowLeft'||e.key==='ArrowDown'){e.preventDefault();turn(-1)}});
+render();
+if(reduce){folio=12;for(let i=0;i<11;i++){const s=document.createElement('div');s.className='sheet';s.innerHTML='<span class="num">001</span><div class="line" style="top:140px"></div><div class="line" style="top:200px"></div>';stack.insertBefore(s,stack.querySelector('.counter'))}render()}else{let n=0;const id=setInterval(()=>{turn(1,true);if(++n>=11)clearInterval(id)},260)}
+</script>
+</body>
+</html>

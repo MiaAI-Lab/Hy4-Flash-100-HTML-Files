@@ -1,0 +1,14 @@
+TITLE
+The Tidal Bell — A Bell That Rings for Water
+
+PROMPT
+A slate #5A6B70, brass #C6A15B and foam #E8E4D8 harbour section. A brass bell hangs above a tide gauge marked 0 to 5 metres. As water rises it crosses each mark and the bell swings once, sounding a low note. On load the tide climbs past the second mark in three seconds and the bell answers. Clicking a mark sets the tide to that level; the water travels there and the bell rings on every mark it crosses. No emoji, no lighthouse photograph, no purple.
+
+DESCRIPTION
+A tide gauge whose rising water rings a brass bell at each metre mark.
+
+VISUAL TECHNIQUES
+SVG water with wave path, tide marks, bell swing animation, Web Audio bell tone, crossing detection.
+
+INTERACTION MODEL
+Click a tide mark to set the level. Keyboard: 0–5 choose marks, arrows step. Reduced motion holds at mark 3.

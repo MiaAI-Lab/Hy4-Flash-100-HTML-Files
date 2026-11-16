@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Museum of Overheard Sentences — Gallery of Unintended Poetry</title>
+<style>
+:root{--stone:#D9D3C8;--ink:#252522;--orange:#C45A2A;--line:rgba(37,37,34,.075)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--stone);color:var(--ink);font-family:Georgia,'Times New Roman',serif}
+.stage{position:relative;width:100%;height:100%;perspective:1400px;overflow:hidden;background-image:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 116px),repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 96px)}
+.room{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.labelhead{position:absolute;left:clamp(20px,3vw,48px);top:clamp(18px,3vw,40px);z-index:5;pointer-events:none}
+.labelhead small{display:block;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase}
+.labelhead b{display:block;font:400 12px/1.5 Georgia,serif;font-weight:400;color:#656056;max-width:34ch;margin-top:8px}
+.q{position:absolute;border:0;background:none;padding:6px 10px;text-align:left;color:var(--ink);cursor:pointer;line-height:1.05;letter-spacing:-.035em;animation:hang .8s cubic-bezier(.18,.9,.22,1.08) both;animation-delay:var(--d);transition:color .25s,transform .5s cubic-bezier(.18,.9,.22,1.08),filter .3s}
+@keyframes hang{from{opacity:0;transform:translateY(-26px) scale(.96)}to{opacity:1;transform:none}}
+.q:hover,.q:focus-visible,.q.hot{color:var(--orange);outline:none}
+.q:focus-visible{box-shadow:inset 0 0 0 2px var(--orange)}
+.q.d1{font-size:clamp(24px,3.4vw,52px);max-width:15ch}
+.q.d2{font-size:clamp(18px,2.1vw,34px);max-width:19ch}
+.q.d3{font-size:clamp(13px,1.15vw,19px);max-width:23ch;color:#5e5a52}
+.q.d3:hover,.q.d3:focus-visible,.q.d3.hot{color:var(--orange)}
+.q.pinned{transform:scale(1.18) translateZ(90px);z-index:9;color:var(--orange);font-size:clamp(30px,4.2vw,64px);max-width:22ch}
+.q1{left:12%;top:20%}.q2{left:60%;top:16%}.q3{left:70%;top:55%}.q4{left:7%;top:62%}
+.q5{left:39%;top:42%}.q6{left:18%;top:76%}.q7{left:57%;top:78%}.q8{left:82%;top:30%}.q9{left:44%;top:72%}
+.echo{position:absolute;pointer-events:none;z-index:8;width:10px;height:10px;margin:-5px 0 0 -5px}
+.echo i{position:absolute;inset:0;border:1px solid var(--orange);border-radius:50%;opacity:0;animation:ring 1.05s cubic-bezier(.15,.7,.2,1) forwards}
+.echo i:nth-child(2){animation-delay:.12s}.echo i:nth-child(3){animation-delay:.26s}
+@keyframes ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(34)}}
+.transcript{position:absolute;left:clamp(20px,3vw,48px);bottom:clamp(18px,3vw,36px);z-index:10;max-width:min(640px,72vw);border-top:2px solid var(--orange);padding-top:10px;pointer-events:none}
+.transcript .id{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--orange);text-transform:uppercase}
+.transcript p{font:400 clamp(15px,1.5vw,21px)/1.35 Georgia,serif;margin:7px 0 0;max-width:62ch}
+.hint{position:absolute;right:clamp(20px,3vw,48px);bottom:clamp(18px,3vw,36px);font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#777166;z-index:5}
+@media(max-width:700px){.q.d1{font-size:26px}.q.d2{font-size:19px}.q.d3{font-size:13px}.transcript{max-width:86vw}.hint{display:none}.q3{left:56%;top:60%}.q8{left:72%;top:36%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.room{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="room" id="room">
+    <div class="labelhead"><small>Museum of Overheard Sentences<br>Room 03 · Collection of the Unintended</small><b>Collected between the Kestrel tram stop and the last lit window on Marrow Road.</b></div>
+    <button class="q d1 q1" style="--d:.52s" data-id="E-014" data-meta="Tram 6, rear seat · 08:41 · speaker certain" data-line="I said the blue one, but I was holding the green one.">I said the blue one, but I was holding the green one.</button>
+    <button class="q d2 q2" style="--d:.34s" data-id="E-022" data-meta="Lost property window · 12:06 · speaker certain" data-line="We can put the chair in the chair.">We can put the chair in the chair.</button>
+    <button class="q d3 q3" style="--d:.18s" data-id="E-031" data-meta="Building site, north gate · 16:22 · speaker uncertain" data-line="It's not a ladder if nobody climbs it.">It's not a ladder if nobody climbs it.</button>
+    <button class="q d3 q4" style="--d:.08s" data-id="E-038" data-meta="Bakery queue · 07:55 · speaker certain" data-line="The bus has a name. We should use it.">The bus has a name. We should use it.</button>
+    <button class="q d1 q5" style="--d:.6s" data-id="E-041" data-meta="Laundry room, floor 4 · 21:13 · speaker certain" data-line="Please leave the weather by the door.">Please leave the weather by the door.</button>
+    <button class="q d2 q6" style="--d:.42s" data-id="E-056" data-meta="Clinic corridor · 10:02 · speaker uncertain" data-line="I have been early since Tuesday.">I have been early since Tuesday.</button>
+    <button class="q d3 q7" style="--d:.24s" data-id="E-063" data-meta="Platform 2, bench end · 18:47 · speaker certain" data-line="That is not a sandwich, that is a maths problem.">That is not a sandwich, that is a maths problem.</button>
+    <button class="q d3 q8" style="--d:.12s" data-id="E-070" data-meta="Allotment path · 06:31 · speaker certain" data-line="Ask the clock. It knows what it did.">Ask the clock. It knows what it did.</button>
+    <button class="q d2 q9" style="--d:.48s" data-id="E-088" data-meta="Bridge, west parapet · 23:18 · speaker uncertain" data-line="We'll decide when the light changes.">We'll decide when the light changes.</button>
+  </div>
+  <div class="transcript" aria-live="polite"><div class="id" id="tid">EXHIBIT E-014</div><p id="tmeta">Hover a sentence to read its transcription. Click to pin it to the room.</p></div>
+  <div class="hint">MOVE TO TILT · CLICK TO PIN · ESC TO RELEASE</div>
+</div>
+<script>
+const room=document.getElementById('room'),stage=document.getElementById('stage'),qs=[...document.querySelectorAll('.q')],tid=document.getElementById('tid'),tmeta=document.getElementById('tmeta');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let pinned=null;
+function show(b){tid.textContent='EXHIBIT '+b.dataset.id;tmeta.textContent=b.dataset.meta+' — “'+b.dataset.line+'”'}
+function echo(b){if(reduce)return;const r=b.getBoundingClientRect(),s=stage.getBoundingClientRect(),e=document.createElement('div');e.className='echo';e.style.left=(r.left-s.left+r.width/2)+'px';e.style.top=(r.top-s.top+r.height/2)+'px';e.innerHTML='<i></i><i></i><i></i>';room.appendChild(e);setTimeout(()=>e.remove(),1500)}
+qs.forEach(b=>{
+  b.addEventListener('pointerenter',()=>show(b));b.addEventListener('focus',()=>show(b));
+  b.addEventListener('click',()=>{
+    if(pinned===b){b.classList.remove('pinned');pinned=null;room.style.transform='';return}
+    if(pinned)pinned.classList.remove('pinned');
+    pinned=b;b.classList.add('pinned');show(b);echo(b);
+  });
+});
+stage.addEventListener('pointermove',e=>{if(pinned||reduce)return;const r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;room.style.transform=`rotateY(${x*5}deg) rotateX(${-y*4}deg)`});
+stage.addEventListener('pointerleave',()=>{if(!pinned)room.style.transform=''});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pinned){pinned.classList.remove('pinned');pinned=null;room.style.transform=''}});
+</script>
+</body>
+</html>

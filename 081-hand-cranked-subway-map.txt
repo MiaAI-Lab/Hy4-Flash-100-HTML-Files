@@ -1,0 +1,14 @@
+TITLE
+Line Nine — The Subway Map You Have to Crank
+
+PROMPT
+A crimson #B23B3B, cream #F2E9D8 and black #1C1C1C transit diagram for a fictional Line Nine. A hand-cranked wheel sits beside a single looping route drawn as a thin red line with eight stations. Turning the crank advances a black train dot along the line; each station it reaches unfolds its name in condensed capitals and stamps a time in the margin. On load the crank turns itself once and the train travels to the second station. Clicking a station jumps the train there. The wheel should feel mechanical: spokes rotate, a ratchet click sounds, and the margin times accumulate like a conductor's record. No emoji, no map tile imagery, no purple.
+
+DESCRIPTION
+A crank-driven subway route where turning a wheel moves the train and unfolds station names.
+
+VISUAL TECHNIQUES
+SVG route path with getPointAtLength, mechanical crank wheel, ratchet audio, staggered label reveal, stamped margin times.
+
+INTERACTION MODEL
+Drag the crank in circles or click it to advance; click any station to jump. Keyboard: arrow keys turn the crank. Reduced motion starts at the second station without animation.

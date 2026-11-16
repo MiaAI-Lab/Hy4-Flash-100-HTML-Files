@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Null Moon — A Phase Roulette</title>
+<style>
+  :root{--black:#0B0B0C;--ivory:#EDE7D8;--brass:#C8A45D;--dim:#6E685D}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--black);color:var(--ivory);overflow:hidden}
+  body{font-family:"Courier New",Courier,monospace;display:grid;place-items:center;
+    background-image:radial-gradient(circle at 50% 45%,#1B1A19 0,#101010 42%,var(--black) 72%)}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:repeating-radial-gradient(circle at 30% 20%,transparent 0 2px,rgba(255,255,255,.025) 2px 3px)}
+  .stage{width:min(94vw,92vh,900px);aspect-ratio:1;position:relative;display:grid;place-items:center;animation:settle 1s cubic-bezier(.2,1.25,.28,1) both}
+  @keyframes settle{from{opacity:0;transform:scale(.84) rotate(-9deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+  #roulette{position:absolute;inset:0;cursor:grab;touch-action:none;border-radius:50%;outline:none}
+  #roulette:active{cursor:grabbing}#roulette:focus-visible{box-shadow:0 0 0 2px var(--brass),0 0 0 10px rgba(200,164,93,.12)}
+  svg{width:100%;height:100%;display:block;overflow:visible}
+  .stone{fill:url(#stone);stroke:#494438;stroke-width:2}
+  .tick{stroke:var(--brass);stroke-width:1.4;opacity:.75;transform-origin:400px 400px;animation:ink .7s both cubic-bezier(.16,.84,.22,1)}
+  .tick.major{stroke-width:2.5;opacity:1}
+  @keyframes ink{from{opacity:0;transform:scale(.7)}to{opacity:.75;transform:scale(1)}}
+  .major{animation-name:inkMajor}@keyframes inkMajor{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+  .rimtext{font:11px "Courier New",monospace;letter-spacing:.36em;fill:var(--dim)}
+  #pointer path{fill:var(--brass)}
+  #centerText{text-anchor:middle;fill:var(--ivory)}
+  #num{font:400 clamp(52px,12vw,104px) Georgia,"Times New Roman",serif;letter-spacing:-.05em}
+  #phaseName{font:italic 16px Georgia,serif;fill:var(--brass)}
+  #preview{font:10px "Courier New",monospace;letter-spacing:.22em;fill:var(--ivory)}
+  .caption{position:absolute;bottom:2%;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.42em;color:var(--dim);pointer-events:none}
+  .readout{position:absolute;top:1%;width:100%;display:flex;justify-content:space-between;font-size:9px;letter-spacing:.3em;color:var(--dim);pointer-events:none}
+  @media(max-width:520px){.caption{letter-spacing:.24em}.readout{font-size:8px;letter-spacing:.18em}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <div class="readout"><span>CALENDAR OF THE HOLLOW SEA</span><span>XXIX NIGHTS</span></div>
+  <div id="roulette" tabindex="0" role="slider" aria-label="Moon phase roulette" aria-valuemin="1" aria-valuemax="29" aria-valuenow="1">
+    <svg viewBox="0 0 800 800" aria-hidden="true">
+      <defs>
+        <radialGradient id="stone" cx="42%" cy="34%"><stop offset="0" stop-color="#242220"/><stop offset=".55" stop-color="#151414"/><stop offset="1" stop-color="#080808"/></radialGradient>
+        <radialGradient id="glow"><stop offset="0" stop-color="#EDE7D8" stop-opacity=".30"/><stop offset="1" stop-color="#EDE7D8" stop-opacity="0"/></radialGradient>
+        <clipPath id="moonClip"><circle cx="400" cy="400" r="150"/></clipPath>
+      </defs>
+      <circle class="stone" cx="400" cy="400" r="378"/>
+      <circle cx="400" cy="400" r="358" fill="none" stroke="#5B5548" stroke-width="1" opacity=".5"/>
+      <g id="wheel"></g>
+      <circle cx="400" cy="400" r="218" fill="#0B0B0C" stroke="#464136" stroke-width="1.5"/>
+      <circle id="moonGlow" cx="400" cy="400" r="205" fill="url(#glow)" opacity="0"/>
+      <g clip-path="url(#moonClip)">
+        <circle cx="400" cy="400" r="150" fill="#EDE7D8"/>
+        <circle id="shadow" cx="400" cy="400" r="150" fill="#0B0B0C"/>
+        <g opacity=".16" stroke="#5D5647" stroke-width="1">
+          <circle cx="365" cy="352" r="19" fill="none"/><circle cx="437" cy="378" r="27" fill="none"/>
+          <circle cx="382" cy="441" r="33" fill="none"/><circle cx="452" cy="455" r="13" fill="none"/>
+        </g>
+      </g>
+      <circle cx="400" cy="400" r="150" fill="none" stroke="#C8A45D" stroke-width="1" opacity=".45"/>
+      <g id="pointer"><path d="M400 20l-11 26h22z"/><circle cx="400" cy="56" r="3" fill="#0B0B0C"/></g>
+      <g id="centerText">
+        <text id="num" x="400" y="392">01</text>
+        <text id="phaseName" x="400" y="430">Ash Moon</text>
+      </g>
+      <text id="preview" x="400" y="640" text-anchor="middle">TURN THE NIGHT</text>
+    </svg>
+  </div>
+  <div class="caption">DRAG THE WHEEL · ARROW KEYS TO STEP</div>
+</main>
+<script>
+(function(){
+  const names=['Ash Moon','Thin Ferry','Needle Light','Quiet Ear','Half House','Raised Sail','Waxing Orchard','Almost Lantern','Full Lantern','Full Lantern','Overripe','Hush Bell','Waning Orchard','Half Door','Lower Tide','Thin Comb','Ash Again','Cinder Whelp','Moth Wing','Black Water','Old Light','Hollow Half','Widow’s Shell','River Teeth','Last Ember','Night Fold','Sealed Vault','No Face','Null Moon'];
+  const NS='http://www.w3.org/2000/svg',wheel=document.getElementById('wheel'),roulette=document.getElementById('roulette'),shadow=document.getElementById('shadow'),num=document.getElementById('num'),phaseName=document.getElementById('phaseName'),preview=document.getElementById('preview'),glow=document.getElementById('moonGlow'),step=360/29,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for(let i=0;i<29;i++){
+    const a=(i*step-90)*Math.PI/180,major=i%7===0,r1=major?318:328,r2=350;
+    const line=document.createElementNS(NS,'line');
+    line.setAttribute('x1',400+Math.cos(a)*r1);line.setAttribute('y1',400+Math.sin(a)*r1);
+    line.setAttribute('x2',400+Math.cos(a)*r2);line.setAttribute('y2',400+Math.sin(a)*r2);
+    line.setAttribute('class','tick'+(major?' major':''));line.style.animationDelay=(i*18)+'ms';
+    line.dataset.i=i;wheel.appendChild(line);
+    if(major){const t=document.createElementNS(NS,'text');t.setAttribute('x',400+Math.cos(a)*298);t.setAttribute('y',400+Math.sin(a)*298+4);t.setAttribute('text-anchor','middle');t.setAttribute('class','rimtext');t.textContent=String(i+1).padStart(2,'0');wheel.appendChild(t);}
+    line.addEventListener('pointerenter',()=>preview.textContent=names[i]);
+  }
+  roulette.addEventListener('pointerleave',()=>preview.textContent='TURN THE NIGHT');
+  let rotation=0,target=0,dragging=false,startPointer=0,startRotation=0;
+  function angle(e){const r=roulette.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI;}
+  function norm(d){while(d>180)d-=360;while(d<-180)d+=360;return d;}
+  function idx(){return ((Math.round(target/step)%29)+29)%29;}
+  function update(){
+    const i=idx(),p=i/29;
+    const off=p<=.5 ? -300*p : 600*(1-p);
+    shadow.setAttribute('cx',(400+off).toFixed(2));
+    glow.setAttribute('opacity',(Math.abs(off)/300*.7).toFixed(2));
+    num.textContent=String(i+1).padStart(2,'0');
+    phaseName.textContent=names[i];
+    roulette.setAttribute('aria-valuenow',i+1);roulette.setAttribute('aria-valuetext',names[i]);
+    wheel.setAttribute('transform',`rotate(${rotation.toFixed(3)} 400 400)`);
+  }
+  function loop(){
+    if(!dragging){
+      const d=target-rotation;
+      rotation+=d*(reduced?1:.16);
+      if(Math.abs(d)<.02)rotation=target;
+    }
+    update();requestAnimationFrame(loop);
+  }
+  roulette.addEventListener('pointerdown',e=>{dragging=true;startPointer=angle(e);startRotation=target;roulette.setPointerCapture(e.pointerId);});
+  roulette.addEventListener('pointermove',e=>{if(!dragging)return;target=startRotation+norm(angle(e)-startPointer);});
+  roulette.addEventListener('pointerup',()=>{dragging=false;target=Math.round(target/step)*step;});
+  roulette.addEventListener('pointercancel',()=>{dragging=false;target=Math.round(target/step)*step;});
+  roulette.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowUp'){target=Math.round(target/step)*step+step;e.preventDefault();}
+    if(e.key==='ArrowLeft'||e.key==='ArrowDown'){target=Math.round(target/step)*step-step;e.preventDefault();}
+  });
+  loop();
+})();
+</script>
+</body>
+</html>

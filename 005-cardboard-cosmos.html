@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardboard Cosmos — A Fold-Out Orrery</title>
+<style>
+  :root{--kraft:#C99A63;--ink:#27323A;--cream:#F6EFE1;--coral:#C65F45;--p:0;--fold:82deg}
+  *{box-sizing:border-box}html,body{margin:0;background:var(--kraft);color:var(--ink);font-family:"Courier New",Courier,monospace;overflow-x:hidden}
+  body{height:300vh;background-image:repeating-linear-gradient(0deg,transparent 0 5px,rgba(39,50,58,.035) 5px 6px),radial-gradient(circle at 20% 10%,rgba(255,255,255,.13),transparent 40%)}
+  .stage{position:sticky;top:0;height:100vh;min-height:560px;overflow:hidden;display:grid;grid-template-columns:minmax(230px,31%) 1fr auto;gap:clamp(12px,2vw,34px);padding:clamp(16px,2.6vw,38px)}
+  .copy{z-index:3;display:flex;flex-direction:column;justify-content:center}
+  .stampmark{display:inline-block;border:2px solid var(--ink);padding:6px 8px;font-size:9px;letter-spacing:.2em;transform:rotate(-3deg);width:max-content}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(46px,6.3vw,96px);line-height:.82;letter-spacing:-.055em;margin:22px 0 18px}
+  h1 span{display:block}.copy p{font-family:Georgia,serif;font-size:clamp(13px,1.2vw,17px);line-height:1.5;max-width:37ch}
+  .cat{margin-top:24px;font-size:10px;letter-spacing:.16em;line-height:1.8;border-top:1px solid var(--ink);padding-top:10px}
+  #spec{color:var(--coral);font-weight:bold}
+  .scene{position:relative;perspective:1200px;display:grid;place-items:center;min-width:0}
+  .card{position:relative;width:min(74vh,720px);aspect-ratio:1;background:var(--cream);border:2px solid var(--ink);box-shadow:16px 20px 0 rgba(39,50,58,.18),0 40px 80px rgba(39,50,58,.25);transform-style:preserve-3d;transform:rotateX(calc(16deg - var(--p)*8deg)) rotateZ(calc(-4deg + var(--p)*8deg));animation:drop 1.2s cubic-bezier(.16,.9,.2,1) both}
+  @keyframes drop{from{opacity:0;transform:translateY(-70px) rotateX(40deg)}to{opacity:1}}
+  .card::before,.card::after{content:"";position:absolute;inset:6%;border:1px dashed rgba(39,50,58,.24);pointer-events:none}
+  .card::after{inset:48% 0 auto;border-top:2px solid rgba(39,50,58,.3);box-shadow:0 3px 0 rgba(255,255,255,.5)}
+  .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(39,50,58,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(39,50,58,.06) 1px,transparent 1px);background-size:8.33% 8.33%}
+  .sun{position:absolute;left:50%;top:50%;width:15%;aspect-ratio:1;margin:-7.5%;border-radius:50%;background:radial-gradient(circle at 35% 32%,#F2D47B,var(--coral));border:2px solid var(--ink);box-shadow:0 0 0 7px rgba(198,95,69,.14);transform:translateY(calc((1 - var(--p))*90px)) translateZ(calc(var(--p)*45px));display:grid;place-items:center;font:9px "Courier New",monospace;letter-spacing:.1em;text-align:center}
+  .arm{position:absolute;left:50%;top:50%;width:2px;height:var(--r);background:linear-gradient(var(--ink),transparent);transform-origin:50% 100%;transform:rotateZ(var(--a)) rotateX(var(--f));transform-style:preserve-3d;transition:transform .18s cubic-bezier(.2,.85,.2,1)}
+  .planet{position:absolute;left:50%;top:-1px;width:var(--s);height:var(--s);margin-left:calc(var(--s)/-2);margin-top:calc(var(--s)/-2);border-radius:50%;border:2px solid var(--ink);background:var(--c);box-shadow:inset -6px -8px 0 rgba(0,0,0,.13),3px 5px 0 rgba(39,50,58,.16);transform:translateZ(24px);cursor:help;outline:none}
+  .planet::after{content:"";position:absolute;inset:16% 12%;border:1px dashed rgba(246,239,225,.6);border-radius:50%}
+  .planet:hover,.planet:focus-visible{outline:3px solid var(--coral);outline-offset:5px}
+  .planet.rng::before{content:"";position:absolute;left:-38%;right:-38%;top:42%;height:16%;border:2px solid var(--ink);border-radius:50%;transform:rotate(-14deg)}
+  .fragile{position:absolute;right:5%;bottom:9%;border:3px double var(--coral);color:var(--coral);font-size:clamp(10px,1.3vw,16px);letter-spacing:.12em;padding:8px 10px;transform:rotate(-11deg);opacity:calc(1 - abs(var(--p) - .7)*7);pointer-events:none}
+  .gauge{height:62vh;display:flex;flex-direction:column;align-items:center;gap:10px;user-select:none;touch-action:none;cursor:ns-resize}
+  .gauge .rail{position:relative;flex:1;width:3px;background:var(--ink)}
+  .gauge .fill{position:absolute;top:0;left:0;width:100%;height:calc(var(--p)*100%);background:var(--coral)}
+  .gauge .knob{position:absolute;top:calc(var(--p)*100%);left:50%;width:22px;height:12px;background:var(--ink);transform:translate(-50%,-50%);box-shadow:0 2px 0 var(--coral)}
+  .gauge span{font-size:9px;letter-spacing:.24em;writing-mode:vertical-rl}
+  @media(max-width:800px){.stage{grid-template-columns:1fr auto;grid-template-rows:auto 1fr;padding:14px}.copy{grid-column:1/-1;justify-content:start}.cat{margin-top:8px}.copy p{display:none}h1{font-size:clamp(38px,11vw,64px);margin:10px 0}.scene{grid-column:1}.gauge{grid-column:2;height:52vh}.card{width:min(84vw,58vh)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="copy">
+    <div class="stampmark">ASTRAL MAIL ORDER · 7-C</div>
+    <h1><span>CARDBOARD</span><span>COSMOS</span></h1>
+    <p>A fold-out orrery for the patient amateur. Printed on heavy stock, scored by hand, and packed flat. Assembly requires one quiet afternoon and a table large enough to lose an empire on.</p>
+    <div class="cat">EDITION 0061 / 1200<br>7 PLANETS · 1 SUN · 19 FOLDS<br>POSTAGE PAID IN STARS<br><span id="spec">HOVER A PLANET FOR SPECIFICATIONS</span></div>
+  </section>
+  <section class="scene" aria-label="Fold-out cardboard solar system">
+    <div class="card" id="card"><div class="grid"></div><div class="sun" id="sunTab">SOL<br>TAB</div><div class="fragile">FRAGILE · OPEN ALONG THE SUN</div></div>
+  </section>
+  <div class="gauge" id="gauge" tabindex="0" role="slider" aria-label="Fold sequence" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span>FOLD GAUGE</span><div class="rail" id="rail"><div class="fill"></div><div class="knob"></div></div><span>SCROLL</span></div>
+</main>
+<script>
+(function(){
+  const card=document.getElementById('card'),gauge=document.getElementById('gauge'),rail=document.getElementById('rail'),spec=document.getElementById('spec'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const planets=[['MERCURY','#8D8C86',18,120,28],['VENUS','#D8B77A',26,170,-42],['EARTH','#4E7F88',29,224,68],['MARS','#C65F45',24,276,-12],['JOVIAN','#C9A87B',58,340,134],['SATURN','#D9C79A',48,408,-96],['NEPTUNE','#5C7894',40,470,24]];
+  const arms=[];
+  planets.forEach((p,i)=>{
+    const arm=document.createElement('div');arm.className='arm'+(p[0]==='SATURN'?' rng':'');arm.style.setProperty('--a',p[4]+'deg');arm.style.setProperty('--r',p[3]+'px');arm.style.setProperty('--s',p[2]+'px');arm.style.setProperty('--c',p[1]);
+    const b=document.createElement('div');b.className='planet';b.tabIndex=0;b.setAttribute('role','button');b.setAttribute('aria-label',p[0]+' specifications');
+    b.addEventListener('pointerenter',()=>spec.textContent=p[0]+' · Ø '+p[2]+' MM · SURCHARGE '+(i+2)+' STARS');
+    b.addEventListener('focus',()=>spec.textContent=p[0]+' · Ø '+p[2]+' MM · SURCHARGE '+(i+2)+' STARS');
+    b.addEventListener('pointerleave',()=>spec.textContent='HOVER A PLANET FOR SPECIFICATIONS');
+    arm.appendChild(b);card.appendChild(arm);arms.push(arm);
+  });
+  function ease(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
+  let p=0;
+  function apply(v){
+    p=Math.max(0,Math.min(1,v));document.documentElement.style.setProperty('--p',p.toFixed(4));
+    arms.forEach((arm,i)=>{
+      const local=Math.max(0,Math.min(1,(p-i*.025)/(.42-i*.018)));
+      let fold;
+      if(p<.72)fold=82-ease(local)*82;
+      else {const back=Math.max(0,Math.min(1,(p-.72)/.18));fold=ease(back)*80;}
+      if(p>.92){const open=Math.max(0,Math.min(1,(p-.92)/.08));fold=80-ease(open)*80;}
+      arm.style.setProperty('--f',reduced?'0deg':fold.toFixed(2)+'deg');
+    });
+    gauge.setAttribute('aria-valuenow',Math.round(p*100));
+  }
+  function scrollP(){const max=document.documentElement.scrollHeight-innerHeight;return max?scrollY/max:0;}
+  addEventListener('scroll',()=>apply(scrollP()),{passive:true});
+  let dragging=false;
+  function setFromY(y){const r=rail.getBoundingClientRect();apply((y-r.top)/r.height);scrollTo({top:p*(document.documentElement.scrollHeight-innerHeight),behavior:'instant'});}
+  gauge.addEventListener('pointerdown',e=>{dragging=true;gauge.setPointerCapture(e.pointerId);setFromY(e.clientY);});
+  gauge.addEventListener('pointermove',e=>{if(dragging)setFromY(e.clientY);});
+  gauge.addEventListener('pointerup',()=>dragging=false);
+  gauge.addEventListener('pointercancel',()=>dragging=false);
+  gauge.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown'){scrollBy(0,innerHeight*.15);e.preventDefault();}if(e.key==='ArrowUp'||e.key==='PageUp'){scrollBy(0,-innerHeight*.15);e.preventDefault();}});
+  apply(reduced?.55:scrollP());
+})();
+</script>
+</body>
+</html>

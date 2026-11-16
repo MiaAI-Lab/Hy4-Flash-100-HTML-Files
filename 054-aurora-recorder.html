@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora Recorder — A Magnetic Diary of Today</title>
+<style>
+:root{--black:#0A1012;--mint:#79D8A5;--pink:#D98AB5;--cream:#E6E4DA}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--black);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+h1{position:absolute;left:24px;top:20px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0;z-index:2}
+.kp{position:absolute;right:24px;top:20px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--mint);z-index:2}
+.bar{position:absolute;left:24px;right:24px;bottom:22px;z-index:3;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border-top:1px solid rgba(230,228,218,.35);padding-top:14px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.14em}
+#scrub{width:100%;accent-color:var(--mint);background:transparent}
+button{background:transparent;border:1px solid var(--mint);color:var(--mint);padding:9px 12px;font:inherit;letter-spacing:.16em;cursor:pointer}
+button:hover{background:var(--mint);color:var(--black)}
+@media(max-width:650px){h1,.kp{font-size:7px}.bar{grid-template-columns:1fr;gap:8px;bottom:12px}button{justify-self:start}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1>AURORA RECORDER / 54<br>THE SKY IS DIFFERENT EVERY MINUTE</h1><div class="kp">Kp 5 — ACTIVE</div>
+<div class="bar"><span id="stamp">LAT 68.9 / DATE — / MINUTE —</span><input id="scrub" type="range" min="0" max="1439" value="0" aria-label="Time of day"><button id="now" type="button">NOW</button></div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),scrub=document.getElementById('scrub'),stamp=document.getElementById('stamp'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const now=new Date(),today=now.getDate(),month=now.getMonth()+1,year=now.getFullYear(),start=now.getHours()*60+now.getMinutes();
+scrub.value=start;
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function shape(minute){const seed=(year*372+month*31+today)*1440+minute,r=rng(seed);return Array.from({length:6},(_,i)=>({y:.18+i*.105+r()*.06,amp:.05+r()*.12,freq:1.2+r()*2.6,phase:r()*6.28,width:.008+r()*.016,tilt:(r()-.5)*.12,color:i%3===0?'#D98AB5':'#79D8A5',alpha:.11+r()*.14}))}
+let current=shape(start),target=shape(start);
+function resize(){const d=devicePixelRatio||1;c.width=innerWidth*d;c.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0)}
+function draw(t){const w=innerWidth,h=innerHeight,reveal=reduce?1:Math.min(1,t/2600);ctx.clearRect(0,0,w,h);ctx.fillStyle='#0A1012';ctx.fillRect(0,0,w,h);
+ for(let k=0;k<6;k++){const a=current[k],b=target[k],s={};for(const key in a)s[key]=a[key]+(b[key]-a[key])*.06;current[k]=s;
+  const color=s.color;ctx.fillStyle=color;const steps=100,right=w*reveal;
+  for(let layer=0;layer<3;layer++){ctx.globalAlpha=s.alpha*(1-layer*.28);ctx.beginPath();
+   for(let i=0;i<=steps;i++){const x=right*i/steps,u=x/w,y=h*(s.y+Math.sin(u*s.freq*6.28+s.phase+t*.00012)*s.amp+Math.sin(u*13+s.phase*2)*.018*s.amp+u*s.tilt)-layer*6;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
+   for(let i=steps;i>=0;i--){const x=right*i/steps,u=x/w,y=h*(s.y+Math.sin(u*s.freq*6.28+s.phase+t*.00012)*s.amp+Math.sin(u*13+s.phase*2)*.018*s.amp+u*s.tilt)+s.width*h+layer*8;ctx.lineTo(x,y)}
+   ctx.closePath();ctx.fill()}
+  ctx.globalAlpha=1}
+ const hh=String(Math.floor(scrub.value/60)).padStart(2,'0'),mm=String(scrub.value%60).padStart(2,'0');stamp.textContent='LAT 68.9 / DATE '+String(today).padStart(2,'0')+'.'+String(month).padStart(2,'0')+'.'+year+' / '+hh+':'+mm;
+ if(!reduce)requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();requestAnimationFrame(draw);
+scrub.addEventListener('input',()=>{target=shape(+scrub.value)});
+scrub.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();scrub.value=Math.max(0,Math.min(1439,+scrub.value+(e.key==='ArrowRight'?10:-10)));target=shape(+scrub.value)}});
+document.getElementById('now').addEventListener('click',()=>{scrub.value=start;target=shape(start)});
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+TITLE
+Herbarium After Rain — Plates That Unfurl Wet
+
+PROMPT
+A foxed herbarium sheet #E8DCC0 with ink #3A2F27 handwriting and deep green #3F5E42 plant drawings. Four pressed specimens are pinned at different heights: FIELD GENTIAN, ROUND-LEAVED SUNDEW, MARSH THISTLE, WATER AVENS. Each specimen is drawn as a single continuous green line that has not yet been drawn — only a small pin and a pencil label are present at first. Scrolling brings each plate into view; as it enters, the stem draws upward from the pin, leaves unfurl one after another, and small droplets form at the leaf tips and slide down the stem before hanging at the lowest point. A handwritten note beside each plate gives a date and a place: “17 Sept. collected from the north ditch, still dripping.” Entrance: paper fibre grain fades in, then the first pin appears. Signature moment: the final drop at each leaf tip waits, swells, then runs down the stem along the exact path of the drawing. No emoji, no glass, no gradients on type. Reduced motion shows all plates drawn and drops still.
+
+DESCRIPTION
+A botanical collection that draws itself after a shower. Each pressed plant unfurls on scroll, and water beads gather at the leaf tips before running down the stem.
+
+VISUAL TECHNIQUES
+Scroll-triggered SVG stroke drawing, staggered leaf paths, droplet motion along a stem path, foxed-paper texture, handwriting labels.
+
+INTERACTION MODEL
+Scroll to reveal plates. Clicking a pin redraws that specimen. Keyboard: pins are buttons; Enter redraws.

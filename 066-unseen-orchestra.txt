@@ -1,0 +1,14 @@
+TITLE
+Unseen Orchestra — Absence for Eighteen Chairs
+
+PROMPT
+A black #121110 concert hall drawn only as gold #C7A35A chairs in three curved rows and cream #E9DFC8 programme type. Nobody is seated. Clicking an empty chair sounds its instrument — a softly filtered tone that blooms and fades — while a glowing five-line staff below draws the notehead and names the missing player. Each chair has a real instrument and a real pitch: cello at 196 Hz, bassoon at 233, glockenspiel at 1568. On load the chairs settle into place one by one and one staff line trembles, waiting. Signature moment: hearing a full instrument arrive from a chair you can see is empty. No emoji, no audio-player chrome, no gradient.
+
+DESCRIPTION
+An orchestra heard from its empty chairs; every click gives one absent instrument a voice and a note on the staff.
+
+VISUAL TECHNIQUES
+SVG chair drawing in arcs, Web Audio oscillator envelopes with filtering, animated SVG staff and noteheads, staggered entrance choreography.
+
+INTERACTION MODEL
+Click or focus a chair to hear it. Keyboard: chairs are buttons; Enter or Space plays. Sound starts only after a user gesture.

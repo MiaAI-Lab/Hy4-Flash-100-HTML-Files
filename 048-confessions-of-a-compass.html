@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confessions of a Compass — True North Is a Feeling</title>
+<style>
+:root{--teal:#0F4C5C;--cream:#F5EFE1;--red:#E85D3F}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--teal);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+h1{position:absolute;left:26px;top:22px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0}
+.hint{position:absolute;right:26px;top:22px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;opacity:.7}
+svg{width:min(72vh,86vw,660px);height:auto;display:block;touch-action:none;cursor:grab}
+svg:active{cursor:grabbing}
+.tick{stroke:var(--cream);stroke-width:1;opacity:0;animation:tickIn .25s ease-out forwards;animation-delay:calc(var(--i)*.012s)}
+.tick.major{stroke:var(--red);stroke-width:2}
+@keyframes tickIn{to{opacity:.65}}
+.ring{fill:none;stroke:var(--cream);stroke-width:1;opacity:.3}
+.card{font:11px ui-monospace,Menlo,monospace;letter-spacing:.18em;fill:var(--cream);text-anchor:middle;transition:fill .2s,opacity .2s}
+.card.hot{fill:var(--red)}
+#needle{filter:drop-shadow(0 2px 0 rgba(0,0,0,.2));animation:drop 1s cubic-bezier(.2,1.3,.35,1) .8s both}
+@keyframes drop{from{transform:translateY(-90px) scale(.7);opacity:0}to{transform:none;opacity:1}}
+caption{text-align:center;max-width:600px;margin-top:6px;font:italic clamp(15px,2vw,22px)/1.5 Georgia,serif;min-height:68px}
+caption b{font-style:normal;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--red);display:block;margin-bottom:8px}
+.strike{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;opacity:.5}
+.rewrite{color:var(--red);opacity:0;transition:opacity .4s .3s}
+.rewrite.show{opacity:1}
+@media(max-width:600px){h1,.hint{font-size:7px}.hint{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.tick{opacity:.65}#needle{animation:none}}
+</style>
+</head>
+<body>
+<h1>CONFESSIONS OF A COMPASS / 48<br>TRUE NORTH IS A FEELING</h1><div class="hint">DRAG THE NEEDLE · ARROWS TO TURN</div>
+<svg id="svg" viewBox="0 0 600 600" tabindex="0" role="application" aria-label="Compass. Drag the needle or use arrow keys.">
+  <circle class="ring" cx="300" cy="300" r="268"/><circle class="ring" cx="300" cy="300" r="206"/>
+  <g id="ticks"></g>
+  <g id="labels"></g>
+  <g id="needle">
+    <path d="M300 300 L278 322 L300 74 L322 322 Z" fill="#E85D3F"/>
+    <path d="M300 300 L278 322 L300 526 L322 322 Z" fill="#F5EFE1" opacity=".65"/>
+    <circle cx="300" cy="300" r="20" fill="#0F4C5C" stroke="#F5EFE1" stroke-width="2"/>
+    <circle cx="300" cy="300" r="5" fill="#E85D3F"/>
+  </g>
+</svg>
+<caption><b id="dir">N / APPROVAL</b><span id="line">I still check whether you read the message.</span><span class="rewrite" id="rewrite"> Something like approval.</span></caption>
+<script>
+const NS='http://www.w3.org/2000/svg',svg=document.getElementById('svg'),ticks=document.getElementById('ticks'),labels=document.getElementById('labels'),needle=document.getElementById('needle'),dir=document.getElementById('dir'),line=document.getElementById('line'),rewrite=document.getElementById('rewrite'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const dirs=[{n:'N',word:'APPROVAL',text:'I still check whether you read the message.'},{n:'E',word:'ESCAPE',text:'I keep a packed bag I have never unpacked.'},{n:'S',word:'STAYING',text:'The front step is worn where I kept sitting down.'},{n:'W',word:'BEGINNING AGAIN',text:'I keep deleting the first paragraph on purpose.'}];
+for(let i=0;i<120;i++){const a=i*3*Math.PI/180,maj=i%10===0,l=document.createElementNS(NS,'line'),r1=maj?246:258,r2=268;l.setAttribute('x1',300+Math.sin(a)*r1);l.setAttribute('y1',300-Math.cos(a)*r1);l.setAttribute('x2',300+Math.sin(a)*r2);l.setAttribute('y2',300-Math.cos(a)*r2);l.setAttribute('class','tick'+(maj?' major':''));l.style.setProperty('--i',i);ticks.appendChild(l)}
+dirs.forEach((d,i)=>{const t=document.createElementNS(NS,'text'),a=i*Math.PI/2;t.setAttribute('class','card');t.setAttribute('x',300+Math.sin(a)*232);t.setAttribute('y',300-Math.cos(a)*232+4);t.textContent=d.n+' — '+d.word;labels.appendChild(t)});
+let angle=0,dragging=false,target=0,anim=null;
+function setCaption(i){dir.textContent=dirs[i].n+' / '+dirs[i].word;line.textContent=dirs[i].text;line.classList.remove('strike');rewrite.classList.remove('show');[...labels.children].forEach((l,k)=>l.classList.toggle('hot',k===i))}
+function settle(){const i=((Math.round(angle/90)%4)+4)%4;target=i*90;if(anim)cancelAnimationFrame(anim);if(reduce){angle=target;needle.setAttribute('transform',`rotate(${angle} 300 300)`);finish(i);return}const start=angle,t0=performance.now(),dur=1500;function step(t){const p=Math.min(1,(t-t0)/dur),e=1-Math.exp(-5*p)*Math.cos(p*Math.PI*3.2);angle=start+(target-start)*e;needle.setAttribute('transform',`rotate(${angle} 300 300)`);if(p<1)anim=requestAnimationFrame(step);else{angle=target;needle.setAttribute('transform',`rotate(${angle} 300 300)`);finish(i)}}anim=requestAnimationFrame(step)}
+function finish(i){setCaption(i);line.classList.add('strike');rewrite.textContent=' '+dirs[i].word.toLowerCase()+(i===0?' — something like approval.':'.');rewrite.classList.add('show')}
+function fromPointer(e){const r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*600-300,y=(e.clientY-r.top)/r.height*600-300;return Math.atan2(x,-y)*180/Math.PI}
+svg.addEventListener('pointerdown',e=>{dragging=true;if(anim)cancelAnimationFrame(anim);svg.setPointerCapture(e.pointerId);needle.style.animation='none';angle=fromPointer(e);needle.setAttribute('transform',`rotate(${angle} 300 300)`);setCaption(((Math.round(angle/90)%4)+4)%4)});
+svg.addEventListener('pointermove',e=>{if(!dragging)return;angle=fromPointer(e);needle.setAttribute('transform',`rotate(${angle} 300 300)`);setCaption(((Math.round(angle/90)%4)+4)%4)});
+svg.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;svg.releasePointerCapture(e.pointerId);settle()});
+svg.addEventListener('pointercancel',()=>{dragging=false;settle()});
+svg.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){angle+=45;needle.setAttribute('transform',`rotate(${angle} 300 300)`);setCaption(((Math.round(angle/90)%4)+4)%4);e.preventDefault()}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){angle-=45;needle.setAttribute('transform',`rotate(${angle} 300 300)`);setCaption(((Math.round(angle/90)%4)+4)%4);e.preventDefault()}else if(e.key==='Enter'){settle();e.preventDefault()}});
+setTimeout(()=>{needle.setAttribute('transform','rotate(0 300 300)');setCaption(0)},1100);
+</script>
+</body>
+</html>

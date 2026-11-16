@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flyway Timetable — Five Journeys Written Across a Map</title>
+<style>
+:root{--sky:#DCE8E8;--ink:#2F4A55;--orange:#D5753D}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sky);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px}
+h1{font:400 clamp(21px,3vw,34px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.map{max-width:1100px;margin:14px auto 0;border:1px solid var(--ink);background:#E6EFEE}
+svg{width:100%;height:auto;display:block}
+.land{fill:rgba(47,74,85,.08);stroke:rgba(47,74,85,.3);stroke-width:1}
+.route{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.6s ease-out forwards;animation-delay:calc(var(--i)*.25s);transition:stroke .3s,stroke-width .3s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.route.hot{stroke:var(--orange);stroke-width:3}
+.city{fill:var(--ink);font:8px ui-monospace,Menlo,monospace;letter-spacing:.1em}
+.stop{fill:var(--sky);stroke:var(--ink);stroke-width:1.2}
+.bird{fill:var(--orange);opacity:0;transition:opacity .3s}
+.bird.on{opacity:1}
+.table{max-width:1100px;margin:16px auto 0;border:1px solid var(--ink)}
+.row{display:grid;grid-template-columns:1.6fr .7fr 2.2fr .7fr;gap:10px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(47,74,85,.3);padding:11px 14px;color:inherit;font:inherit;cursor:pointer;transition:background .25s}
+.row:last-child{border-bottom:0}.row:hover,.row:focus-visible,.row.hot{background:rgba(213,117,61,.14);outline:none}
+.row b{font:400 15px Georgia,serif}
+.row span{font:9px ui-monospace,Menlo,monospace;letter-spacing:.1em;align-self:center}
+.row .dist{text-align:right;color:var(--orange)}
+.head{display:grid;grid-template-columns:1.6fr .7fr 2.2fr .7fr;gap:10px;padding:9px 14px;font:8px ui-monospace,Menlo,monospace;letter-spacing:.18em;border-bottom:2px solid var(--ink)}
+@media(max-width:700px){body{padding:12px}.row,.head{grid-template-columns:1.2fr .7fr 1.6fr .6fr;font-size:8px;gap:5px;padding:8px}.row b{font-size:12px}.row span{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.route{animation:none;stroke-dashoffset:0}*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Flyway timetable</h1><span class="meta">CHART 078 · FIVE JOURNEYS · NORTH TO SOUTH</span></header>
+<div class="map"><svg id="svg" viewBox="0 0 1100 420" aria-label="Map of five bird migration routes"><g id="land"></g><g id="routes"></g><g id="cities"></g><g id="flocks"></g></svg></div>
+<div class="table"><div class="head"><span>SPECIES</span><span>DEPART</span><span>STOPS</span><span>DISTANCE</span></div><div id="rows"></div></div>
+<script>
+const svg=document.getElementById('svg'),land=document.getElementById('land'),routesG=document.getElementById('routes'),citiesG=document.getElementById('cities'),flocksG=document.getElementById('flocks'),rows=document.getElementById('rows'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const journeys=[
+ {n:'BAR-TAILED GODWIT',dep:'19 AUG 02:10',stops:'LENA DELTA → YELLOW SEA → BOTANY BAY',dist:'11,400 KM',d:'M160 92 C300 40 520 80 620 170 S820 300 980 330',cities:[[160,92,'LENA'],[620,170,'YELLOW SEA'],[980,330,'BOTANY']],speed:1.6},
+ {n:'ARCTIC TERN',dep:'22 AUG 17:40',stops:'GREENLAND → AZORES → CAPE BASIN',dist:'22,000 KM',d:'M330 65 C480 150 420 250 560 280 S760 360 900 380',cities:[[330,65,'GREENLAND'],[560,280,'AZORES'],[900,380,'CAPE BASIN']],speed:2.4},
+ {n:'EUROPEAN SWALLOW',dep:'03 SEP 06:05',stops:'YORKSHIRE → GIBRALTAR → LAKE CHAD',dist:'9,600 KM',d:'M470 70 C540 120 500 210 430 250 S520 350 650 340',cities:[[470,70,'YORKSHIRE'],[430,250,'GIBRALTAR'],[650,340,'LAKE CHAD']],speed:1.3},
+ {n:'RED KNOT',dep:'27 AUG 23:15',stops:'TAIMYR → BAY OF BENGAL → NORTH ISLAND',dist:'14,200 KM',d:'M210 80 C380 190 520 140 700 230 S860 320 1030 290',cities:[[210,80,'TAIMYR'],[700,230,'BAY OF BENGAL'],[1030,290,'NORTH ISLAND']],speed:1.9},
+ {n:'SANDHILL CRANE',dep:'11 SEP 07:30',stops:'MACKENZIE → TEXAS COAST → MEXICO CITY',dist:'6,800 KM',d:'M90 110 C220 180 260 270 390 300 S560 370 720 350',cities:[[90,110,'MACKENZIE'],[390,300,'TEXAS'],[720,350,'MEXICO CITY']],speed:1.0}
+];
+[['M40 40 q80 -40 160 10 q60 40 10 90 q-90 20 -130 -20Z','M760 70 q90 -30 170 20 q30 60 -50 80 q-100 -10 -120 -60Z','M30 310 q120 -50 220 20 q40 60 -60 80 q-140 0 -160 -60Z','M840 280 q120 -30 220 30 q10 70 -100 80 q-120 -10 -120 -70Z']].forEach(d=>{const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','land');p.setAttribute('d',d);land.appendChild(p)});
+const paths=[],flocks=[];
+journeys.forEach((j,i)=>{const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','route');p.setAttribute('d',j.d);p.setAttribute('id','route'+i);p.style.setProperty('--i',i);routesG.appendChild(p);paths.push(p);const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','bird');for(let k=0;k<3;k++){const b=document.createElementNS('http://www.w3.org/2000/svg','path');b.setAttribute('d','M0 0 L-6 -4 L-2 0 L-6 4Z');b.setAttribute('transform','translate('+k*10+' '+((k%2)*6)+')');g.appendChild(b)}flocksG.appendChild(g);flocks.push(g);j.cities.forEach(c=>{const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('class','stop');dot.setAttribute('cx',c[0]);dot.setAttribute('cy',c[1]);dot.setAttribute('r','4');citiesG.appendChild(dot);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('class','city');t.setAttribute('x',c[0]+7);t.setAttribute('y',c[1]-6);t.textContent=c[2];citiesG.appendChild(t)});
+ const b=document.createElement('button');b.type='button';b.className='row';b.innerHTML='<b>'+j.n+'</b><span>'+j.dep+'</span><span>'+j.stops+'</span><span class="dist">'+j.dist+'</span>';const on=()=>hot(i),off=()=>cool(i);b.addEventListener('mouseenter',on);b.addEventListener('focus',on);b.addEventListener('mouseleave',off);b.addEventListener('blur',off);p.addEventListener('mouseenter',on);p.addEventListener('mouseleave',off);rows.appendChild(b);j.row=b});
+let active=-1;
+function hot(i){active=i;paths.forEach((p,k)=>p.classList.toggle('hot',k===i));journeys.forEach((j,k)=>j.row.classList.toggle('hot',k===i));flocks.forEach((g,k)=>g.classList.toggle('on',k===i));if(reduce){const p=paths[i],pt=p.getPointAtLength(p.getTotalLength()*.62);flocks[i].setAttribute('transform','translate('+pt.x+' '+pt.y+')')}}
+function cool(i){if(active!==i)return;active=-1;paths.forEach(p=>p.classList.remove('hot'));journeys.forEach(j=>j.row.classList.remove('hot'));flocks.forEach(g=>g.classList.remove('on'))}
+function frame(t){if(active>=0&&!reduce){const p=paths[active],len=p.getTotalLength(),q=(t/1000/journeys[active].speed)%1,pt=p.getPointAtLength(q*len),pt2=p.getPointAtLength(Math.min(len,q*len+4)),a=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;flocks[active].setAttribute('transform','translate('+pt.x+' '+pt.y+') rotate('+a+')')}requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

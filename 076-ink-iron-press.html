@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink &amp; Iron — A Press That Prints the Word You Bring It</title>
+<style>
+:root{--ink:#1F1D1A;--cream:#EFE8D7;--red:#A8342B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px}
+h1{font:400 clamp(21px,3vw,34px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.workshop{display:grid;grid-template-columns:190px 1fr;gap:26px;max-width:1100px;margin:18px auto 0}
+.case{border:1px solid var(--ink);padding:14px;height:max-content}
+.case h2,.pressbox h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;font-weight:400;margin:0 0 12px}
+.card{width:100%;background:#E4DBC7;border:1px solid var(--ink);padding:12px 8px;margin-bottom:9px;font:400 21px Georgia,serif;text-align:center;cursor:grab;touch-action:none;transition:transform .25s,background .25s}
+.card:hover{transform:translateX(5px)}.card:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.card.inbed{background:var(--red);color:var(--cream);cursor:default}
+.pressbox{border:1px solid var(--ink);position:relative;min-height:520px;overflow:hidden}
+.pressbox svg{width:100%;height:100%;display:block;position:absolute;inset:0;touch-action:none}
+.paper{position:absolute;left:37%;top:44%;width:26%;height:31%;display:grid;place-items:center;background:#F7F2E8;border:1px solid rgba(31,29,26,.3);box-shadow:2px 3px 0 rgba(31,29,26,.15);font:400 clamp(18px,3vw,38px) Georgia,serif;color:transparent;pointer-events:none}
+.paper.printed{animation:bleed 2.1s ease-out forwards}
+@keyframes bleed{0%{color:rgba(168,52,43,.05);filter:blur(7px);letter-spacing:.18em;text-shadow:none}38%{color:rgba(168,52,43,.55);filter:blur(3px)}100%{color:var(--red);filter:blur(0);letter-spacing:.04em;text-shadow:0 1px 0 rgba(255,255,255,.9),1px 2px 1px rgba(31,29,26,.22)}}
+.iron{stroke:var(--ink);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.thin{stroke:var(--ink);fill:none;stroke-width:1.2}
+.lever{cursor:grab;outline:none}.lever:active{cursor:grabbing}.lever:focus-visible circle{stroke:var(--red);stroke-width:5}
+.bed{fill:#D9CFB7;stroke:var(--ink);stroke-width:2}
+.foot{display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:12px auto 0;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+.status{color:var(--red)}
+.reset{background:none;border:0;border-bottom:1px solid var(--ink);color:var(--ink);font:inherit;letter-spacing:inherit;cursor:pointer}
+.reset:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+@media(max-width:750px){body{padding:14px}.workshop{grid-template-columns:1fr}.case{display:flex;flex-wrap:wrap;gap:8px}.case h2{width:100%}.card{width:calc(50% - 4px)}.pressbox{min-height:400px}.paper{left:34%;top:45%;width:32%;height:28%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.paper.printed{color:var(--red);text-shadow:0 1px 0 rgba(255,255,255,.9)}}
+</style>
+</head>
+<body>
+<header><h1>Ink &amp; Iron</h1><span class="meta">PRESS 076 · HAND-SET TYPE · ONE SHEET AT A TIME</span></header>
+<div class="workshop"><div class="case"><h2>TYPE CASE · DRAG A WORD</h2><div id="cards"></div></div><div class="pressbox" id="pressbox"><svg id="press" viewBox="0 0 760 520" aria-label="Hand-operated iron printing press"><path class="thin" d="M40 470 H720 M80 470 V110 M680 470 V110 M80 110 H680"/><path class="iron" d="M110 430 H650 M150 430 V230 M610 430 V230 M150 230 H610"/><path class="iron" d="M180 200 H580 M220 200 V150 M540 200 V150"/><rect class="bed" x="280" y="250" width="200" height="150"/><path class="thin" d="M280 250 H480 M280 400 H480"/><rect x="250" y="215" width="260" height="22" fill="#1F1D1A"/><circle cx="610" cy="150" r="24" fill="#EFE8D7" stroke="#1F1D1A" stroke-width="3"/><g class="lever" id="lever" tabindex="0" role="slider" aria-label="Press lever" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><path class="iron" d="M610 150 L700 72"/><circle cx="700" cy="72" r="17" fill="#A8342B" stroke="#1F1D1A" stroke-width="3"/></g><path class="thin" d="M610 150 L580 400 M580 400 l-24 -10 M580 400 l24 -10"/><text x="60" y="60" font-size="10" font-family="ui-monospace,Menlo,monospace" letter-spacing="2" fill="#1F1D1A">IRON PRESS No. 076</text><text x="560" y="60" font-size="10" font-family="ui-monospace,Menlo,monospace" letter-spacing="2" fill="#A8342B">RED INK</text></svg><div class="paper" id="paper"></div></div></div>
+<div class="foot"><span class="status" id="status">NO TYPE IN THE BED · DRAG A WORD FROM THE CASE</span><span>PRINTED SHEETS <b id="count">0</b> · <button class="reset" id="reset" type="button">RESET SHEET</button></span></div>
+<script>
+const words=['SLOW','HAND','INK','PRESS'],cards=document.getElementById('cards'),paper=document.getElementById('paper'),pressbox=document.getElementById('pressbox'),press=document.getElementById('press'),lever=document.getElementById('lever'),status=document.getElementById('status'),count=document.getElementById('count'),reset=document.getElementById('reset'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let current='',sheets=0,drag=null,angle=0,pressing=false;
+words.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.className='card';b.textContent=w;b.setAttribute('aria-label','Use word '+w);b.addEventListener('pointerdown',e=>{if(b.classList.contains('inbed'))return;const r=b.getBoundingClientRect();drag={b,w,dx:e.clientX-r.left,dy:e.clientY-r.top,clone:b.cloneNode(true)};drag.clone.style.position='fixed';drag.clone.style.left=r.left+'px';drag.clone.style.top=r.top+'px';drag.clone.style.width=r.width+'px';drag.clone.style.pointerEvents='none';drag.clone.style.zIndex=99;document.body.appendChild(drag.clone);b.setPointerCapture(e.pointerId)});cards.appendChild(b)});
+addEventListener('pointermove',e=>{if(!drag)return;drag.clone.style.left=(e.clientX-drag.dx)+'px';drag.clone.style.top=(e.clientY-drag.dy)+'px'});
+addEventListener('pointerup',e=>{if(!drag)return;const r=pressbox.getBoundingClientRect(),inside=e.clientX>r.left+r.width*.3&&e.clientX<r.left+r.width*.7&&e.clientY>r.top+r.height*.35&&e.clientY<r.top+r.height*.85;drag.clone.remove();if(inside)lock(drag.w,drag.b);drag=null});
+function lock(w,btn){current=w;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('inbed',c===btn));status.textContent='TYPE LOCKED: '+w+' · PULL THE LEVER DOWN'}
+function svgAngle(e){const r=press.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*760-610,y=(e.clientY-r.top)/r.height*520-150;return Math.atan2(y,x)*180/Math.PI}
+function setAngle(a){angle=Math.max(-38,Math.min(12,a));lever.setAttribute('transform','rotate('+angle+' 610 150)');lever.setAttribute('aria-valuenow',Math.round((angle+38)/50*100));status.textContent=angle>3?'PRESSURE BUILDING…':'TYPE LOCKED: '+(current||'—')+' · PULL THE LEVER DOWN'}
+lever.addEventListener('pointerdown',e=>{if(!current)return;pressing=true;lever.setPointerCapture(e.pointerId)});
+lever.addEventListener('pointermove',e=>{if(pressing)setAngle(svgAngle(e))});
+lever.addEventListener('pointerup',()=>{if(!pressing)return;pressing=false;if(angle>4){print();setTimeout(()=>setAngle(-38),500)}else setAngle(-38)});
+lever.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){setAngle(angle+10);e.preventDefault()}if(e.key==='ArrowUp'){setAngle(angle-10);e.preventDefault()}if(e.key==='Enter'&&current){print()}});
+addEventListener('keydown',e=>{if(/^[1-4]$/.test(e.key)&&!current){const i=+e.key-1;lock(words[i],document.querySelectorAll('.card')[i])}if((e.key==='p'||e.key==='P')&&current)print()});
+function print(){if(!current)return;paper.textContent=current;paper.classList.remove('printed');void paper.offsetWidth;paper.classList.add('printed');sheets++;count.textContent=sheets;status.textContent='SHEET PULLED: '+current+' · '+sheets+' IN THE TRAY'}
+reset.addEventListener('click',()=>{paper.textContent='';paper.classList.remove('printed');current='';document.querySelectorAll('.card').forEach(c=>c.classList.remove('inbed'));setAngle(-38);status.textContent='NO TYPE IN THE BED · DRAG A WORD FROM THE CASE'});
+setAngle(-38);
+</script>
+</body>
+</html>

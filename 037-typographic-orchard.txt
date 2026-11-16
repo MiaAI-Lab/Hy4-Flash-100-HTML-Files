@@ -1,0 +1,14 @@
+TITLE
+Typographic Orchard — Six Trees, No Fruit
+
+PROMPT
+An orchard of six thin trees drawn in cream #EDE6D2 on deep orchard green #557150, with fruit in one red #B53A2F. The trees are made entirely of letters: trunks are stacked ‘l’ characters, branches are diagonal runs of ‘/’ and ‘\\’, leaves are small lowercase words like ‘still’, ‘almost’, ‘after’. Hanging from the branches are twelve red circular fruits, each containing a single word in cream: WAIT, RIPEN, RETURN, QUIET, AGAIN, SOON, TODAY, GONE, HEARD, NEAR, YET, HOME. Clicking a tree shakes it: letters jitter, fruits detach and fall with simple gravity, bouncing once on the ground before settling into a woven basket at the bottom. Clicking a fallen fruit opens a one-line poem in a side panel. A SHAKE ALL button shakes every tree in a staggered wave. Text at upper left: “Nothing here is ripe. Everything here is waiting.” Entrance: trees type themselves into existence from the ground up; fruits fade in last. Signature moment: the falling fruits leave a brief trail of their own word, repeated small, like an echo. No emoji, no gradients, no purple. Reduced motion drops fruits directly into the basket.
+
+DESCRIPTION
+An orchard made of letters. Shaking the trees drops word-fruit into a basket, where each word reveals a tiny poem.
+
+VISUAL TECHNIQUES
+DOM typography arranged as SVG-like tree structures, physics-based falling with bounce, echo trails, staggered shake animation, side-panel poems.
+
+INTERACTION MODEL
+Click a tree to shake it; click a fallen fruit to read its poem. SHAKE ALL shakes all six trees. Keyboard: trees and fruits are focusable buttons.

@@ -1,0 +1,14 @@
+TITLE
+Botanical Weather — A Forecast Kept by Plants
+
+PROMPT
+An editorial weather report written by a greenhouse full of unreliable plants. Cream #F2EBD9 paper, sage #7C9875 foliage, rust #B45A3C ink accents, pale sky #D8E3DD. Long vertical scroll with a sticky botanical illustration on the right and four short forecast chapters on the left: DRIZZLE, CLEARING, HEAT, STORM. At the top, a slim masthead sets a small issue number and a monumental Georgia title “BOTANICAL WEATHER”. Each chapter contains a temperature, a barometric reading, and two sentences in the voice of a gardener who trusts the plants over the instrument. The illustration is a large inline SVG of a potted plant with six leaves, a soil line and a cloud above it. As each chapter enters view, the weather state changes: leaves unfold or curl, the cloud fills and rains, the sky warms, and a storm bends the stem. Rain is made of short SVG strokes animated downward with staggered delays, not a generic particle field. Signature moment: in the STORM chapter the cloud visibly squeezes sideways, releasing a single diagonal sheet of rain while every leaf turns its pale underside upward at once. Motion uses custom cubic-bezier curves and no default scroll reveal. Interaction: scroll naturally, or use four small chapter marks on the right to jump; hover a leaf to read its invented common name and its weather opinion. Typography: Georgia for display and forecast prose, Courier for instrument readings. Reduced motion shows the final botanical state with all labels visible.
+
+DESCRIPTION
+A quiet scroll-driven forecast in which plants, not instruments, report the weather. Each chapter changes the drawing and the mood of the greenhouse, ending with a storm that turns every leaf pale-side up.
+
+VISUAL TECHNIQUES
+SVG illustrated plant with transformable leaf groups, IntersectionObserver chapter state, staggered SVG rain strokes, sticky two-column editorial layout, custom easing, hover/focus labels, reduced-motion static composition.
+
+INTERACTION MODEL
+Scroll through four forecast states or select the chapter marks. Hover or focus any leaf to read its name and forecast opinion.

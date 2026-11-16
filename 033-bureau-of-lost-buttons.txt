@@ -1,0 +1,14 @@
+TITLE
+Bureau of Lost Buttons — A Coat With a Memory
+
+PROMPT
+A bureau drawer of lost buttons tipped out across a charcoal #2B2A27 desk. The drawer is a shallow mustard #D8A93C rectangle at the bottom; inside it sit forty small buttons drawn as circles with two or four holes, in bone #EEE7D6, brass #D8A93C and red #B64A34. At the centre hangs the outline of a coat in bone lines. Hovering a button reveals where it came from in a small monospaced caption: “OFFICE COAT, LEFT CUFF, 1987”, “SAILOR’S SHIRT, SECOND FROM TOP”. Clicking a button threads a needle: a thin bone line draws from the drawer to a specific position on the coat, the button flies along it and settles with a tiny rotation. The coat gradually fills with an impossible, non-symmetric constellation of buttons. A counter at upper right says REUNITED 00/40. Text at upper left: “Every button remembers the exact shape of the hole it left.” Entrance: buttons tumble out of the drawer into their places with staggered gravity. Signature moment: the stitching is drawn as individual dashed stitches, and each button lands at a slight angle determined by its origin. No emoji, no glass, no gradients. Reduced motion places buttons instantly.
+
+DESCRIPTION
+An inventory of lost buttons that can be sewn back onto a coat. Each button carries the memory of the garment it came from.
+
+VISUAL TECHNIQUES
+SVG button grid, JS path generation for dashed stitch lines, flight animation with landing rotation, live provenance caption, sparse coat silhouette.
+
+INTERACTION MODEL
+Hover to read a button's origin; click to sew it onto the coat. A RESET EMPTY COAT control removes all buttons. Keyboard: buttons are focusable and Enter sews.

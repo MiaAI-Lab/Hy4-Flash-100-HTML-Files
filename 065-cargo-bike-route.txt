@@ -1,0 +1,14 @@
+TITLE
+Cargo Bike Route — Seven Minutes Across the Shipping Quarter
+
+PROMPT
+A cream #EFE9D9 street map with a single hand-drawn delivery route in teal #2E726D and an orange #DD6A36 cargo bicycle. The route threads past a ferry ramp, market row, canal bridge, cold store and a final courtyard. Dragging the bicycle along the line redraws the travelled portion in real time; a clock counts elapsed minutes from 07:42 and a small label names the current street. On load the route draws itself left to right while the rider rolls to the canal bridge, then stops for input. Signature moment: the orange trace catching up to the dragged wheel and the clock answering instantly. No emoji, no standard map tiles, no floating glass panel.
+
+DESCRIPTION
+A delivery map whose rider can be dragged along the route, redrawing the journey and reporting time and street names.
+
+VISUAL TECHNIQUES
+SVG path length and getPointAtLength, clipped stroke drawing, tangent-aligned bicycle drawing, sampled nearest-point dragging, custom map lettering.
+
+INTERACTION MODEL
+Drag the bicycle anywhere along the route. Clicking a point moves it there. Keyboard: arrow keys nudge the rider along the path.

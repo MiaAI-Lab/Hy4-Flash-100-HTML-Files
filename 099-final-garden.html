@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Garden — One Hundred Petals Spell 100</title>
+<style>
+:root{--cream:#F2EAD8;--green:#5F7B56;--terra:#C06A4B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--green);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 28px;background-image:repeating-linear-gradient(0deg,rgba(95,123,86,.035) 0 1px,transparent 1px 30px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--green);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.garden{position:relative;height:calc(100vh - 100px);min-height:460px;margin-top:8px;background:linear-gradient(180deg,#F6F0E2 0 68%,#DDE2CF 68%);cursor:pointer;overflow:hidden}
+.soil{position:absolute;left:0;right:0;bottom:0;height:32%;border-top:2px solid rgba(95,123,86,.35);background:repeating-linear-gradient(90deg,rgba(95,123,86,.07) 0 2px,transparent 2px 14px)}
+.petal{position:absolute;width:15px;height:24px;border-radius:70% 0 70% 0;background:var(--terra);transform-origin:50% 100%;box-shadow:inset 1px 1px 0 rgba(242,234,216,.25)}
+.petal.g{background:var(--green)}
+.caption{position:absolute;left:12px;bottom:8px;font:italic 12px Georgia,serif;color:rgba(95,123,86,.8)}
+.count{position:absolute;right:12px;top:8px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+@media(max-width:600px){body{padding:12px}.petal{width:10px;height:16px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Final Garden</h1><span class="meta">PLOT No. 099 · ONE HUNDRED PETALS</span></header>
+<div class="garden" id="garden" tabindex="0" role="button" aria-label="Replay the petal assembly"><div class="soil"></div><div class="caption">a hundred small things, briefly one number</div><div class="count" id="count">100 PETALS</div></div>
+<script>
+const garden=document.getElementById('garden'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches,N=100;
+const c=document.createElement('canvas');c.width=1000;c.height=520;const cx=c.getContext('2d');
+cx.fillStyle='#000';cx.font='700 340px Georgia,serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('100',500,255);
+const img=cx.getImageData(0,0,1000,520).data,pts=[];
+for(let y=30;y<480;y+=8)for(let x=30;x<970;x+=8)if(img[(y*1000+x)*4+3]>100)pts.push([x,y]);
+const petals=[];let startTime=0,running=false,ac=null;
+function home(i){return [40+(i%20)*48+(i%3)*3,garden.clientHeight-40-Math.floor(i/20)*10]}
+function target(i){return pts[Math.floor(i*pts.length/N)]||[500,250]}
+for(let i=0;i<N;i++){const p=document.createElement('div');p.className='petal'+(i%4===0?' g':'');garden.appendChild(p);petals.push(p)}
+function frame(t){if(!startTime){startTime=t;running=true}const e=(t-startTime)/1000,g=e<1.8?e/1.8:e<2.5?1:e<3.1?1-(e-2.5)/.6:0,k=g<.5?2*g*g:1-Math.pow(-2*g+2,2)/2;petals.forEach((p,i)=>{const h=home(i),q=target(i),sx=q[0]/1000*garden.clientWidth,sy=q[1]/520*garden.clientHeight,x=h[0]+(sx-h[0])*k,y=h[1]+(sy-h[1])*k;p.style.transform='translate('+x+'px,'+y+'px) rotate('+(k*((i%7)-3)*28)+'deg) scale('+(.65+k*.5)+')';p.style.opacity=.55+k*.45});if(e<3.15)requestAnimationFrame(frame);else{startTime=0;running=false}}
+function replay(){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();if(running)return;startTime=0;requestAnimationFrame(frame)}
+garden.addEventListener('click',replay);
+garden.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();replay()}});
+if(reduce){petals.forEach((p,i)=>{const q=target(i);p.style.transform='translate('+(q[0]/1000*garden.clientWidth)+'px,'+(q[1]/520*garden.clientHeight)+'px)'});document.getElementById('count').textContent='100 · HELD'}else requestAnimationFrame(frame);
+</script>
+</body>
+</html>

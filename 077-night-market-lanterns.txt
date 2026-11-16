@@ -1,0 +1,14 @@
+TITLE
+Lantern Street — Nine Stalls After the Rain
+
+PROMPT
+A narrow night market seen down a wet street: deep red #4B101A walls, black #130C0D shadows, gold #E7B44B lanterns hung at nine depths. Each lantern is a small paper cylinder with ribs and a dark cap, suspended by a string. On load they sway in a slow staggered sequence, then almost stop. Hovering one lantern makes it swing harder and grows a pool of warm light on the street below, revealing a tiny vendor detail: a tea canister, a mending basket, a stack of sweet-rice bowls, an umbrella stand. Signature moment: a stall appearing out of the dark only where the lantern's light reaches. No emoji, no generic bokeh, no purple.
+
+DESCRIPTION
+A night-market street where swinging lanterns cast pools of light that reveal small vendor details.
+
+VISUAL TECHNIQUES
+CSS paper lanterns with ribbing and perspective scale, staggered sway animation, radial light pools, hidden detail reveals, wet-street reflections.
+
+INTERACTION MODEL
+Hover or focus a lantern to swing it and light its stall. Keyboard: lanterns are buttons. Reduced motion keeps lanterns still but hover reveals the light.

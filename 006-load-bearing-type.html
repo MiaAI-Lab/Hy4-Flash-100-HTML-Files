@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Load Bearing — A Typographic Stress Test</title>
+<style>
+  :root{--coal:#24231F;--yellow:#F2C500;--concrete:#B9B5AC;--ink:#11110F}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--coal);color:var(--concrete);font-family:"Courier New",Courier,monospace;overflow:hidden}
+  body{background-image:linear-gradient(rgba(185,181,172,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(185,181,172,.055) 1px,transparent 1px);background-size:42px 42px}
+  .shell{height:100vh;min-height:540px;display:grid;grid-template-columns:minmax(210px,25%) 1fr minmax(130px,15%);gap:clamp(10px,1.6vw,24px);padding:clamp(14px,2vw,28px)}
+  .left{border-right:1px solid rgba(185,181,172,.3);padding-right:14px;display:flex;flex-direction:column}
+  .mark{font-size:10px;letter-spacing:.24em;line-height:1.7}
+  .mark b{display:block;font:400 clamp(29px,3.3vw,48px)/.88 Georgia,serif;color:var(--yellow);letter-spacing:-.05em;margin:20px 0 14px}
+  .note{font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#D8D3C7;margin-top:18px;max-width:30ch}
+  .warn{margin-top:auto;border:1px solid var(--yellow);color:var(--yellow);padding:8px;font-size:9px;letter-spacing:.16em;transform:rotate(-1deg)}
+  .stage{position:relative;min-width:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10%;overflow:hidden}
+  .letters{display:flex;align-items:flex-end;gap:clamp(2px,1vw,14px);position:relative;z-index:1}
+  .column{font:400 clamp(104px,20vw,270px)/.72 Georgia,"Times New Roman",serif;color:var(--yellow);transform-origin:50% 100%;animation:columnIn .9s cubic-bezier(.16,1.25,.24,1) both;will-change:transform;text-shadow:6px 8px 0 rgba(0,0,0,.28)}
+  .column:nth-child(2){animation-delay:.11s}.column:nth-child(3){animation-delay:.22s}
+  @keyframes columnIn{from{opacity:0;transform:translateY(150%) scaleY(.4)}to{opacity:1;transform:none}}
+  .column.hit{animation:buckle .62s cubic-bezier(.18,1.55,.28,1)}
+  @keyframes buckle{0%{transform:none}18%{transform:scaleY(.60) scaleX(1.22) rotate(-4deg)}48%{transform:scaleY(1.16) scaleX(.9) rotate(3deg)}74%{transform:scaleY(.94) rotate(-1deg)}100%{transform:none}}
+  .slab{position:absolute;left:9%;width:82%;height:clamp(42px,6vh,66px);top:0;z-index:3;cursor:grab;outline:none;touch-action:none;background:linear-gradient(180deg,#D5D1C8,var(--concrete) 55%,#8F8B83);border:2px solid var(--ink);box-shadow:0 9px 0 #6E6A63,0 22px 26px rgba(0,0,0,.36);display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#2A2824;font-size:10px;letter-spacing:.2em;user-select:none;will-change:transform}
+  .slab::before{content:"";position:absolute;inset:6px 10px auto;height:2px;background:repeating-linear-gradient(90deg,#7C786F 0 8px,transparent 8px 18px)}
+  .slab:active{cursor:grabbing}.slab:focus-visible{outline:3px solid var(--yellow);outline-offset:4px}
+  .rivet{width:9px;height:9px;border-radius:50%;background:#75716A;box-shadow:inset 1px 1px 0 #E4E0D8}
+  #dust{position:absolute;inset:0;pointer-events:none;z-index:2}
+  .puff{position:absolute;width:11px;height:11px;border-radius:50%;background:rgba(185,181,172,.6);animation:puff .72s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes puff{to{transform:translate(var(--dx),var(--dy)) scale(2.6);opacity:0}}
+  .floor{position:absolute;left:0;right:0;bottom:9%;height:2px;background:var(--concrete);box-shadow:0 8px 0 rgba(185,181,172,.16)}
+  .right{border-left:1px solid rgba(185,181,172,.3);padding-left:14px;display:flex;flex-direction:column;justify-content:space-between}
+  .right h2{font:400 12px "Courier New",monospace;letter-spacing:.18em;margin:0}
+  #stress{font:400 clamp(30px,3.6vw,52px) Georgia,serif;color:var(--yellow);letter-spacing:-.04em;transition:color .18s ease}
+  #stress.hot{color:#E4472F}
+  .bar{height:170px;width:10px;border:1px solid var(--concrete);position:relative;margin:14px 0}
+  .bar i{position:absolute;bottom:0;left:0;width:100%;height:20%;background:var(--yellow);transition:height .2s cubic-bezier(.2,.8,.2,1)}
+  .tiny{font-size:9px;letter-spacing:.14em;line-height:1.7;opacity:.8}
+  @media(max-width:760px){.shell{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}.left{border-right:0;border-bottom:1px solid rgba(185,181,172,.3);padding:0 0 8px}.mark b{margin:6px 0;display:inline-block}.note,.warn{display:none}.stage{padding-bottom:12%}.right{border-left:0;border-top:1px solid rgba(185,181,172,.3);padding:8px 0 0;flex-direction:row;align-items:center;gap:14px}.bar{height:50px;width:8px;margin:0}.tiny{display:none}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="left">
+    <div class="mark">BUREAU OF IMPOSSIBLE STRUCTURES<b>LOAD<br>BEARING</b><span>SHEET 04 / TYPOGRAPHIC SPANS</span></div>
+    <p class="note">Three letters have agreed to carry the ceiling. The agreement is verbal and not notarised.</p>
+    <div class="warn">SPAN 4.2 M<br>TOLERANCE: OPTIMISTIC<br>DO NOT DROP FROM HEIGHT</div>
+  </aside>
+  <main class="stage" id="stage">
+    <div class="letters" id="letters"><div class="column">A</div><div class="column">T</div><div class="column">E</div></div>
+    <div id="dust"></div>
+    <div class="floor"></div>
+    <div class="slab" id="slab" tabindex="0" role="button" aria-label="Concrete slab. Drag upward and release to drop."><span class="rivet"></span><span>SLAB 04 · 480 KG</span><span class="rivet"></span></div>
+  </main>
+  <aside class="right">
+    <h2>STRESS METER</h2>
+    <div><span id="stress">0.20</span><div class="tiny">kN / PER LETTER<br>PEAK RECORD —</div></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="tiny">DRAG THE SLAB · RELEASE TO LOAD<br>R RESETS THE APPARATUS</div>
+  </aside>
+</div>
+<script>
+(function(){
+  const stage=document.getElementById('stage'),letters=document.getElementById('letters'),slab=document.getElementById('slab'),cols=[...document.querySelectorAll('.column')],dust=document.getElementById('dust'),stress=document.getElementById('stress'),bar=document.getElementById('barFill'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let y=0,vy=0,rest=260,dragging=false,grab=0,lastImpact=0;
+  function measure(){const sr=stage.getBoundingClientRect(),lr=letters.getBoundingClientRect();rest=lr.top-sr.top-slab.offsetHeight-2;}
+  function place(){slab.style.transform=`translateY(${y.toFixed(2)}px)`;}
+  function impact(v){
+    const strength=Math.min(1,v/16);
+    cols.forEach((c,i)=>{c.classList.remove('hit');void c.offsetWidth;c.style.animationDelay=(i*60)+'ms';c.classList.add('hit');setTimeout(()=>c.classList.remove('hit'),700+i*60);});
+    const kN=(.2+strength*1.2);stress.textContent=kN.toFixed(2);stress.classList.add('hot');setTimeout(()=>stress.classList.remove('hot'),420);
+    bar.style.height=Math.max(10,Math.min(100,kN/1.4*100))+'%';
+    if(reduced)return;
+    const sr=stage.getBoundingClientRect();
+    for(let i=0;i<16;i++){const p=document.createElement('div');p.className='puff';p.style.left=(18+Math.random()*64)+'%';p.style.top=(rest+slab.offsetHeight-sr.top*0)+'px';p.style.setProperty('--dx',(Math.random()-.5)*100+'px');p.style.setProperty('--dy',(-10-Math.random()*45)+'px');dust.appendChild(p);setTimeout(()=>p.remove(),760);}
+  }
+  function reset(){measure();y=rest-190;vy=0;place();stress.textContent='0.20';bar.style.height='20%';}
+  function frame(){
+    measure();
+    if(!dragging){
+      vy+=.62;y+=vy;
+      if(y>=rest){const v=vy;y=rest;if(v>3&&performance.now()-lastImpact>160){impact(v);lastImpact=performance.now();}vy=-vy*.26;if(Math.abs(vy)<1.1)vy=0;}
+      place();
+    }
+    requestAnimationFrame(frame);
+  }
+  slab.addEventListener('pointerdown',e=>{measure();dragging=true;grab=e.clientY-(stage.getBoundingClientRect().top+y);slab.setPointerCapture(e.pointerId);});
+  slab.addEventListener('pointermove',e=>{if(!dragging)return;y=Math.max(-40,Math.min(rest-6,e.clientY-stage.getBoundingClientRect().top-grab));vy=0;place();});
+  slab.addEventListener('pointerup',()=>{dragging=false;vy=0;});
+  slab.addEventListener('pointercancel',()=>{dragging=false;vy=0;});
+  slab.addEventListener('keydown',e=>{
+    if(e.key==='ArrowUp'){y=Math.max(-40,y-50);vy=0;place();e.preventDefault();}
+    if(e.key==='ArrowDown'){vy=3;e.preventDefault();}
+    if(e.key.toLowerCase()==='r'){reset();e.preventDefault();}
+  });
+  window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='r'&&document.activeElement!==slab)reset();});
+  addEventListener('resize',()=>{measure();place();});
+  reset();setTimeout(()=>{vy=2;},900);frame();
+})();
+</script>
+</body>
+</html>

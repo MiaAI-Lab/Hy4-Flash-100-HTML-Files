@@ -1,0 +1,14 @@
+TITLE
+Needle & Voltage — An Anatomical Circuit
+
+PROMPT
+A clinical scientific plate imagining the human heart as a wired instrument. Bone paper #F1E9D8 background, oxidised red #A83B32 for anatomy, teal #2E7D7A for electrical traces, graphite labels. Layout: a wide two-column plate with a large SVG heart and vascular system on the left, and a narrow instrument panel on the right. Tiny caption at the top reads “PLATE VIII: THE PUMP AS CIRCUIT, AFTER H. VESALIUS (FICTIONAL)”. The heart is an accurate-looking but stylised line drawing with chambers drawn as nested paths; from it emerge teal circuit traces with small solder nodes and resistor glyphs. A horizontal range slider controls rate from 40 to 140 beats per minute. A visible numeric readout and a small ECG strip update live. Entrance: heart outline draws over 1.4s, circuit traces over 1.1s with a delay, then the first pulse travels through the network. Interaction: dragging the slider changes rate immediately; clicking the heart triggers a single extra systole and a visible surge along one chosen trace. Keyboard slider and heart focus support. Signature moment: heart and circuit pulse in exact alternation—one frame the heart contracts and the traces dim, the next the traces glow while the heart relaxes—creating the impression of an electrical relay. Copy: invented chamber names, voltage values, lead numbers, and a footnote about the instrument’s maker. No sound and no external assets.
+
+DESCRIPTION
+An anatomical plate crossed with a circuit schematic. The viewer sets the rate of a stylised heart and watches electrical charge move through its vascular wiring in precise alternation with each contraction.
+
+VISUAL TECHNIQUES
+SVG stroke drawing, procedural ECG Canvas or SVG path, requestAnimationFrame pulse scheduling, CSS filter glow, custom-styled range input, keyboard-accessible interactive SVG, reduced-motion static waveform.
+
+INTERACTION MODEL
+Drag the slider or use arrow keys to set 40–140 bpm. Click or press Enter on the heart for an extra beat. The ECG and circuit respond continuously; no audio is produced.

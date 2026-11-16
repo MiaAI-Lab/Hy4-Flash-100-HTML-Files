@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardiology of a Clock — Twelve Arteries, One Second</title>
+<style>
+:root{--bone:#EDE7D8;--ink:#1F1D1A;--red:#B4362C;--fade:#A8A294}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bone);color:var(--ink);font-family:Arial,Helvetica,sans-serif;display:grid;grid-template-columns:minmax(240px,27vw) 1fr}
+aside{padding:clamp(24px,3vw,48px);border-right:1px solid var(--fade);display:flex;flex-direction:column;gap:16px}
+h1{font:400 clamp(22px,2.4vw,34px)/1.05 Georgia,serif;margin:0;letter-spacing:-.02em}
+.quote{font:italic 15px/1.5 Georgia,serif;margin:0;max-width:24ch;border-left:2px solid var(--red);padding-left:14px}
+.meta{font:9px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#6B665C}
+.ctrl{margin-top:auto;border-top:1px solid var(--ink);padding-top:16px}
+.bpm{font:400 46px/1 Georgia,serif;letter-spacing:-.04em;color:var(--red)}
+input[type=range]{width:100%;accent-color:var(--red);margin:14px 0 4px}
+.note{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.12em}
+main{display:grid;place-items:center;padding:16px;min-width:0}
+svg{width:min(100%,78vh);height:auto;display:block;cursor:pointer;outline:none}
+svg:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.artery{fill:none;stroke:var(--red);stroke-width:1.6;opacity:.5;stroke-dasharray:330;stroke-dashoffset:330;animation:grow .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*.075s)}
+@keyframes grow{to{stroke-dashoffset:0}}
+.num{font:400 24px Georgia,serif;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;opacity:0;animation:appear .4s ease-out 1.05s forwards}
+@keyframes appear{to{opacity:1}}
+.rim{fill:none;stroke:var(--ink);stroke-width:1;opacity:.25}
+.needle{stroke:var(--ink);stroke-linecap:round}
+.second{stroke:var(--red);stroke-width:2}
+.core{fill:var(--ink);transform-origin:350px 350px;transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
+.core.beat{transform:scale(1.28)}
+.drop{fill:var(--red)}
+.ecg{fill:none;stroke:var(--red);stroke-width:4;stroke-linejoin:round;stroke-linecap:round;opacity:0;stroke-dasharray:640;stroke-dashoffset:640}
+.ecg.draw{animation:ecg 1.1s ease-out forwards}
+@keyframes ecg{0%{opacity:0;stroke-dashoffset:640}12%{opacity:1}80%{opacity:1}100%{opacity:0;stroke-dashoffset:0}}
+.ecg-on .num,.ecg-on .artery{opacity:0!important}
+@media(max-width:700px){body{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{border-right:0;border-bottom:1px solid var(--fade);gap:8px}.quote{font-size:13px}.ctrl{margin-top:4px}.bpm{font-size:30px}}
+@media(prefers-reduced-motion:reduce){.artery,.num{animation:none;stroke-dashoffset:0;opacity:1}.ecg.draw{animation:none}.core{transition:none}}
+</style>
+</head>
+<body>
+<aside>
+  <h1>Cardiology<br>of a Clock</h1>
+  <p class="quote">The second is not a unit. It is a small animal.</p>
+  <div class="meta">TWELVE ARTERIES<br>ONE DROP PER BEAT<br>BLOOD: #B4362C</div>
+  <div class="ctrl"><div class="bpm" id="bpmText">72 BPM</div><input id="bpm" type="range" min="40" max="140" value="72" aria-label="Heart rate in beats per minute"><div class="note" id="status">CLICK THE FACE TO PAUSE</div></div>
+</aside>
+<main><svg id="clock" viewBox="0 0 700 700" tabindex="0" role="img" aria-label="Clock face with arteries and travelling blood drops">
+  <circle class="rim" cx="350" cy="350" r="272"/><circle class="rim" cx="350" cy="350" r="248"/>
+  <g id="arteries"></g><g id="numerals"></g><g id="drops"></g>
+  <path class="ecg" id="ecg" d="M105 350 L250 350 L278 350 L292 308 L313 398 L336 332 L354 350 L420 350 L432 336 L444 350 L595 350"/>
+  <g id="hands"><line class="needle" id="hour" x1="350" y1="350" x2="350" y2="205" stroke-width="5"/><line class="needle" id="minute" x1="350" y1="350" x2="350" y2="140" stroke-width="3"/><line class="second" id="second" x1="350" y1="372" x2="350" y2="120"/></g>
+  <path class="core" id="core" d="M350 323 C337 307 314 314 314 334 C314 351 337 367 350 378 C363 367 386 351 386 334 C386 314 363 307 350 323Z"/>
+</svg></main>
+<script>
+const NS='http://www.w3.org/2000/svg',arteries=document.getElementById('arteries'),numerals=document.getElementById('numerals'),dropsG=document.getElementById('drops'),clock=document.getElementById('clock'),bpm=document.getElementById('bpm'),bpmText=document.getElementById('bpmText'),status=document.getElementById('status'),hour=document.getElementById('hour'),minute=document.getElementById('minute'),second=document.getElementById('second'),core=document.getElementById('core'),ecg=document.getElementById('ecg');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,paths=[];
+for(let h=0;h<12;h++){
+  const a=(h*30-90)*Math.PI/180,ix=350+Math.cos(a)*36,iy=350+Math.sin(a)*36,ex=350+Math.cos(a)*214,ey=350+Math.sin(a)*214,mx=350+Math.cos(a+.12)*128,my=350+Math.sin(a+.12)*128;
+  const p=document.createElementNS(NS,'path');p.setAttribute('class','artery');p.setAttribute('d',`M${ix} ${iy} Q${mx} ${my} ${ex} ${ey}`);p.style.setProperty('--i',h);arteries.appendChild(p);paths.push(p);
+  const n=document.createElementNS(NS,'text');n.setAttribute('class','num');n.setAttribute('x',350+Math.cos(a)*238);n.setAttribute('y',350+Math.sin(a)*238);n.textContent=h===0?'12':String(h);numerals.appendChild(n);
+}
+const active=[];let beat=0,last=0,paused=false;
+function spawn(h,strength){const c=document.createElementNS(NS,'circle');c.setAttribute('class','drop');c.setAttribute('r',4+strength*3);dropsG.appendChild(c);active.push({el:c,path:paths[h],start:performance.now(),dur:Math.max(220,60000/+bpm.value*.72)})}
+function tick(now){
+  const rate=+bpm.value,interval=60000/rate;
+  if(!paused&&now-last>=interval){last=now;const h=beat%12;spawn(h,beat%12===0?1:0);beat++;core.classList.add('beat');setTimeout(()=>core.classList.remove('beat'),150);if(beat%12===0&&!reduce){clock.classList.add('ecg-on');ecg.classList.remove('draw');void ecg.getBoundingClientRect();ecg.classList.add('draw');setTimeout(()=>clock.classList.remove('ecg-on'),1100)}}
+  for(let i=active.length-1;i>=0;i--){const d=active[i],p=Math.min(1,(now-d.start)/d.dur);if(reduce){d.el.remove();active.splice(i,1);continue}const pt=d.path.getPointAtLength(d.path.getTotalLength()*p);d.el.setAttribute('cx',pt.x);d.el.setAttribute('cy',pt.y);d.el.setAttribute('opacity',p>.85?(1-p)/.15:1);if(p>=1){d.el.remove();active.splice(i,1)}}
+  const d=new Date(),secs=paused?0:(beat%12)+Math.min(1,(now-last)/interval),secAngle=secs*30;
+  second.setAttribute('transform',`rotate(${secAngle-90} 350 350)`);
+  hour.setAttribute('transform',`rotate(${(d.getHours()%12)*30+d.getMinutes()*.5-90} 350 350)`);
+  minute.setAttribute('transform',`rotate(${d.getMinutes()*6-90} 350 350)`);
+  requestAnimationFrame(tick)
+}
+bpm.addEventListener('input',()=>bpmText.textContent=bpm.value+' BPM');
+function toggle(){paused=!paused;status.textContent=paused?'PAUSED · CLICK TO RESUME':'CLICK THE FACE TO PAUSE'}
+clock.addEventListener('click',toggle);clock.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();toggle()}});
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

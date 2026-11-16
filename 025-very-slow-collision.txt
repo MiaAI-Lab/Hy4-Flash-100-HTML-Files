@@ -1,0 +1,14 @@
+TITLE
+A Very Slow Collision — Two Sentences at a Fault Line
+
+PROMPT
+A brutalist typographic experiment in two colours: acid yellow #E5FF3D and charcoal #191A17, with one oxide-red #D6472B warning line. The viewport is split vertically by a jagged fault. Left plate carries a enormous repeated charcoal sentence “THE GROUND REMEMBERS”; right plate carries “THE GROUND FORGETS” in yellow on charcoal. Both are set flush, cropped, and slightly out of alignment. Dragging the right plate horizontally with the pointer moves it against the left; a stress meter at the top increases from 0 to 100. As stress rises, letters near the fault visibly shear — individual characters shift by a few pixels, then snap back — and a thin red seam appears. Releasing lets the plate spring back slowly, not instantly. If stress passes 90, a short earthquake ripple travels through both plates and a new sentence is stamped across the seam: “WHAT IS LEFT IS CALLED A HILL”. Entrance: the two plates slide together from opposite edges until the fault meets, with a hard stop. Signature moment: the shear is per-letter, so the words tear character by character before the quake. No emoji, no cards, no gradients. Reduced motion moves the plate without shear and triggers the stamp without ripple.
+
+DESCRIPTION
+A slow-motion tectonic metaphor made of type. Dragging one sentence against the other makes letters shear, a red fault glow, and a landscape emerge from the collision.
+
+VISUAL TECHNIQUES
+Pointer-drag with damped spring return, per-character transform driven by distance to fault, CSS clip-path jagged seam, stress meter, ripple keyframes, stamped overlay text.
+
+INTERACTION MODEL
+Drag the right plate; release to let it settle. Keyboard users use left/right arrows on a focusable plate. An earthquake fires above a stress threshold.

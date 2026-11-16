@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sewing Frame — Three Signatures and a Needle</title>
+<style>
+:root{--linen:#C9BDA6;--indigo:#243B53;--thread:#A8443A}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--linen);color:var(--indigo);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:repeating-linear-gradient(90deg,rgba(36,59,83,.03) 0 1px,transparent 1px 5px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--indigo);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.work{display:flex;gap:24px;height:calc(100vh - 100px);min-height:470px}
+.frame{flex:1;position:relative;min-width:0;border:1px solid rgba(36,59,83,.3)}
+svg{width:100%;height:100%;display:block}
+.page{fill:rgba(255,255,255,.35);stroke:var(--indigo);stroke-width:1.5}
+.fold{fill:none;stroke:rgba(36,59,83,.35);stroke-width:1}
+.cord{stroke:var(--indigo);stroke-width:4}
+.wood{fill:#9E8A6C;stroke:var(--indigo);stroke-width:2}
+.station{fill:var(--linen);stroke:var(--indigo);stroke-width:2;cursor:pointer}
+.station:hover,.station:focus-visible{fill:var(--thread);outline:none}
+.station.sewn{fill:var(--thread)}
+.stitch{fill:none;stroke:var(--thread);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset .5s}
+.stitch.drawn{stroke-dashoffset:0}
+.needle{stroke:var(--indigo);stroke-width:4;stroke-linecap:round;transition:transform .32s cubic-bezier(.3,1.2,.4,1)}
+.needle:after{fill:var(--indigo)}
+.panel{width:220px;flex:none;border:1px solid rgba(36,59,83,.3);padding:14px}
+.panel h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0 0 12px;color:var(--thread)}
+.count{font:400 46px/1 Georgia,serif;color:var(--thread)}
+.count small{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--indigo)}
+.help{font:italic 12px/1.7 Georgia,serif;color:rgba(36,59,83,.7);margin-top:18px}
+@media(max-width:680px){body{padding:12px}.work{flex-direction:column}.panel{width:auto;height:140px}.count{font-size:30px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Sewing Frame</h1><span class="meta">BINDERY 093 · THREE SIGNATURES · LINEN THREAD</span></header>
+<div class="work">
+ <div class="frame"><svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <rect class="wood" x="160" y="80" width="580" height="18"/><rect class="wood" x="160" y="440" width="580" height="22"/><rect class="wood" x="160" y="80" width="18" height="382"/><rect class="wood" x="722" y="80" width="18" height="382"/>
+  <line class="cord" x1="180" y1="118" x2="720" y2="118"/>
+  <path class="page" d="M300 118 H620 V410 H300 Z"/><path class="fold" d="M460 118 V410 M300 264 H620"/>
+  <path class="page" d="M310 126 H630 V418 H310 Z" opacity=".7"/><path class="fold" d="M470 126 V418"/>
+  <path class="page" d="M320 134 H640 V426 H320 Z" opacity=".45"/><path class="fold" d="M480 134 V426"/>
+  <path class="stitch" id="stitch" d=""/>
+  <g id="stations"></g>
+  <line class="needle" id="needle" x1="250" y1="90" x2="250" y2="166"/>
+ </svg></div>
+ <div class="panel"><h2>STITCHES</h2><div class="count"><span id="count">00</span><small> / 06</small></div><div class="help">Click a hole in the spine. The needle pulls the red thread through every fold.</div></div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',stationsG=document.getElementById('stations'),stitch=document.getElementById('stitch'),needle=document.getElementById('needle'),count=document.getElementById('count'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const ys=[170,220,270,320,370,420],xs=[300,470,640];
+let sewn=[],ac=null;
+ys.forEach((y,i)=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',300);c.setAttribute('cy',y);c.setAttribute('r',8);c.setAttribute('class','station');c.setAttribute('tabindex','0');c.dataset.i=i;stationsG.appendChild(c);const t=document.createElementNS(NS,'text');t.setAttribute('x',278);t.setAttribute('y',y+4);t.setAttribute('fill','rgba(36,59,83,.5)');t.setAttribute('font-size','10');t.setAttribute('font-family','ui-monospace,monospace');t.textContent=String(i+1).padStart(2,'0');stationsG.appendChild(t)});
+function tug(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.setValueAtTime(320,t);o.frequency.exponentialRampToValueAtTime(180,t+.12);g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+.16);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.18)}
+function render(){let d='M300 118';sewn.forEach((i,k)=>{const y=ys[i],x=xs[k%3];d+=' L'+x+' '+y+' L'+300+' '+(y+16)});stitch.setAttribute('d',d);stitch.classList.remove('drawn');void stitch.getBoundingClientRect();stitch.classList.add('drawn');count.textContent=String(sewn.length).padStart(2,'0');[...stationsG.querySelectorAll('.station')].forEach((c,n)=>c.classList.toggle('sewn',sewn.includes(n)))}
+function moveNeedle(i,cb){const y=ys[i];needle.style.transform='translate(0,'+(y-90)+'px)';setTimeout(()=>{needle.style.transform='translate(0,0)';cb()},reduce?1:330)}
+function sew(i){if(sewn.includes(i)||sewn.length>=6)return;if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();sewn.push(i);tug();moveNeedle(i,render)}
+stationsG.addEventListener('click',e=>{if(e.target.dataset.i!==undefined)sew(+e.target.dataset.i)});
+stationsG.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i!==undefined){e.preventDefault();sew(+e.target.dataset.i)}});
+document.addEventListener('keydown',e=>{if(/^[1-6]$/.test(e.key))sew(+e.key-1)});
+render();
+if(reduce){for(let i=0;i<6;i++){if(!sewn.includes(i))sewn.push(i)}render()}else{[0,2,4].forEach((i,k)=>setTimeout(()=>sew(i),500+k*800))}
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oxide River — A Current You Can Disturb</title>
+<style>
+:root{--red:#C4462B;--cream:#F2E8D6;--ink:#1C1B18}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.head{position:absolute;left:clamp(20px,3vw,48px);top:clamp(20px,3vw,42px);pointer-events:none}
+h1{font:900 clamp(34px,5.6vw,82px)/.84 'Arial Narrow',Impact,sans-serif;letter-spacing:-.04em;text-transform:uppercase;margin:0}
+.head p{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#6E6257;margin:10px 0 0;text-transform:uppercase}
+.count{position:absolute;right:clamp(20px,3vw,48px);bottom:clamp(20px,3vw,38px);text-align:right;pointer-events:none}
+.count strong{font:300 62px/.8 Arial,sans-serif;letter-spacing:-.07em;color:var(--red)}
+.count span{display:block;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#6E6257;margin-top:9px;text-transform:uppercase}
+button{position:absolute;left:clamp(20px,3vw,48px);bottom:clamp(20px,3vw,38px);background:var(--ink);color:var(--cream);border:0;padding:11px 16px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+button:hover{background:var(--red)}
+button:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.hint{position:absolute;left:50%;bottom:clamp(20px,3vw,38px);transform:translateX(-50%);font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#6E6257;pointer-events:none}
+@media(max-width:700px){h1{font-size:36px}.hint{display:none}.count strong{font-size:42px}}
+</style>
+</head>
+<body>
+<canvas id="river" width="1200" height="700" role="img" aria-label="An animated river of red dashes responding to pointer and stones"></canvas>
+<div class="head"><h1>Oxide River</h1><p>Flow measured at the ford · 16:20<br>Dashes are not particles. They are directions.</p></div>
+<div class="count"><strong id="speed">04</strong><span>cm/s current · <span id="stones">00</span> stones dropped</span></div>
+<div class="hint">MOVE TO PULL THE WATER · CLICK TO DROP A STONE</div>
+<button id="drop" type="button">Drop stone</button>
+<script>
+const c=document.getElementById('river'),x=c.getContext('2d'),speed=document.getElementById('speed'),stonesN=document.getElementById('stones'),drop=document.getElementById('drop');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,W=1200,H=700;
+let dots=[],vortices=[],pointer={x:600,y:350,on:false},lag={x:600,y:350},stones=0,start=performance.now();
+for(let i=0;i<1500;i++)dots.push({x:Math.random()*W,y:Math.random()*H,px:0,py:0});
+function coord(e){const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}}
+function fieldAngle(p,t,bend){
+  let a=(Math.sin(p.y*.009+t*.00045)*.36+Math.sin(p.x*.004-p.y*.006)*.16)*bend;
+  if(pointer.on){const dx=pointer.x-p.x,dy=pointer.y-p.y,d=Math.hypot(dx,dy),w=Math.exp(-d*d/46000)*.85;a+=Math.atan2(dy,dx)*w}
+  vortices.forEach(v=>{const dx=v.x-p.x,dy=v.y-p.y,d=Math.hypot(dx,dy);if(d<230&&d>2){const w=(1-d/230)*v.life*2.2;a+=((Math.atan2(dy,dx)+Math.PI/2)-a)*w;if(v.life>.96)a+=Math.PI}});
+  return a
+}
+function frame(now){
+  const t=now-start,bend=Math.min(1,t/2000);
+  x.fillStyle='rgba(242,232,214,.055)';x.fillRect(0,0,W,H);
+  lag.x+=(pointer.x-lag.x)*.045;lag.y+=(pointer.y-lag.y)*.045;
+  x.lineWidth=1.4;x.strokeStyle='rgba(196,70,43,.30)';x.beginPath();
+  let sum=0;
+  dots.forEach(p=>{const a=fieldAngle(p,t,bend),vx=Math.cos(a)*2.5,vy=Math.sin(a)*1.35;sum+=Math.hypot(vx,vy);p.px=p.x;p.py=p.y;p.x+=vx;p.y+=vy;if(p.x>W+8||p.x< -8||p.y>H+8||p.y< -8){p.x=Math.random()*W;p.y=Math.random()*H;p.px=p.x;p.py=p.y}x.moveTo(p.px,p.py);x.lineTo(p.x,p.y)});
+  x.stroke();
+  vortices.forEach(v=>{v.life-=.0045;if(v.life<=0)return;x.strokeStyle=`rgba(28,27,24,${.16*v.life})`;x.lineWidth=1;x.beginPath();x.arc(v.x,v.y,230*(1-v.life)+14,0,Math.PI*2);x.stroke()});
+  vortices=vortices.filter(v=>v.life>0);
+  speed.textContent=String(Math.max(1,Math.min(9,Math.round(sum/dots.length*2.1)))).padStart(2,'0');
+  requestAnimationFrame(frame)
+}
+function stone(p){stones++;stonesN.textContent=String(stones).padStart(2,'0');vortices.push({x:p.x,y:p.y,life:1});if(reduce)drawStatic()}
+function drawStatic(){
+  x.fillStyle='#F2E8D6';x.fillRect(0,0,W,H);x.lineWidth=1.4;x.strokeStyle='rgba(196,70,43,.55)';x.beginPath();
+  dots.forEach(p=>{const a=fieldAngle(p,800,1);x.moveTo(p.x,p.y);x.lineTo(p.x+Math.cos(a)*15,p.y+Math.sin(a)*15)});x.stroke();
+  vortices.forEach(v=>{x.strokeStyle='rgba(28,27,24,.4)';x.beginPath();x.arc(v.x,v.y,44,0,Math.PI*2);x.stroke()});
+}
+c.addEventListener('pointermove',e=>pointer={...coord(e),on:true});
+c.addEventListener('pointerleave',()=>pointer.on=false);
+c.addEventListener('pointerdown',e=>stone(coord(e)));
+drop.addEventListener('click',()=>stone({x:W/2,y:H/2}));
+if(reduce){drawStatic()}else{x.fillStyle='#F2E8D6';x.fillRect(0,0,W,H);requestAnimationFrame(frame)}
+</script>
+</body>
+</html>

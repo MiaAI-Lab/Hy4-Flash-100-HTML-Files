@@ -1,0 +1,14 @@
+TITLE
+A Dictionary of Doors — Six Entrances to Small Rooms
+
+PROMPT
+A typographic dictionary where every entry is a physical door. Palette: deep forest #17332B ground, bone #EFE7D8 panels, brass #C79A4B fittings, one oxblood #A63B2C for “occupied”. Left third: a strict alphabetical index of six entries — Aft, Borrow, Custody, Draft, Echo, Forfeit — each with part of speech and a very short definition. Right two thirds: a large door drawn in CSS 3D, closed at first, with a brass knob and a small number plate. Clicking an entry or the door swings the leaf open on its left hinge with a damped overshoot; beyond it is a differently coloured small room containing one object and one sentence of invented story. A trapezoid of light spills from the doorway onto the floor, widening as the door opens. Entrance: the six index lines type in quickly, then the door handle turns once by itself. Signature moment: when the door opens, the sentence inside is revealed in two stages — first the noun, then the rest — as if the room were remembering. Copy examples: “Aft, n. The room behind a room, kept for things that arrived late.” · “Forfeit, v. To leave a coat and take someone else's weather.” No emoji, no cards, no gradients on type. Reduced motion opens the door without overshoot and shows the full sentence at once.
+
+DESCRIPTION
+A lexicon of rooms reached through doors. Each definition is literal: selecting a word opens its door and reveals the small, strange interior that word names.
+
+VISUAL TECHNIQUES
+CSS perspective and rotateY on a hinged leaf, cubic-bezier overshoot, CSS-drawn knob and plate, light-spill polygon via clip-path, staged text reveal, keyboard-accessible index.
+
+INTERACTION MODEL
+Click an index word or the door to open; select another word to swap rooms; Escape closes. Focus rings use brass, never browser defaults.

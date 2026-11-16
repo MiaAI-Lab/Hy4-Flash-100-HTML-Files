@@ -1,0 +1,14 @@
+TITLE
+The Sewing Frame — Three Signatures and a Needle
+
+PROMPT
+A linen #C9BDA6, indigo #243B53 and red-thread #A8443A bookbinding frame. Three folded signatures hang from a tight cord above a small wooden sewing frame. A long needle on a red thread moves down through the folds and back up, making a row of stitches along the spine. On load the needle sews the first three stations in the opening three seconds. Clicking any unused station adds a stitch; the red thread lengthens and the signature count rises. No emoji, no book photograph, no purple.
+
+DESCRIPTION
+A bookbinding frame where a needle stitches folded signatures along the spine.
+
+VISUAL TECHNIQUES
+SVG signatures and stations, animated needle motion, growing thread path, stitch counting, Web Audio thread tug.
+
+INTERACTION MODEL
+Click a station to sew it. Keyboard: 1–6 select stations, Enter repeats the last. Reduced motion sews all six at once.

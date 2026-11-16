@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep-Sea Sonar — Contacts at the Edge of the Sweep</title>
+<style>
+:root{--black:#07100E;--green:#6ED49B;--pale:#D5E7DD}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--pale);font-family:ui-monospace,Menlo,monospace;overflow:hidden}
+body{padding:20px 24px}
+h1{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0}
+.console{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px;margin-top:16px;height:calc(100vh - 70px)}
+.scope{position:relative;display:grid;place-items:center;border:1px solid rgba(214,231,221,.25)}
+canvas{width:100%;height:100%;display:block}
+.side{display:flex;flex-direction:column;justify-content:space-between;min-height:0}
+.read{font-size:11px;letter-spacing:.14em;color:var(--green)}
+.log{border-top:1px solid rgba(214,231,221,.3);padding-top:10px;font-size:10px;line-height:1.8;overflow:hidden;flex:1}
+.log div{opacity:.85;animation:logIn .4s ease-out}
+@keyframes logIn{from{opacity:0;transform:translateX(-8px)}}
+.controls{display:flex;align-items:center;gap:16px;border-top:1px solid rgba(214,231,221,.3);padding-top:14px}
+.dial{width:84px;height:84px;border:2px solid var(--green);border-radius:50%;position:relative;cursor:grab;touch-action:none;flex:none}
+.dial:active{cursor:grabbing}
+.dial:focus-visible{outline:2px solid var(--pale);outline-offset:4px}
+.dial i{position:absolute;left:50%;top:50%;width:3px;height:32px;background:var(--pale);transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(var(--a,0deg));transition:transform .1s}
+.dial b{position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:var(--green)}
+button{background:transparent;border:1px solid var(--green);color:var(--green);padding:9px 10px;font:inherit;font-size:9px;letter-spacing:.14em;cursor:pointer}
+button:hover{background:var(--green);color:var(--black)}
+@media(max-width:760px){.console{grid-template-columns:1fr;height:auto}.scope{height:56vh}.side{gap:12px}.log{height:110px;flex:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<h1>DEEP-SEA SONAR / 57<br>RANGE 800 M · PASSIVE + ACTIVE</h1>
+<div class="console"><div class="scope"><canvas id="c"></canvas></div><div class="side"><div class="read" id="read">SWEEP 12 RPM / RANGE 800 M</div><div class="log" id="log"></div><div class="controls"><div class="dial" id="dial" tabindex="0" role="slider" aria-label="Sweep speed" aria-valuemin="4" aria-valuemax="24" aria-valuenow="12"><i></i><b>RPM</b></div><button id="freeze" type="button">FREEZE</button></div></div></div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),read=document.getElementById('read'),log=document.getElementById('log'),dial=document.getElementById('dial'),freezeBtn=document.getElementById('freeze'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let rpm=12,angle=0,frozen=false,last=performance.now(),hits=[];
+const contacts=[{a:.4,r:.33,type:'FISH',label:'FISH',drift:.00007},{a:1.9,r:.62,type:'WRECK',label:'WRECK',drift:-.00004},{a:3.1,r:.48,type:'UNKNOWN',label:'UNKNOWN',drift:.00011,passes:0},{a:4.5,r:.78,type:'FISH',label:'FISH',drift:.00006},{a:5.4,r:.25,type:'',label:'',drift:-.00009},{a:2.6,r:.86,type:'',label:'',drift:.00005},{a:.9,r:.72,type:'',label:'',drift:-.00006}];
+function resize(){const r=c.parentElement.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;ctx.setTransform(d,0,0,d,0,0)}
+function logLine(ct){const t=new Date().toISOString().slice(11,19),bearing=Math.round(((ct.a%(Math.PI*2))*180/Math.PI+360)%360);const line=document.createElement('div');line.textContent=t+' / '+ct.label+' / '+String(bearing).padStart(3,'0')+'°';log.prepend(line);while(log.children.length>4)log.lastChild.remove()}
+function draw(now){const dt=Math.min(60,now-last);last=now,r=c.width/(devicePixelRatio||1)/2,h=c.height/(devicePixelRatio||1)/2,R=Math.min(r,h)*.86;const w=r*2,hh=h*2;ctx.clearRect(0,0,w,hh);ctx.fillStyle='#07100E';ctx.fillRect(0,0,w,hh);
+ ctx.strokeStyle='rgba(110,212,155,.22)';ctx.lineWidth=1;for(let i=1;i<=4;i++){ctx.beginPath();ctx.arc(r,h,R*i/4,0,Math.PI*2);ctx.stroke()}ctx.beginPath();ctx.moveTo(r-R,h);ctx.lineTo(r+R,h);ctx.moveTo(r,h-R);ctx.lineTo(r,h+R);ctx.stroke();
+ if(!frozen&&!reduce)angle=(angle+dt*rpm*Math.PI*6/60000)%(Math.PI*2);
+ if(!reduce){const trail=.55;for(let i=18;i>=0;i--){const a=angle-i*.018;ctx.strokeStyle='rgba(110,212,155,'+(.24*(1-i/19))+')';ctx.beginPath();ctx.moveTo(r,h);ctx.lineTo(r+Math.cos(a)*R,h+Math.sin(a)*R);ctx.stroke()}}
+ ctx.strokeStyle=trailColor();ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(r,h);ctx.lineTo(r+Math.cos(angle)*R,h+Math.sin(angle)*R);ctx.stroke();
+ contacts.forEach((ct,i)=>{if(!frozen&&!reduce)ct.a=(ct.a+ct.drift*dt)%(Math.PI*2);let diff=Math.abs(((ct.a-angle+Math.PI*3)%(Math.PI*2))-Math.PI);const near=diff<.07;
+  if(near&&!ct.flare&&!reduce){ct.flare=performance.now();hits.push(ct);logLine(ct);if(ct.label==='UNKNOWN'){ct.passes++;if(ct.passes%3===0){ct.a+=.38;ct.r=Math.max(.2,ct.r-.04)}}}
+  if(diff>.3)ct.flare=0;const flare=ct.flare?Math.max(0,1-(performance.now()-ct.flare)/1400):0;
+  const x=r+Math.cos(ct.a)*ct.r*R,y=h+Math.sin(ct.a)*ct.r*R;
+  ctx.beginPath();ctx.arc(x,y,flare?4+flare*4:2.5,0,Math.PI*2);ctx.fillStyle='rgba(110,212,155,'+(.35+flare*.65)+')';ctx.fill();
+  if(flare>.2&&ct.label){ctx.fillStyle='rgba(213,231,221,'+flare+')';ctx.font='10px ui-monospace';ctx.fillText(ct.label,x+8,y+3)}
+ });
+ if(frozen){ctx.fillStyle='#D5E7DD';ctx.font='12px ui-monospace';ctx.fillText('SWEEP FROZEN',20,26)}
+ if(!reduce)requestAnimationFrame(draw)}
+function trailColor(){return '#6ED49B'}
+function setRPM(v){rpm=Math.max(4,Math.min(24,v));const deg=(rpm-4)/20*270-135;dial.style.setProperty('--a',deg+'deg');dial.setAttribute('aria-valuenow',rpm);read.textContent='SWEEP '+rpm+' RPM / RANGE 800 M'}
+let dragging=false;
+dial.addEventListener('pointerdown',e=>{dragging=true;dial.setPointerCapture(e.pointerId)});
+dial.addEventListener('pointermove',e=>{if(!dragging)return;const r=dial.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),a=Math.atan2(dy,dx)*180/Math.PI+90;setRPM(Math.round(4+((a+135+360)%360)/270*20))});
+dial.addEventListener('pointerup',e=>{dragging=false;dial.releasePointerCapture(e.pointerId)});
+dial.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowUp'){setRPM(rpm+1);e.preventDefault()}else if(e.key==='ArrowLeft'||e.key==='ArrowDown'){setRPM(rpm-1);e.preventDefault()}});
+freezeBtn.addEventListener('click',()=>{frozen=!frozen;freezeBtn.textContent=frozen?'RESUME':'FREEZE'});
+addEventListener('resize',resize);resize();setRPM(12);requestAnimationFrame(draw);
+</script>
+</body>
+</html>

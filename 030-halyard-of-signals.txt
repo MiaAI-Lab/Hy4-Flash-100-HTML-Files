@@ -1,0 +1,14 @@
+TITLE
+Halyard of Signals — A Sentence in Flags
+
+PROMPT
+A ship's signal halyard against a flat sea-sky of chalk cream #F6F0E2, ink navy #17324D and signal red #D8402B. A single rope runs diagonally from a cleat at lower left to a masthead at upper right. Beside it, a styled telegraph tape holds the phrase “ALL WEATHER IS LOCAL”. Pressing RAISE sends one signal flag up the rope for each letter: twenty-one rectangular cloth flags with clipped corners and simple geometric patterns drawn in CSS — chevrons, discs, crosses, stripes — never emoji or icons. Each flag rises with a small overshoot and then flutters; the flutter intensifies when the pointer moves quickly, as if the wind has changed. Clicking a flag opens a narrow dictionary margin with the flag's invented maritime meaning, e.g. “G: glass collected from four harbours”. Lowering the message on SEND drops the flags in sequence from left to right, and the sea horizon briefly turns red. Title “HALYARD OF SIGNALS / STATION 30” in spaced monospaced type. Entrance: the rope draws itself, the cleat appears, then the flags rise once from the default message. Signature moment: the flags climb in a staggered wave that exactly matches the letter rhythm, then settle at slightly different heights like real cloth. No rounded cards, no gradients on type, no stock-nautical clutter. Reduced motion raises flags instantly.
+
+DESCRIPTION
+A message becomes a physical run of signal flags on a rope. Wind responds to the pointer, and each flag has its own meaning in a small invented codebook.
+
+VISUAL TECHNIQUES
+SVG rope path, staggered CSS transform animation with overshoot, pointer-velocity-driven flutter amplitude, CSS flag patterns, dictionary panel with live update, sequential lowering.
+
+INTERACTION MODEL
+Edit the phrase and press RAISE; press SEND to lower it. Click any flag to read its meaning. Keyboard: all controls are buttons or labelled text input; flags are focusable.

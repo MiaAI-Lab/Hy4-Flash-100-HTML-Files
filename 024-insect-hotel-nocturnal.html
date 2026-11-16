@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insect Hotel Nocturnal — A Cutaway With Tenants</title>
+<style>
+:root{--kraft:#CBA36C;--ochre:#A86B32;--umber:#3B3225;--moss:#647A4E;--lamp:#F2D06B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--kraft);color:var(--umber);font-family:Arial,Helvetica,sans-serif;transition:background .7s,color .7s}
+body{min-height:100vh;display:grid;grid-template-columns:1fr minmax(280px,26vw)}
+body.night{background:#191C17;color:var(--lamp)}
+main{position:relative;min-width:0;display:grid;place-items:center;padding:20px;overflow:hidden}
+svg{width:100%;height:auto;max-height:92vh;display:block}
+.room{cursor:pointer;outline:none;opacity:0;animation:roomIn .8s cubic-bezier(.18,.86,.2,1.08) both;animation-delay:calc(var(--r)*.08s)}
+@keyframes roomIn{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.box{fill:var(--ochre);stroke:var(--umber);stroke-width:2;transition:fill .45s,stroke .45s}
+.inner{fill:#E3C99A;stroke:rgba(59,50,37,.4);stroke-width:1}
+.night .box{fill:#4A3D2B;stroke:#8B7146}
+.night .inner{fill:#242A20;stroke:#6D704C}
+.room:hover .box,.room:focus-visible .box,.room.lit .box{fill:var(--lamp)}
+.room:focus-visible .box{stroke-width:5}
+.tenant{fill:var(--moss);transition:fill .5s}
+.night .tenant{fill:#9FB486}
+.eyes{fill:var(--lamp);opacity:0;transition:opacity .45s}
+.night .eyes{opacity:1}
+.night .room.lit .eyes{opacity:1;filter:drop-shadow(0 0 5px var(--lamp))}
+.beetle{animation:patrol 4.2s ease-in-out infinite alternate}
+.spider{animation:bob 2.6s ease-in-out infinite alternate}
+.earwig{animation:turn 5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+.moth{animation:flap 1.5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes patrol{to{transform:translateX(32px)}}
+@keyframes bob{to{transform:translateY(-18px)}}
+@keyframes turn{to{transform:rotate(180deg)}}
+@keyframes flap{to{transform:scaleX(.35)}}
+aside{padding:clamp(22px,2.5vw,42px);border-left:2px solid var(--umber);display:flex;flex-direction:column;gap:18px}
+.night aside{border-left-color:#6D704C}
+h1{font:300 clamp(26px,2.8vw,42px)/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;margin:0}
+.sub{font:10px/1.65 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#6C5B3F;margin:0}
+.night .sub{color:#A79C6D}
+.stats{border-top:2px solid currentColor;padding-top:10px;font:10px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase}
+.note{margin-top:auto;border-top:2px solid currentColor;padding-top:14px;min-height:150px}
+.note .no{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--moss)}
+.night .note .no{color:var(--lamp)}
+.note h2{font:400 24px/1.15 Georgia,serif;margin:9px 0}
+.note p{font:13px/1.5 Georgia,serif;margin:0;opacity:.8}
+button{background:var(--umber);color:var(--kraft);border:0;padding:12px 16px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.night button{background:var(--lamp);color:#191C17}
+button:focus-visible{outline:3px solid var(--moss);outline-offset:3px}
+.hint{font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;opacity:.65}
+@media(max-width:760px){body{grid-template-columns:1fr;grid-template-rows:1fr auto}aside{border-left:0;border-top:2px solid var(--umber)}h1{font-size:23px}.note{min-height:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.room{opacity:1}}
+</style>
+</head>
+<body>
+<main><svg id="hotel" viewBox="0 0 900 700" aria-label="Isometric insect hotel with twelve tenants"></svg></main>
+<aside>
+  <div><h1>Insect Hotel<br>Nocturnal</h1><p class="sub">Occupancy recorded at dusk. Tenants are not disturbed by visitors.</p></div>
+  <div class="stats">12 COMPARTMENTS<br>12 RESIDENTS · 1 LAMP</div>
+  <div class="note" aria-live="polite"><div class="no" id="no">ROOM 01 / STRAW</div><h2 id="name">The Patient Woodlouse</h2><p id="note">Patrols the same forty millimetres every evening, turning at a scratch in the straw.</p></div>
+  <button id="lights" type="button" aria-pressed="false">Lights on at dusk</button>
+  <div class="hint">HOVER OR TAB THROUGH ROOMS</div>
+</aside>
+<script>
+const SVGNS='http://www.w3.org/2000/svg',svg=document.getElementById('hotel'),no=document.getElementById('no'),name=document.getElementById('name'),note=document.getElementById('note'),lights=document.getElementById('lights');
+const data=[
+ ['The Patient Woodlouse','Patrols the same forty millimetres every evening, turning at a scratch in the straw.','beetle','STRAW'],
+ ['Eight-Leged Foreman','Bobs twice, pauses, then lowers itself on a thread no longer than a fingernail.','spider','PINECONE'],
+ ['Small Earwig of the Third Tube','Turns slowly through half a revolution and returns; it has never completed the circle.','earwig','DRILLED BLOCK'],
+ ['Moth Without a Name','Opens and closes its wings at the rate of a slow breath, facing the lamp.','moth','HOLLOW STEM'],
+ ['The Grain Beetle','Walks the inner rim of its compartment as if checking a boundary it cannot see.','beetle','STRAW'],
+ ['Tiny Spider, Unnamed','Drops on a thread, climbs back, and repeats with the patience of a clock.','spider','PINECONE'],
+ ['Earwig in Waiting','Spins when the light changes, then settles facing the same direction as yesterday.','earwig','DRILLED BLOCK'],
+ ['Pale Moth','Keeps its wings half open, neither resting nor flying, for most of the night.','moth','HOLLOW STEM'],
+ ['Rust Beetle','Patrols left, then right, but never crosses the seam between two tubes.','beetle','STRAW'],
+ ['Orb Spider, Small','Bobs at the centre of an incomplete web; the missing quarter is deliberate.','spider','PINECONE'],
+ ['Earwig of the Back Row','Turns once an hour, always anticlockwise, always stopping at the same crack.','earwig','DRILLED BLOCK'],
+ ['Last Moth','Fades to a narrow line when watched, then opens again when the room is quiet.','moth','HOLLOW STEM']
+];
+const rooms=[];
+data.forEach((d,i)=>{
+  const c=i%3,r=Math.floor(i/3),x=110+c*230+r*30,y=150+r*126-c*24;
+  const g=document.createElementNS(SVGNS,'g');g.setAttribute('class','room');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',d[0]+', '+d[3]);g.style.setProperty('--r',Math.floor(i/4));
+  const box=document.createElementNS(SVGNS,'polygon');box.setAttribute('class','box');box.setAttribute('points',`${x},${y} ${x+160},${y-42} ${x+212},${y-8} ${x+52},${y+36}`);g.appendChild(box);
+  const inner=document.createElementNS(SVGNS,'polygon');inner.setAttribute('class','inner');inner.setAttribute('points',`${x+24},${y+2} ${x+156},${y-32} ${x+186},${y-12} ${x+54},${y+24}`);g.appendChild(inner);
+  const t=document.createElementNS(SVGNS,'g');t.setAttribute('class','tenant '+d[2]);t.setAttribute('transform',`translate(${x+88},${y-4})`);
+  const body=document.createElementNS(SVGNS,'ellipse');body.setAttribute('class','tenant');body.setAttribute('rx',d[2]==='spider'?9:15);body.setAttribute('ry',d[2]==='moth'?7:10);t.appendChild(body);
+  if(d[2]==='moth'){const w=document.createElementNS(SVGNS,'path');w.setAttribute('class','tenant');w.setAttribute('d','M -4 0 L -26 -18 L -22 6 M 4 0 L 26 -18 L 22 6');w.setAttribute('fill','none');w.setAttribute('stroke','#647A4E');w.setAttribute('stroke-width','5');t.appendChild(w)}
+  if(d[2]==='spider'){for(let k=0;k<4;k++){const leg=document.createElementNS(SVGNS,'line');leg.setAttribute('x1',0);leg.setAttribute('y1',0);leg.setAttribute('x2',(k-1.5)*16);leg.setAttribute('y2',k%2?16:-14);leg.setAttribute('stroke','#647A4E');leg.setAttribute('stroke-width','2');t.appendChild(leg)}}
+  const e=document.createElementNS(SVGNS,'g');e.setAttribute('class','eyes');
+  [-5,5].forEach(dx=>{const dot=document.createElementNS(SVGNS,'circle');dot.setAttribute('cx',dx);dot.setAttribute('cy',-3);dot.setAttribute('r',2.2);e.appendChild(dot)});t.appendChild(e);
+  g.appendChild(t);svg.appendChild(g);rooms.push(g);
+  const show=()=>{rooms.forEach(q=>q.classList.toggle('lit',q===g));no.textContent='ROOM '+String(i+1).padStart(2,'0')+' / '+d[3];name.textContent=d[0];note.textContent=d[1]};
+  g.addEventListener('pointerenter',show);g.addEventListener('focus',show);g.addEventListener('click',show);
+  g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();show()}});
+});
+lights.addEventListener('click',()=>{const on=document.body.classList.toggle('night');lights.setAttribute('aria-pressed',on);lights.textContent=on?'Daylight, please':'Lights on at dusk'});
+</script>
+</body>
+</html>

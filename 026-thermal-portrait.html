@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermal Portrait — A Face at Fourteen Temperatures</title>
+<style>
+:root{--paper:#EEEAE0;--ink:#252722;--cold:#2B5A8C;--cream:#E8DFC8;--hot:#C43B2B}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;display:grid;grid-template-columns:minmax(190px,22vw) 1fr}
+aside{border-right:1px solid #B9B4A8;padding:clamp(22px,3vw,44px);display:flex;flex-direction:column;gap:14px}
+h1{font:300 clamp(19px,2vw,29px)/1.1 Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin:0}
+.kicker{font:9px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#6E6D63}
+.thermo{margin:18px 0;display:flex;gap:14px;height:min(52vh,440px)}
+input[type=range]{writing-mode:vertical-lr;direction:rtl;width:26px;height:100%;accent-color:var(--hot);cursor:ns-resize}
+.scale{display:flex;flex-direction:column;justify-content:space-between;font:9px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6E6D63}
+.readout{border-top:1px solid var(--ink);padding-top:12px;margin-top:auto}
+.temp{font:400 clamp(38px,5vw,68px)/1 Georgia,serif;letter-spacing:-.04em}
+.diag{font:13px/1.5 Georgia,serif;font-style:italic;max-width:24ch;margin:8px 0 0}
+main{display:grid;place-items:center;padding:24px;min-width:0}
+svg{width:min(100%,620px);height:auto;display:block}
+.band{animation:slideIn .65s cubic-bezier(.18,.85,.22,1) both;animation-delay:calc(var(--i)*.055s)}
+@keyframes slideIn{from{opacity:0;transform:translateX(-90px)}to{opacity:1;transform:none}}
+.cold .band{animation:coldShiver .18s steps(2) infinite alternate}
+@keyframes coldShiver{to{transform:translateX(1px)}}
+.detail{fill:none;stroke:#252722;stroke-width:3;stroke-linecap:round}
+.eye{transition:transform .4s}
+.cold .eye{transform:scaleY(.35)}
+.mouth-open{opacity:0;transition:opacity .4s}
+.hot .mouth-open{opacity:1}
+.hot .mouth-line{opacity:0}
+.drop{opacity:0;fill:var(--hot);transition:opacity .5s}
+.hot .drop{opacity:1}
+.secret{font:700 20px/1 Arial,sans-serif;letter-spacing:.04em;fill:var(--paper);opacity:0;transition:opacity .35s;pointer-events:none}
+.reveal .secret{opacity:1}
+@media(max-width:680px){body{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{border-right:0;border-bottom:1px solid #B9B4A8;gap:8px}.thermo{height:130px;flex-direction:row-reverse;align-items:center;margin:4px 0}input[type=range]{writing-mode:horizontal-tb;direction:ltr;height:26px;width:100%}.scale{flex-direction:row;width:100%;justify-content:space-between}.readout{margin-top:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.band{opacity:1}}
+</style>
+</head>
+<body>
+<aside>
+  <h1>Thermal<br>Portrait</h1>
+  <div class="kicker">CASE 026 / SUBJECT UNNAMED<br>CONTINUOUS READING</div>
+  <div class="thermo"><input id="temp" type="range" min="-5" max="42" step="1" value="18" aria-label="Temperature in degrees Celsius"><div class="scale"><span>42°</span><span>37°</span><span>20°</span><span>0°</span><span>−5°</span></div></div>
+  <div class="readout"><div class="temp" id="deg">18°C</div><p class="diag" id="diag">within expected range for a Tuesday</p></div>
+</aside>
+<main>
+<svg id="face" viewBox="0 0 600 620" aria-label="Portrait made of fourteen temperature bands">
+  <defs><clipPath id="silhouette"><path d="M300 74 C210 74 160 144 160 238 C160 318 202 372 236 400 L222 456 C130 478 86 530 74 610 L526 610 C514 530 470 478 378 456 L364 400 C398 372 440 318 440 238 C440 144 390 74 300 74Z"/></clipPath></defs>
+  <g id="bands" clip-path="url(#silhouette)"></g>
+  <g id="features">
+    <path class="detail eye" d="M222 244 Q250 230 276 244 M324 244 Q350 230 378 244"/>
+    <circle cx="249" cy="252" r="4" fill="#252722"/><circle cx="351" cy="252" r="4" fill="#252722"/>
+    <path class="detail" d="M290 268 L282 318 L308 318"/>
+    <path class="detail mouth-line" d="M258 354 Q300 370 342 354"/>
+    <ellipse class="mouth-open" cx="300" cy="358" rx="24" ry="11" fill="#252722"/>
+    <g class="drop"><path d="M410 218 C410 218 398 236 398 244 A12 12 0 0 0 422 244 C422 236 410 218 410 218Z"/><path d="M434 266 C434 266 425 280 425 286 A9 9 0 0 0 443 286 C443 280 434 266 434 266Z"/><path d="M182 262 C182 262 174 274 174 279 A8 8 0 0 0 190 279 C190 274 182 262 182 262Z"/></g>
+    <text class="secret" id="secret" x="300" y="412" text-anchor="middle">I AM NOT ILL, I AM WEATHER</text>
+  </g>
+  <text x="300" y="46" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="4" fill="#6E6D63">FOURTEEN BANDS · ONE BODY</text>
+</svg>
+</main>
+<script>
+const temp=document.getElementById('temp'),deg=document.getElementById('deg'),diag=document.getElementById('diag'),bands=document.getElementById('bands'),face=document.getElementById('face'),secret=document.getElementById('secret'),NS='http://www.w3.org/2000/svg';
+const rects=[];
+for(let i=0;i<14;i++){const r=document.createElementNS(NS,'rect');r.setAttribute('class','band');r.setAttribute('x',120);r.setAttribute('y',60+i*40);r.setAttribute('width',360);r.setAttribute('height',42);r.style.setProperty('--i',i);bands.appendChild(r);rects.push(r)}
+const cold=[43,90,140],mid=[232,223,200],hot=[196,59,43];
+const mix=(a,b,t)=>a.map((v,k)=>Math.round(v+(b[k]-v)*t));
+function colour(t,i){const wave=Math.sin(i*.85+t*.09)*.09;const v=Math.max(0,Math.min(1,t/47+wave));const c=v<.5?mix(cold,mid,v*2):mix(mid,hot,(v-.5)*2);return `rgb(${c[0]},${c[1]},${c[2]})`}
+function diagnosis(t){if(t<0)return 'a winter that has entered the room';if(t<14)return 'cool hands, an unhurried heart';if(t<26)return 'within expected range for a Tuesday';if(t<33)return 'mild optimism, localised in the cheeks';if(t<37)return 'a small internal summer';if(t===37)return 'body temperature. the sentence is listening.';if(t<40)return 'the weather has opinions about you';return 'a fever with excellent posture'}
+let revealTimer;
+function update(){const t=+temp.value;rects.forEach((r,i)=>r.setAttribute('fill',colour(t,i)));deg.textContent=t+'°C';diag.textContent=diagnosis(t);face.classList.toggle('cold',t<8);face.classList.toggle('hot',t>37);if(t===37){face.classList.add('reveal');clearTimeout(revealTimer);revealTimer=setTimeout(()=>face.classList.remove('reveal'),2400)}else face.classList.remove('reveal')}
+temp.addEventListener('input',update);update();
+</script>
+</body>
+</html>

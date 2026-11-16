@@ -1,0 +1,14 @@
+TITLE
+Shadow Theater — A Play Performed by Objects Offstage
+
+PROMPT
+A black box theatre rendered as a single SVG stage. The top two-thirds are near-black #0D0B0A, the bottom is a pale lime-washed floor #F2E9D8 with a hard horizon line. Four small objects sit just above that line — a bottle, a chair, a bird, a key — drawn as flat black silhouettes, but each casts an enormous triangular shadow across the floor from a red light #E24A2B hanging above. Title “SHADOW THEATER” in tall serif capitals at upper left, with a small cast list beneath. A red draggable light handle sits on a horizontal rail near the ceiling. Dragging it left and right recomputes all four shadow polygons in real time: shadows shrink when the light is overhead and stretch, cross and overlap when it moves to an edge. Entrance: the light drops into place, the shadows snap long, then settle with a subtle elastic overshoot. Clicking an object or a cast-list row highlights it, dims the others, and shows a one-line stage direction in a lower margin (“The bottle refuses to be moved. Its shadow does not.”). Signature moment: when the light crosses an object's exact x-position, that object's shadow briefly inverts direction and reveals a thin red seam at its base. No gradients on type, no glass, no emoji. Reduced motion sets the light at centre without animation.
+
+DESCRIPTION
+An interactive shadow play in which unseen objects are known only by the shapes they throw. Moving the light makes the scene legible in a completely physical way.
+
+VISUAL TECHNIQUES
+SVG polygon projection calculated from a light point, pointer events on a rail and handle, elastic easing on initial light drop, opacity isolation per cast member, live stage-direction strip, high-contrast two-plane composition.
+
+INTERACTION MODEL
+Drag the red light along its rail; click or Tab to a cast member to isolate it. Keyboard arrows move the focused light handle.

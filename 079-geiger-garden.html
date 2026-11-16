@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geiger Garden — What Grows From a Counting Sound</title>
+<style>
+:root{--black:#0C0F0C;--lime:#A5D447;--gray:#89918A}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--gray);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(137,145,138,.35);padding-bottom:10px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--lime)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.garden{position:relative;height:calc(100vh - 150px);min-height:440px;margin-top:6px;cursor:none}
+canvas{width:100%;height:100%;display:block}
+.readout{position:absolute;left:0;top:10px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+.readout b{color:var(--lime);font-weight:400}
+.hint{position:absolute;left:0;bottom:6px;font:italic 13px Georgia,serif;color:#69736B;pointer-events:none}
+@media(max-width:600px){body{padding:12px}.meta{font-size:7px}.hint{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Geiger Garden</h1><span class="meta">SITE 079 · PROBE ACTIVE · CLICK TO CULTIVATE</span></header>
+<div class="garden" id="garden"><canvas id="cv"></canvas><div class="readout">CPM <b id="cpm">000</b> · LAST FLOWER <b id="petals">—</b> PETALS · STANDING CROP <b id="crop">00</b></div><div class="hint">Move the probe. Click to plant. Listen to what counts.</div></div>
+<script>
+const garden=document.getElementById('garden'),cv=document.getElementById('cv'),ctx=cv.getContext('2d'),cpm=document.getElementById('cpm'),petalsEl=document.getElementById('petals'),crop=document.getElementById('crop'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let w=0,h=0,flowers=[],probe={x:0,y:0},lastClick=0,nextTick=0,tickFlash=0,ac=null,counts=[];
+function resize(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;ctx.setTransform(d,0,0,d,0,0);if(!probe.x){probe.x=w/2;probe.y=h/2}}
+function audio(){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
+function tick(vol){tickFlash=1;if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.setValueAtTime(1200+Math.random()*900,t);o.frequency.exponentialRampToValueAtTime(300,t+.018);g.gain.setValueAtTime(vol*.11,t);g.gain.exponentialRampToValueAtTime(.0001,t+.045);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.05)}
+function plant(x,y){const now=performance.now(),gap=lastClick?now-lastClick:900,petals=Math.max(4,Math.min(14,3+Math.round(gap/160)));lastClick=now;flowers.push({x,y,born:now,petals,lean:(Math.random()-.5)*.4});petalsEl.textContent=String(petals).padStart(2,'0');crop.textContent=String(flowers.length).padStart(2,'0');tick(.8);for(let i=0;i<petals;i++)setTimeout(()=>tick(.18),80+i*45);if(reduce)flowers[flowers.length-1].born=now-4000}
+function drawFlower(f,t){const age=Math.min(1,(t-f.born)/2100),g=1-Math.pow(1-age,3),stemH=62*g,sx=f.x+f.lean*stemH,sy=f.y-stemH;ctx.strokeStyle='rgba(165,212,71,.75)';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(f.x,f.y+8);ctx.quadraticCurveTo(f.x+f.lean*stemH*.5,f.y-stemH*.4,sx,sy);ctx.stroke();ctx.fillStyle='rgba(165,212,71,.4)';ctx.beginPath();ctx.ellipse(f.x+f.lean*32,f.y-30,10,4,f.lean,0,6.3);ctx.fill();ctx.save();ctx.translate(sx,sy);for(let i=0;i<f.petals;i++){const p=Math.max(0,Math.min(1,(age-i/f.petals*.7)*2.4));if(p<=0)continue;ctx.save();ctx.rotate(i/f.petals*6.283+t*.00008);ctx.globalAlpha=p*.9;ctx.fillStyle='#A5D447';ctx.shadowColor='#A5D447';ctx.shadowBlur=12*p;ctx.beginPath();ctx.ellipse(0,-11*p,4.5*p,10*p,0,0,6.3);ctx.fill();ctx.restore()}ctx.globalAlpha=1;ctx.fillStyle='#0C0F0C';ctx.strokeStyle='#A5D447';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,5,0,6.3);ctx.fill();ctx.stroke();ctx.restore()}
+function frame(t){ctx.clearRect(0,0,w,h);flowers.forEach(f=>drawFlower(f,t));const near=flowers.reduce((a,f)=>a+Math.max(0,1-Math.hypot(f.x-probe.x,f.y-probe.y)/160),0);if(t>nextTick&&!reduce){tick(Math.min(1,.2+near*.6));nextTick=t+Math.max(140,900-near*700);counts.push(t);counts=counts.filter(x=>t-x<6000)}cpm.textContent=String(Math.min(999,Math.round(counts.length*10))).padStart(3,'0');ctx.strokeStyle=tickFlash>.1?`rgba(165,212,71,${.5+tickFlash*.5})`:'rgba(137,145,138,.55)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(probe.x,probe.y,17+tickFlash*8,0,6.3);ctx.moveTo(probe.x-28,probe.y);ctx.lineTo(probe.x-20,probe.y);ctx.moveTo(probe.x+20,probe.y);ctx.lineTo(probe.x+28,probe.y);ctx.moveTo(probe.x,probe.y-28);ctx.lineTo(probe.x,probe.y-20);ctx.moveTo(probe.x,probe.y+20);ctx.lineTo(probe.x,probe.y+28);ctx.stroke();tickFlash*=.86;requestAnimationFrame(frame)}
+resize();requestAnimationFrame(frame);addEventListener('resize',resize);
+garden.addEventListener('pointermove',e=>{const r=garden.getBoundingClientRect();probe.x=e.clientX-r.left;probe.y=e.clientY-r.top});
+garden.addEventListener('click',e=>{const r=garden.getBoundingClientRect();audio();plant(e.clientX-r.left,e.clientY-r.top)});
+garden.addEventListener('keydown',e=>{if(e.key===' '){audio();plant(probe.x,probe.y);e.preventDefault()}const s=18;if(e.key==='ArrowLeft')probe.x-=s;if(e.key==='ArrowRight')probe.x+=s;if(e.key==='ArrowUp')probe.y-=s;if(e.key==='ArrowDown')probe.y+=s;if(e.key.startsWith('Arrow'))e.preventDefault()});
+garden.tabIndex=0;
+[[.28,.7,1100],[.52,.55,300],[.74,.72,800]].forEach((s,i)=>setTimeout(()=>{const old=lastClick;lastClick=performance.now()-s[2];plant(w*s[0],h*s[1]);lastClick=old;const f=flowers[flowers.length-1];f.born=performance.now()-2200;petalsEl.textContent=String(f.petals).padStart(2,'0');crop.textContent=String(flowers.length).padStart(2,'0')},400+i*650));
+</script>
+</body>
+</html>

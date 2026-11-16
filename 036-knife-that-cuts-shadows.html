@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Knife That Cuts Shadows — A Study in Split Light</title>
+<style>
+:root{--floor:#C85A3C;--chalk:#F3EAD7;--ink:#252A25}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--floor);color:var(--chalk);font-family:Arial,Helvetica,sans-serif;overflow:hidden;cursor:none}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+h1{position:absolute;left:26px;top:22px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0;pointer-events:none}
+.count{position:absolute;right:26px;top:22px;font:11px ui-monospace,Menlo,monospace;letter-spacing:.2em;pointer-events:none}
+button{position:absolute;left:26px;bottom:22px;background:transparent;color:var(--chalk);border:1px solid var(--chalk);padding:10px 13px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;cursor:pointer;z-index:3}
+button:hover{background:var(--chalk);color:var(--floor)}
+.hint{position:absolute;right:26px;bottom:26px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;opacity:.7}
+@media(max-width:600px){h1{font-size:7px}.count{font-size:9px}.hint{font-size:7px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1>SHADOW CUTTING, 4TH CLASS<br>THE BLADE DOES NOT TOUCH THE OBJECT</h1>
+<div class="count">CUTS <span id="num">00</span></div>
+<button id="reset" type="button">RESET SHADE</button><div class="hint">MOVE TO BEND · CLICK TO CUT · C TO CUT</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),num=document.getElementById('num');
+let W=0,H=0,dpr=1,mx=.5,my=.35,px=.5,py=.35,vx=0,vy=0,pieces=[],cuts=0,flash=0,blade=null,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const base=[[-180,-70],[-60,-110],[40,-60],[150,-100],[190,-20],[110,10],[150,90],[40,70],[-30,120],[-100,50],[-200,80],[-160,0]];
+function resize(){const r=c.getBoundingClientRect();dpr=devicePixelRatio||1;W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+function shape(){const cx=W*.52,cy=H*.48,s=Math.min(W,H)/720,sx=1+(mx-.5)*.8,sy=1+(my-.5)*.5;return base.map(([x,y])=>({x:cx+(x*sx+y*(mx-.5)*.5)*s*1.7,y:cy+(y*sy-x*(my-.5)*.25)*s*1.7}))}
+function clip(poly,n,d,keep){const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],fa=keep*(a.x*n.x+a.y*n.y-d),fb=keep*(b.x*n.x+b.y*n.y-d);if(fa>=0)out.push(a);if((fa>0&&fb<0)||(fa<0&&fb>0)){const t=fa/(fa-fb);out.push({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t})}}return out}
+function draw(poly){if(poly.length<3)return;ctx.beginPath();ctx.moveTo(poly[0].x,poly[0].y);poly.forEach(p=>ctx.lineTo(p.x,p.y));ctx.closePath();ctx.fill()}
+function tick(){
+ ctx.clearRect(0,0,W,H);
+ ctx.fillStyle='rgba(37,42,37,.10)';ctx.beginPath();ctx.ellipse(W*.52,H*.48,Math.min(W,H)*.34,Math.min(W,H)*.2,0,0,7);ctx.fill();
+ ctx.fillStyle='#F3EAD7';
+ if(cuts===0)draw(shape());else{pieces.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=.93;p.vy=p.vy*.93+.006;if(p.y>H-30){p.vy=0;p.vx*=.85}draw(p.poly.map(q=>({x:q.x+p.x,y:q.y+p.y})))});}
+ if(flash>0){flash-=.04;ctx.fillStyle=`rgba(243,234,215,${flash*.5})`;ctx.fillRect(0,0,W,H)}
+ if(blade){blade.t+=.045;const t=Math.min(1,blade.t),bx=blade.x+blade.dx*(t-.5)*3,by=blade.y+blade.dy*(t-.5)*3;ctx.strokeStyle='#F3EAD7';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(bx-blade.dx*180,by-blade.dy*180);ctx.lineTo(bx+blade.dx*180,by+blade.dy*180);ctx.stroke();ctx.fillStyle='#F3EAD7';ctx.beginPath();ctx.arc(bx,by,7,0,7);ctx.fill();if(t>=1)blade=null}
+ ctx.strokeStyle='#F3EAD7';ctx.lineWidth=2;ctx.beginPath();ctx.arc(mx*W,my*H,10,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(mx*W+14,my*H);ctx.lineTo(mx*W+34,my*H-22);ctx.lineTo(mx*W+40,my*H-16);ctx.lineTo(mx*W+20,my*H+6);ctx.closePath();ctx.fillStyle='#F3EAD7';ctx.fill();
+ requestAnimationFrame(tick)
+}
+function cut(){let src=cuts===0?shape():pieces.map(p=>p.poly.map(q=>({x:q.x+p.x,y:q.y+p.y})));const angle=Math.atan2(vy,vx)||-.35,n={x:-Math.sin(angle),y:Math.cos(angle)},d=n.x*mx*W+n.y*my*H;const out=[];src.forEach(poly=>{const a=clip(poly,n,d,1),b=clip(poly,n,d,-1);if(a.length>2)out.push({poly:a,x:n.x*6,y:n.y*6,vx:n.x*(.5+Math.random()),vy:n.y*.5-.3});if(b.length>2)out.push({poly:b,x:-n.x*6,y:-n.y*6,vx:-n.x*(.5+Math.random()),vy:-n.y*.5-.3})});pieces=out;cuts++;num.textContent=String(cuts).padStart(2,'0');flash=1;blade={x:mx*W,y:my*H,dx:Math.cos(angle),dy:Math.sin(angle),t:0};if(reduce){pieces.forEach(p=>{p.vx=0;p.vy=0});flash=0;blade=null}}
+window.addEventListener('pointermove',e=>{const X=e.clientX/W,Y=e.clientY/H;vx=X-px;vy=Y-py;px=X;py=Y;mx+= (X-mx)*.22;my+=(Y-my)*.22});
+window.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;cut()});
+window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='c')cut()});
+document.getElementById('reset').addEventListener('click',()=>{cuts=0;pieces=[];num.textContent='00'});
+window.addEventListener('resize',resize);resize();requestAnimationFrame(tick);
+</script>
+</body>
+</html>

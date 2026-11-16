@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indoor Wind Observatory — Anemometer for Rooms That Pretend to Be Still</title>
+<style>
+:root{--blue:#DCE9F2;--ink:#1B3A4B;--coral:#E86B4C;--brass:#B99654}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--blue);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{height:100vh;padding:clamp(20px,3vw,44px);display:flex;flex-direction:column;background-image:linear-gradient(90deg,rgba(27,58,75,.055) 1px,transparent 1px);background-size:72px 100%}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+h1{font:300 clamp(19px,2.4vw,34px)/1.05 Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;margin:0}
+.sub{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#5A7583;text-transform:uppercase;text-align:right}
+.stamp{border:1px solid var(--coral);color:var(--coral);padding:6px 9px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;transform:rotate(-3deg);display:inline-block;margin-top:9px}
+.rig{position:relative;flex:1;min-height:240px;margin-top:4vh}
+.rail{position:absolute;left:0;right:0;top:12%;height:14px;background:linear-gradient(var(--brass),#E2C98C 45%,#8C6D35);border-radius:2px;box-shadow:0 3px 0 rgba(27,58,75,.18)}
+.rail:after{content:"";position:absolute;left:0;right:0;top:16px;height:1px;background:rgba(27,58,75,.28)}
+.strip{position:absolute;top:calc(12% + 14px);width:34px;height:var(--h);transform-origin:50% 0;will-change:transform;background:repeating-linear-gradient(94deg,#F7F8F2 0 7px,#EFF2EA 7px 9px);border:1px solid rgba(27,58,75,.18);box-shadow:5px 7px 12px rgba(27,58,75,.09)}
+.strip:before{content:attr(data-n);position:absolute;top:-25px;left:50%;transform:translateX(-50%);font:9px ui-monospace,Menlo,monospace;color:#5A7583}
+.strip:after{content:"";position:absolute;left:0;right:0;bottom:0;height:7px;background:rgba(232,107,76,.18)}
+#gust{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#gust path{fill:none;stroke:var(--coral);stroke-width:1.6;stroke-dasharray:280;stroke-dashoffset:280;opacity:0}
+#gust path.go{animation:trace .72s cubic-bezier(.18,.75,.2,1) forwards}
+@keyframes trace{0%{opacity:1;stroke-dashoffset:280}75%{opacity:.8}100%{opacity:0;stroke-dashoffset:0}}
+footer{border-top:2px solid var(--ink);padding-top:14px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.readout{display:flex;align-items:baseline;gap:16px}
+.readout strong{font:300 clamp(66px,10vw,132px)/.78 Arial,sans-serif;letter-spacing:-.08em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.readout span{font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase}
+#dir{color:var(--coral);font:400 clamp(17px,2vw,28px)/1 Georgia,serif;text-transform:none;letter-spacing:0}
+.right{text-align:right;max-width:42ch}
+.right p{font:13px/1.55 Georgia,serif;margin:0 0 12px;color:#36566A}
+button{background:var(--ink);color:var(--blue);border:0;padding:11px 15px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+button:hover{background:var(--coral)}
+button:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+@media(max-width:700px){.sub{display:none}.strip{width:22px}h1{font-size:17px}footer{align-items:flex-start;flex-direction:column}.right{text-align:left}.readout strong{font-size:76px}}
+@media(prefers-reduced-motion:reduce){.strip{transform:none!important}#gust path.go{animation:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Indoor Wind<br>Observatory</h1><span class="stamp">INSTRUMENT NO. 7 · STILL ROOM</span></div>
+  <div class="sub">Recorded at the threshold of the east room, 11:04<br>Seven paper standards · calibrated by hand</div>
+</header>
+<div class="rig" id="rig">
+  <div class="rail"></div>
+  <div class="strip" data-n="01" style="left:8%;--h:116px"></div>
+  <div class="strip" data-n="02" style="left:22%;--h:168px"></div>
+  <div class="strip" data-n="03" style="left:36%;--h:132px"></div>
+  <div class="strip" data-n="04" style="left:50%;--h:198px"></div>
+  <div class="strip" data-n="05" style="left:64%;--h:150px"></div>
+  <div class="strip" data-n="06" style="left:78%;--h:182px"></div>
+  <div class="strip" data-n="07" style="left:92%;--h:126px"></div>
+  <svg id="gust" aria-hidden="true"><path id="gustPath" d=""/></svg>
+</div>
+<footer>
+  <div class="readout"><strong id="wind">0</strong><span>ROOM-WINDS<br><span id="dir">from the window</span></span></div>
+  <div class="right"><p>A room is never still. Somebody opens a door, somebody walks past with a coat, and for four seconds the air remembers an outside.</p><button id="blast" type="button">Release gust</button></div>
+</footer>
+<script>
+const strips=[...document.querySelectorAll('.strip')],rig=document.getElementById('rig'),wind=document.getElementById('wind'),dir=document.getElementById('dir'),gustPath=document.getElementById('gustPath'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lengths=[116,168,132,198,150,182,126],state=lengths.map(()=>({a:0,v:0,k:.018+Math.random()*.014,d:.078+Math.random()*.03}));
+let target=0,vx=0,lastX=0,lastT=performance.now();
+const words=['from the window','toward the kettle','from the door','across the table','toward the stair','from the hall','around the lamp','behind the coat','toward the light'];
+function gust(x,power=1){if(reduce)return;const r=rig.getBoundingClientRect(),px=(x-r.left)/r.width;state.forEach((s,i)=>{const d=Math.abs(px-(i+.5)/7*1.0);s.v+=(Math.sign(px-(i+.5)/7)||1)*power*2.6*Math.exp(-d*d*13)/(1+i*.06)})}
+function frame(now){
+  const dt=Math.min(2,(now-lastT)/16.7)||1;lastT=now;target*=.94;vx*=.9;
+  state.forEach((s,i)=>{const force=Math.max(-22,Math.min(22,target*(1+i*.07)+vx*3));s.v+=((force-s.a)*s.k-s.v*s.d)*dt;s.a+=s.v*dt;strips[i].style.transform=`rotate(${s.a.toFixed(2)}deg)`});
+  const speed=Math.min(9,Math.round(Math.abs(target)*.42+Math.abs(vx)*2.2));
+  wind.textContent=speed;dir.textContent=words[target>2?6:target<-2?2:vx>1.2?1:vx<-1.2?5:0];
+  requestAnimationFrame(frame)
+}
+document.addEventListener('pointermove',e=>{const now=performance.now(),dt=Math.max(8,now-lastT);vx=(e.clientX-lastX)/dt*12;lastX=e.clientX;target=Math.max(-18,Math.min(18,vx));lastT=now});
+document.addEventListener('click',e=>{gust(e.clientX,2.2);const r=rig.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;gustPath.setAttribute('d',`M ${x} ${y} q 90 -52 190 -18`);gustPath.classList.remove('go');void gustPath.getBoundingClientRect();gustPath.classList.add('go')});
+document.getElementById('blast').addEventListener('click',e=>{const r=rig.getBoundingClientRect();gust(r.left+r.width*.2,4);wind.textContent='9';dir.textContent='toward the kettle';gustPath.setAttribute('d',`M ${r.width*.12} ${r.height*.6} q ${r.width*.4} -${r.height*.4} ${r.width*.8} -${r.height*.16}`);gustPath.classList.remove('go');void gustPath.getBoundingClientRect();gustPath.classList.add('go')});
+if(!reduce){[1,3,0,5,2,6,4].forEach((i,k)=>setTimeout(()=>state[i].v+=3.4,420+k*160));requestAnimationFrame(frame)}
+else target=0;
+</script>
+</body>
+</html>

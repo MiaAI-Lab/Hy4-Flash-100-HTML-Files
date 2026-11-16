@@ -1,0 +1,14 @@
+TITLE
+A Cartography of Sounds — Districts Heard, Not Seen
+
+PROMPT
+A flat mint-and-ink map of an invented night city, drawn as five irregular districts separated by pale streets: mint #BFDCC8 land, deep ink #1D3A33 lines, orange #E07A3F for sound. The title “A CARTOGRAPHY OF SOUNDS” sits upper left; a small legend reads “LISTEN WITH THE POINTER”. Each district is labelled with a sound rather than a street: THE PUMP HOUSE HUMS AT 62 HZ, A WINDOW LEFT OPEN, THE BAKERY BEFORE DOUGH, TWO ARGUMENTS IN ONE ROOM, THE LAST TRAM. Clicking a district plays a short chord made in the browser — no audio files — and sends orange contour rings outward from the point, like a topographic map redrawing itself around a noise. The clicked district's label expands into a two-sentence description in a bottom margin. A muted speaker control silences the sound but keeps the rings. Entrance: the streets draw themselves in sequence, then district labels fade in. Signature moment: the ring spacing is derived from the chord frequencies, so low sounds make wide rings and high sounds make close ones. No emoji, no glass, no purple. Reduced motion shows one static ring per click.
+
+DESCRIPTION
+A city map where districts are identified by their sound. Clicking plays a synthesized chord and draws contour rings whose spacing reflects the frequencies heard.
+
+VISUAL TECHNIQUES
+SVG polygon districts, Web Audio oscillators with custom envelopes, canvas contour rings generated from frequency values, live description margin, mute control.
+
+INTERACTION MODEL
+Click a district. Use the mute control to silence audio. Keyboard users Tab through named district polygons and press Enter.

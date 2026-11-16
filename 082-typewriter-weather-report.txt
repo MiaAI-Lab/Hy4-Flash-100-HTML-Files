@@ -1,0 +1,14 @@
+TITLE
+The Weather Is Being Typed — A Typewriter Forecast
+
+PROMPT
+An overcast #A7B3B9 and paper #F4F1E8 typewriter study with ink #262B2E lettering. A single sheet of report paper carries a forecast that types itself in uneven, mechanical strokes. Pressing word cards (DRIZZLE, GALE, HAIL, THAW, MIST) or typing a word into the ribbon adds another clause; a GUST button blows across the sheet and scatters random letters sideways before they settle back into their lines. On load, the first two lines type themselves in the first three seconds. The report should feel like a meteorological office where the weather is dictated too fast. No emoji, no weather icons, no purple.
+
+DESCRIPTION
+A typewriter weather sheet that types itself, accepts new words and scatters its letters in gusts.
+
+VISUAL TECHNIQUES
+Per-character DOM spans, staggered typewriter reveal, CSS transform gusts with per-letter custom properties, drawn ribbon input, soft noise audio.
+
+INTERACTION MODEL
+Click a word card or type into the ribbon and press Enter to add a clause. Click GUST or press G to scatter letters. Keyboard: Enter adds, G gusts. Reduced motion shows full text and no scatter.

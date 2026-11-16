@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Very Slow Collision — Two Sentences at a Fault Line</title>
+<style>
+:root{--acid:#E5FF3D;--ink:#191A17;--red:#D6472B}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--ink);color:var(--acid);font-family:Arial,Helvetica,sans-serif;touch-action:none}
+.top{position:absolute;left:0;right:0;top:0;height:64px;background:var(--ink);border-bottom:2px solid var(--acid);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,3vw,42px);z-index:8;gap:20px}
+.top h1{font:800 clamp(13px,1.5vw,20px)/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;margin:0;white-space:nowrap}
+.meter{display:flex;align-items:center;gap:12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;white-space:nowrap}
+.bar{width:min(220px,20vw);height:9px;border:1px solid var(--acid);position:relative}
+.bar i{position:absolute;inset:2px;right:auto;width:0%;background:var(--acid);transition:background .2s}
+.bar i.hot{background:var(--red)}
+.plates{position:absolute;inset:64px 0 0;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.plate{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0 2vw}
+.left{background:var(--acid);color:var(--ink);clip-path:polygon(0 0,100% 0,97% 12%,100% 27%,96% 43%,100% 58%,97% 74%,100% 88%,98% 100%,0 100%)}
+.right{background:var(--ink);color:var(--acid);clip-path:polygon(0 0,100% 0,100% 100%,2% 100%,0 88%,4% 72%,0 57%,3% 42%,0 26%,2% 12%);cursor:ew-resize;outline:none;will-change:transform}
+.right:focus-visible{box-shadow:inset 0 0 0 5px var(--acid)}
+.line{display:block;font:900 clamp(38px,6.2vw,104px)/.9 Arial,sans-serif;letter-spacing:-.07em;white-space:nowrap;text-transform:uppercase}
+.line:nth-child(even){margin-left:5vw}
+.ch{display:inline-block;transition:transform .12s linear}
+.fault{position:absolute;top:64px;bottom:0;left:50%;width:2px;background:var(--red);opacity:0;z-index:5;pointer-events:none;transform:translateX(-50%)}
+.fault.on{opacity:1;box-shadow:0 0 16px var(--red)}
+.stamp{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%) rotate(-2deg) scale(.86);z-index:7;background:var(--red);color:var(--acid);font:900 clamp(18px,3.4vw,50px)/1 Arial,sans-serif;letter-spacing:-.03em;text-align:center;padding:18px 26px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.16,1.3,.3,1)}
+.stamp.on{opacity:1;transform:translate(-50%,-50%) rotate(-2deg) scale(1)}
+.quake .plate{animation:shake .45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{0%,100%{transform:translateX(0)}18%{transform:translateX(-7px)}38%{transform:translateX(6px)}58%{transform:translateX(-4px)}78%{transform:translateX(3px)}}
+.hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:8;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--red);background:var(--ink);padding:6px 10px;white-space:nowrap}
+@media(max-width:650px){.top h1{display:none}.bar{width:44vw}.line{font-size:38px}.stamp{white-space:normal;font-size:18px}}
+@media(prefers-reduced-motion:reduce){.quake .plate{animation:none}.stamp{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><h1>A Very Slow Collision / Fault Study 25</h1><div class="meter"><span>STRESS</span><div class="bar"><i id="fill"></i></div><strong id="val">000</strong></div></header>
+<div class="plates">
+  <div class="plate left" id="left"></div>
+  <div class="plate right" id="right" tabindex="0" role="slider" aria-label="Fault displacement" aria-valuemin="-120" aria-valuemax="120" aria-valuenow="0"></div>
+</div>
+<div class="fault" id="fault"></div>
+<div class="stamp" id="stamp">WHAT IS LEFT IS CALLED A HILL</div>
+<div class="hint">DRAG THE DARK PLATE · RELEASE TO LET IT SETTLE</div>
+<script>
+const left=document.getElementById('left'),right=document.getElementById('right'),fill=document.getElementById('fill'),val=document.getElementById('val'),fault=document.getElementById('fault'),stamp=document.getElementById('stamp');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function fillText(el,text,n){for(let k=0;k<n;k++){const d=document.createElement('span');d.className='line';for(const ch of text){const s=document.createElement('span');s.className='ch';s.textContent=ch===' '?' ':ch;d.appendChild(s)}el.appendChild(d)}}
+fillText(left,'THE GROUND REMEMBERS',4);fillText(right,'THE GROUND FORGETS',4);
+const chars=[...document.querySelectorAll('.ch')],rightChars=[...right.querySelectorAll('.ch')];
+let offset=0,velocity=0,dragging=false,startX=0,startOffset=0,quaked=false;
+function apply(){
+  right.style.transform=`translateX(${offset}px)`;
+  const stress=Math.min(100,Math.round(Math.abs(offset)*.92));
+  fill.style.width=stress+'%';fill.classList.toggle('hot',stress>75);val.textContent=String(stress).padStart(3,'0');
+  fault.classList.toggle('on',stress>12);right.setAttribute('aria-valuenow',Math.round(offset));
+  if(!reduce){
+    const rect=right.getBoundingClientRect(),faultX=rect.left;
+    rightChars.forEach(s=>{const r=s.getBoundingClientRect(),d=Math.abs(r.left-faultX);if(d<260){const w=(1-d/260)*stress/100;s.style.transform=`translate(${(w*7*(offset>0?1:-1)).toFixed(1)}px,${(w*5*Math.sin(r.left*.14)).toFixed(1)}px)`}else s.style.transform=''});
+    left.querySelectorAll('.ch').forEach(s=>{const r=s.getBoundingClientRect(),d=Math.abs(r.right-faultX);if(d<220){const w=(1-d/220)*stress/100;s.style.transform=`translate(${(-w*6*(offset>0?1:-1)).toFixed(1)}px,${(w*3*Math.cos(r.left*.1)).toFixed(1)}px)`}else s.style.transform=''});
+  }
+  if(stress>=90&&!quaked){quaked=true;stamp.classList.add('on');document.body.classList.add('quake');setTimeout(()=>document.body.classList.remove('quake'),520)}
+  if(stress<45&&quaked){quaked=false;stamp.classList.remove('on')}
+}
+function loop(){if(!dragging){velocity+=(0-offset)*.012;velocity*=.92;offset+=velocity;if(Math.abs(offset)<.2){offset=0;velocity=0}apply()}requestAnimationFrame(loop)}
+right.addEventListener('pointerdown',e=>{dragging=true;startX=e.clientX;startOffset=offset;right.setPointerCapture(e.pointerId)});
+right.addEventListener('pointermove',e=>{if(dragging){offset=Math.max(-120,Math.min(120,startOffset+(e.clientX-startX)));velocity=0;apply()}});
+right.addEventListener('pointerup',()=>dragging=false);
+right.addEventListener('pointercancel',()=>dragging=false);
+right.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();offset=Math.max(-120,Math.min(120,offset+(e.key==='ArrowRight'?18:-18)));velocity=0;apply()}});
+apply();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

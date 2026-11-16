@@ -1,0 +1,14 @@
+TITLE
+Chess for Ants — A Five-Square Game on the Forest Floor
+
+PROMPT
+A moss #586B45 forest floor with a five-by-five board scratched into the earth in cream #E8DEBF. Oversized amber #C8913E chess pieces — rooks, kings and pawns — are far too heavy for the ants that play them. Click a piece to see its legal squares; click one and two ants scurry underneath, brace, and physically push the piece along a slightly curved route. Captured pieces are dragged off the board. The score line reads: CRUMB FOR CAPTURE · PROMOTION AFTER THREE SQUARES · NO CASTLING, THE KING IS TIRED. Signature moment: the slow, visible effort of a tiny ant moving a very large king. No emoji, no generic chessboard texture, no purple.
+
+DESCRIPTION
+A miniature chess game where ants push oversized pieces across a five-square forest board.
+
+VISUAL TECHNIQUES
+SVG forest-floor drawing, drawn chess pieces, legal-move calculation, curved push animation with following ants, custom score typography.
+
+INTERACTION MODEL
+Click a piece then a highlighted square to move. Kings step one square, rooks slide, pawns advance one; captures are legal. RESET restores the opening position.

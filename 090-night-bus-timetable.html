@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Night Service 090 — A Timetable Drawn in Thread</title>
+<style>
+:root{--teal:#123F45;--lemon:#E3D45F;--paper:#EFE8D6}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--teal);color:var(--paper);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:repeating-linear-gradient(0deg,rgba(239,232,214,.02) 0 1px,transparent 1px 5px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(239,232,214,.4);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--lemon)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.roll{display:flex;align-items:center;gap:16px;margin:14px 0 8px;border:2px solid var(--lemon);padding:6px 14px;background:#0B2C31;width:min(520px,60vw)}
+.roll span{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(239,232,214,.6)}
+.roll b{font:400 24px Georgia,serif;color:var(--lemon);letter-spacing:.08em;white-space:nowrap;overflow:hidden}
+.roll b.swap{animation:swap .28s steps(2)}
+@keyframes swap{50%{opacity:0;transform:translateY(-8px)}}
+.layout{display:flex;gap:20px;height:calc(100vh - 150px);min-height:430px}
+.map{flex:1;position:relative;min-width:0;border:1px solid rgba(239,232,214,.25)}
+svg{width:100%;height:100%;display:block}
+.thread{fill:none;stroke:rgba(239,232,214,.4);stroke-width:2;stroke-linecap:round;stroke-dasharray:1200;stroke-dashoffset:1200;transition:stroke-dashoffset 1.8s ease}
+.thread.drawn{stroke-dashoffset:0}
+.active-thread{fill:none;stroke:var(--lemon);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(227,212,95,.6))}
+.node{fill:var(--teal);stroke:var(--paper);stroke-width:2;cursor:pointer}
+.node:hover,.node:focus-visible{fill:var(--lemon);stroke:var(--lemon);outline:none}
+.node.visited{fill:var(--lemon)}
+.nlabel{fill:rgba(239,232,214,.65);font:9px ui-monospace,Menlo,monospace;letter-spacing:.12em;pointer-events:none}
+.tip{position:absolute;pointer-events:none;background:var(--lemon);color:var(--teal);font:10px ui-monospace,Menlo,monospace;padding:4px 7px;opacity:0;transition:opacity .15s;white-space:nowrap;z-index:4}
+.tip.show{opacity:1}
+.panel{width:210px;flex:none;border:1px solid rgba(239,232,214,.25);padding:12px;overflow:hidden}
+.panel h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--lemon);margin:0 0 10px}
+.stop{display:flex;justify-content:space-between;font:10px ui-monospace,Menlo,monospace;padding:5px 0;border-bottom:1px dashed rgba(239,232,214,.18)}
+.stop b{color:var(--lemon);font-weight:400}
+.help{font:italic 11px/1.6 Georgia,serif;color:rgba(239,232,214,.6);margin-top:14px}
+@media(max-width:680px){body{padding:12px}.layout{flex-direction:column}.panel{width:auto;height:150px}.roll{width:100%}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.thread{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<header><h1>Night Service 090</h1><span class="meta">DEPOT MAP · FOUR THREADS · AFTER MIDNIGHT</span></header>
+<div class="roll"><span>DESTINATION</span><b id="destination">LAST LIGHT</b><span>NEXT 00:14</span></div>
+<div class="layout">
+ <div class="map" id="map"><svg viewBox="0 0 900 500" preserveAspectRatio="none" aria-hidden="true"><g id="base"></g><polyline class="active-thread" id="active" points=""/><g id="nodes"></g><g id="names"></g></svg><div class="tip" id="tip">00:00</div></div>
+ <div class="panel"><h2>STOPS VISITED</h2><div id="stops"></div><div class="help">Click a station to extend the thread. R resets the journey.</div></div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',base=document.getElementById('base'),nodesG=document.getElementById('nodes'),namesG=document.getElementById('names'),active=document.getElementById('active'),map=document.getElementById('map'),tip=document.getElementById('tip'),destination=document.getElementById('destination'),stops=document.getElementById('stops'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const points=[[90,390],[190,300],[280,350],[360,230],[450,290],[540,180],[630,250],[720,150],[810,230],[170,140],[330,100],[590,390],[760,390]];
+const names=['DEPOT','CANAL','ASH ROW','MOTH','CLOCK','LAST LIGHT','RIVER','NINE ARCH','EAST FIELD','HILL','GLASSYARD','OLD PIER','SIGNAL'];
+const times=['00:02','00:08','00:14','00:21','00:29','00:36','00:44','00:52','01:01','00:06','00:12','00:47','01:05'];
+const routes=[[0,1,2,3,5,6],[9,10,3,4,6,7],[0,11,6,12,8],[9,1,4,5,7,8]];
+let visited=[0];
+function poly(ids){return ids.map(i=>points[i][0]+','+points[i][1]).join(' ')}
+routes.forEach((r,i)=>{const p=document.createElementNS(NS,'polyline');p.setAttribute('points',poly(r));p.setAttribute('class','thread');p.style.stroke=i===2?'rgba(227,212,95,.5)':'rgba(239,232,214,.4)';base.appendChild(p)});
+points.forEach(([x,y],i)=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',7);c.setAttribute('class','node');c.setAttribute('tabindex','0');c.dataset.i=i;nodesG.appendChild(c);const t=document.createElementNS(NS,'text');t.setAttribute('x',x+10);t.setAttribute('y',y-9);t.setAttribute('class','nlabel');t.textContent=names[i];namesG.appendChild(t)});
+nodesG.addEventListener('pointerover',e=>{if(e.target.dataset.i===undefined)return;const r=map.getBoundingClientRect(),i=+e.target.dataset.i;tip.textContent=names[i]+' · '+times[i];tip.style.left=(points[i][0]/900*r.width+12)+'px';tip.style.top=(points[i][1]/500*r.height-12)+'px';tip.classList.add('show')});
+nodesG.addEventListener('pointerout',()=>tip.classList.remove('show'));
+function setDestination(text){destination.classList.remove('swap');void destination.offsetWidth;destination.classList.add('swap');destination.textContent=text}
+function render(){active.setAttribute('points',poly(visited));stops.innerHTML=visited.map((i,k)=>'<div><span>'+names[i]+'</span><b>'+times[i]+'</b></div>').join('');[...nodesG.children].forEach((c,n)=>c.classList.toggle('visited',visited.includes(n)))}
+function extend(i){if(visited.includes(i))return;visited.push(i);setDestination(names[i]);render()}
+nodesG.addEventListener('click',e=>{if(e.target.dataset.i!==undefined)extend(+e.target.dataset.i)});
+nodesG.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i!==undefined){e.preventDefault();extend(+e.target.dataset.i)}});
+document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='r'){visited=[0];setDestination('LAST LIGHT');render()}});
+render();
+if(reduce){[...base.children].forEach(t=>t.classList.add('drawn'))}else{[...base.children].forEach((t,i)=>setTimeout(()=>t.classList.add('drawn'),220+i*380));['DEPOT','MOTH','LAST LIGHT'].forEach((text,i)=>setTimeout(()=>setDestination(text),700+i*760))}
+</script>
+</body>
+</html>

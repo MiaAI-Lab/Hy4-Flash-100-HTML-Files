@@ -1,0 +1,14 @@
+TITLE
+Acid Garden — A Plant That Grows Toward Attention
+
+PROMPT
+A near-black field #0A0D0B with one luminous acid-green line #B8FF3D. The title “ACID GARDEN” sits small at upper left; beneath it, a legend: “Specimen 22 · phototropic toward cursor · do not touch the tip”. The whole rest of the page is an SVG growing surface. Press and hold anywhere: a vine starts from the bottom edge below the pointer and grows toward it, segment by segment, with a slight wandering bias and occasional side branches. Moving the pointer while holding makes the vine change course with a visible delay, like a plant deciding. Releasing stops growth; when a tip reaches the pointer it opens into five small luminous seeds and freezes. Older vines dim to a darker green but remain on the page, so repeated interactions compose a dense drawing. Entrance: one pre-grown vine rises by itself on load, drawing from bottom to top over two seconds. Signature moment: every active tip carries a bright node that pulses; when five vines are active at once the nodes briefly synchronize. Copy: a small readout at lower right counts specimens grown and seeds opened. No emoji, no cards, no gradients. Reduced motion draws complete vines on click without animation.
+
+DESCRIPTION
+A generative garden in which attention is light. Holding the pointer grows a vine that bends toward it; the accumulated drawing becomes a record of where the visitor looked.
+
+VISUAL TECHNIQUES
+SVG path accumulation with per-frame segment addition, steering with delayed target following, branching agents, pulsing tip nodes via CSS animation, live specimen counters.
+
+INTERACTION MODEL
+Press and hold to grow; move to steer; release to stop. Keyboard users press Space to grow toward a marked centre point.

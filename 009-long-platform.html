@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Long Platform — Departure Board 23:59</title>
+<style>
+  :root{--green:#10231E;--ivory:#EFE7CF;--amber:#E3A23B;--blood:#8E3A32;--line:rgba(239,231,207,.24)}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--green);color:var(--ivory);font-family:"Courier New",Courier,monospace;overflow:hidden}
+  body{background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(239,231,207,.014) 3px 4px),radial-gradient(ellipse at 50% 0%,rgba(227,162,59,.09),transparent 60%)}
+  .boardShell{height:100vh;min-height:560px;max-width:1600px;margin:auto;padding:clamp(14px,2.2vw,32px);display:grid;grid-template-rows:auto 1fr auto;gap:clamp(10px,1.6vh,20px)}
+  header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:14px;border-bottom:2px solid var(--amber);padding-bottom:10px}
+  h1{font:400 clamp(27px,4.4vw,62px)/.9 Georgia,serif;letter-spacing:-.04em;margin:0;color:var(--amber)}
+  .sub{font-size:9px;letter-spacing:.28em;margin-top:6px;opacity:.75}
+  .clockWrap{text-align:right}
+  #clock{display:flex;justify-content:flex-end;gap:2px;font-size:clamp(16px,2.5vw,34px)}
+  .clockWrap small{font-size:8px;letter-spacing:.24em;opacity:.6}
+  #note{min-height:14px;font-size:9px;letter-spacing:.18em;color:var(--amber);text-align:right}
+  .board{border:2px solid var(--amber);background:#0A1714;box-shadow:inset 0 0 0 1px rgba(239,231,207,.08),0 18px 50px rgba(0,0,0,.4);display:grid;grid-template-rows:auto repeat(6,1fr);overflow:hidden}
+  .head,.row{display:grid;grid-template-columns:minmax(0,4.4fr) minmax(80px,1.2fr) minmax(48px,.65fr) minmax(100px,1.5fr);gap:clamp(6px,1vw,18px);align-items:center;padding:0 clamp(8px,1.5vw,22px)}
+  .head{height:32px;border-bottom:1px solid var(--line);font-size:9px;letter-spacing:.24em;color:var(--amber);opacity:.8}
+  .row{border:0;border-bottom:1px solid var(--line);background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;outline:none;min-height:0;transition:background .2s ease}
+  .row:last-child{border-bottom:0}
+  .row:hover,.row:focus-visible{background:rgba(227,162,59,.09);box-shadow:inset 4px 0 0 var(--amber)}
+  .field{display:flex;gap:2px;min-width:0;overflow:hidden}
+  .cell{position:relative;display:inline-block;width:1.06em;max-width:12%;height:clamp(30px,5.2vh,55px);perspective:220px;flex:0 1 auto}
+  .cell .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.16,.85,.2,1);transition-delay:var(--d,0ms)}
+  .cell.turn .inner{transform:rotateX(180deg)}
+  .face{position:absolute;inset:0;display:grid;place-items:center;backface-visibility:hidden;background:linear-gradient(#1B2F29,#14241F 48%,#1B2F29);border:1px solid rgba(239,231,207,.1);border-top-color:rgba(239,231,207,.28);box-shadow:inset 0 -1px 0 rgba(0,0,0,.6);font-weight:bold;color:var(--ivory);overflow:hidden}
+  .face::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.65)}
+  .back{transform:rotateX(180deg)}
+  .time .cell,.plat .cell{width:1em;color:var(--amber)}
+  .stat .cell{width:.92em;font-size:.9em;color:var(--amber)}
+  .stat.cancelled .cell{color:#D97C6F}
+  .row:nth-child(even) .face{background:linear-gradient(#192C26,#12211C 48%,#192C26)}
+  footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:9px;letter-spacing:.2em;color:rgba(239,231,207,.6)}
+  @media(max-width:700px){.boardShell{min-height:0}.head,.row{grid-template-columns:minmax(0,3.4fr) 68px 38px;gap:5px;padding:0 7px}.head span:last-child,.stat{display:none}.cell{height:clamp(26px,4.4vh,42px);font-size:.88em}header{grid-template-columns:1fr}.clockWrap{text-align:left}#clock{justify-content:flex-start}#note{text-align:left}.row{padding:6px 7px}}
+  @media(prefers-reduced-motion:reduce){.cell .inner{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="boardShell">
+  <header>
+    <div><h1>THE LONG PLATFORM</h1><div class="sub">TERMINUS FOR DELAYS · ALL SERVICES SUBJECT TO WEATHER, MEMORY AND TIDE</div></div>
+    <div class="clockWrap"><div id="clock"></div><small>LOCAL TIME · BOARD 06</small><div id="note">AWAITING FIRST RELAY</div></div>
+  </header>
+  <main class="board" id="board" aria-label="Departure board">
+    <div class="head"><span>DESTINATION</span><span>DEPART</span><span>PLT</span><span>STATE</span></div>
+  </main>
+  <footer><span>SELECT A ROW TO RELAY THE BOARD</span><span>LAST TRAIN 23:59 · NO RETURN TICKETS ISSUED AFTER MIDNIGHT</span></footer>
+</div>
+<script>
+(function(){
+  const board=document.getElementById('board'),clock=document.getElementById('clock'),note=document.getElementById('note'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sets=[
+    [['MOSS JUNCTION','23:59','4','ON TIME','The moss remembers every footstep.'],['SALT VIADUCT','00:14','7','ON TIME','Cross only when the wind is spelling.'],['LAST LIGHT','00:31','2','DELAYED','The signalman has fallen asleep again.'],['NORTH RESERVOIR','01:05','9','ON TIME','Bring a cup; the water is articulate.'],['CINDER YARD','01:42','1','CANCELLED','A small fire, politely extinguished.'],['NULL HARBOUR','02:18','6','ON TIME','The ferry runs only on ebb tides.']],
+    [['GLASS ORCHARD','23:47','3','ON TIME','The fruit sounds faintly when struck.'],['SLEEPING AQUEDUCT','00:02','8','DELAYED','A flock of white birds blocked the incline.'],['PAPER CAPITAL','00:26','5','ON TIME','All tickets are printed on one side.'],['THIRD SHORE','00:58','4','ON TIME','The sea keeps a second timetable.'],['EMBER CROSSING','01:33','2','CANCELLED','Signal failure, possibly metaphorical.'],['QUIET MACHINE','02:11','7','ON TIME','Arrivals are not announced.']],
+    [['WICKLOW DRIFT','23:52','6','ON TIME','Named for a drift that never arrived.'],['CLOCKWORK FEN','00:09','1','ON TIME','The platforms run three minutes slow.'],['BLUE DEPOT','00:37','5','DELAYED','Waiting on a consignment of rain.'],['HOLLOW STATION','01:16','3','ON TIME','No one has ever left by this door.'],['FOG EXCHANGE','01:49','8','CANCELLED','Visibility: one careful metre.'],['VERY LATE','02:24','9','ON TIME','The last service is also the first.']]
+  ];
+  let setIndex=0,rows=[];
+  function makeField(el,text,delayBase){
+    el.textContent='';
+    const chars=[...text];el.dataset.chars=chars.join('');
+    chars.forEach((ch,i)=>{
+      const cell=document.createElement('span');cell.className='cell';cell.style.setProperty('--d',(delayBase+i*18)+'ms');
+      cell.innerHTML=`<span class="inner"><span class="face front">${ch===' '?'&nbsp;':ch}</span><span class="face back">${ch===' '?'&nbsp;':ch}</span></span>`;
+      el.appendChild(cell);
+    });
+  }
+  function field(el,text,base){
+    const chars=[...text],cells=[...el.children];
+    while(cells.length<chars.length){const c=document.createElement('span');c.className='cell';c.innerHTML='<span class="inner"><span class="face front">-</span><span class="face back">-</span></span>';el.appendChild(c);cells.push(c);}
+    while(cells.length>chars.length){cells.pop().remove();}
+    chars.forEach((ch,i)=>{
+      const c=cells[i];clearTimeout(c._t);
+      if(c.dataset.char===ch)return;
+      c.dataset.char=ch;
+      const back=c.querySelector('.back');back.textContent=ch===' '?'\u00A0':ch;
+      c.style.setProperty('--d',(base+i*18)+'ms');
+      c.classList.add('turn');
+      c._t=setTimeout(()=>{c.querySelector('.front').textContent=ch===' '?'\u00A0':ch;c.classList.remove('turn');},reduced?0:440+base+i*18);
+    });
+  }
+  function update(set,initial){
+    set.forEach((r,i)=>{
+      const row=rows[i],base=initial?i*110:i*95;
+      field(row.dest,r[0],base);field(row.time,r[1],base+40);field(row.plat,r[2],base+80);field(row.stat,r[3],base+120);
+      row.stat.classList.toggle('cancelled',r[3]==='CANCELLED');
+    });
+  }
+  sets[0].forEach((r,i)=>{
+    const row=document.createElement('button');row.type='button';row.className='row';row.setAttribute('aria-label',`Departure ${i+1}. Select to relay the board.`);
+    row.innerHTML='<span class="dest"></span><span class="time field"></span><span class="plat field"></span><span class="stat field"></span>';
+    board.appendChild(row);
+    rows.push({el:row,dest:row.querySelector('.dest'),time:row.querySelector('.time'),plat:row.querySelector('.plat'),stat:row.querySelector('.stat')});
+    row.addEventListener('click',()=>{
+      setIndex=(setIndex+1)%sets.length;
+      note.textContent='RELAYING — ALL FLAPS IN MOTION';
+      update(sets[setIndex],false);
+      setTimeout(()=>note.textContent=sets[setIndex][i][4],1500);
+    });
+    row.addEventListener('pointerenter',()=>note.textContent=r[4]);
+    row.addEventListener('focus',()=>note.textContent=r[4]);
+    row.addEventListener('keydown',e=>{
+      if(e.key==='ArrowDown'){e.preventDefault();rows[(i+1)%6].el.focus();}
+      if(e.key==='ArrowUp'){e.preventDefault();rows[(i+5)%6].el.focus();}
+    });
+  });
+  makeField(clock,'00:00:00',0);
+  function tick(){const d=new Date(),s=[d.getHours(),d.getMinutes(),d.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');field(clock,s,0);}
+  tick();setInterval(tick,1000);
+  setTimeout(()=>{update(sets[0],true);note.textContent='FIRST RELAY COMPLETE · SELECT A ROW';},reduced?0:240);
+})();
+</script>
+</body>
+</html>

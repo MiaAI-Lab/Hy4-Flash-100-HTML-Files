@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Weight of Unsent Letters — A Postal Balance</title>
+<style>
+:root{--paper:#F0E9DA;--ink:#2E2C29;--wax:#8C2F2A}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 30px;background-image:repeating-linear-gradient(90deg,rgba(46,44,41,.02) 0 1px,transparent 1px 5px)}
+h1{font:400 clamp(22px,3vw,34px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.main{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:26px;border-top:1px solid var(--ink);padding-top:24px}
+.stack{position:relative;height:310px}
+.env{position:absolute;width:260px;height:132px;background:#E5DCC8;border:1px solid var(--ink);cursor:grab;outline:none;box-shadow:4px 5px 0 rgba(46,44,41,.13);padding:28px 16px 12px;animation:slide .8s cubic-bezier(.2,.9,.2,1.05) both;animation-delay:calc(var(--i)*.12s);user-select:none;touch-action:none}
+@keyframes slide{from{opacity:0;transform:translateX(-90px) rotate(var(--rot))}to{opacity:1;transform:rotate(var(--rot))}}
+.env:active{cursor:grabbing}
+.env:before{content:'';position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 56%);border-bottom:1px solid var(--ink);opacity:.6}
+.addr{font:italic 13px/1.25 Georgia,serif;max-width:20ch;position:relative;z-index:2}
+.g{position:absolute;right:12px;bottom:8px;font:9px ui-monospace,Menlo,monospace;color:var(--wax);z-index:2}
+.seal{position:absolute;right:22px;top:56px;width:24px;height:24px;border-radius:50%;background:var(--wax);z-index:3}
+.seal:after{content:'W';position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);font:10px Georgia,serif}
+.env:focus-visible{outline:2px solid var(--wax);outline-offset:4px}
+.scale{position:relative;min-height:310px}
+svg{width:100%;height:300px;display:block}
+.beam{transform-box:view-box;transform-origin:300px 82px;transition:transform .15s}
+.line{stroke:var(--ink);stroke-width:2;fill:none}
+.thin{stroke:var(--ink);stroke-width:1;fill:none}
+.pan{fill:none;stroke:var(--wax);stroke-width:1.5}
+#panstack{position:absolute;left:26%;top:190px;width:140px;height:90px;pointer-events:none}
+.mini{position:absolute;width:78px;height:38px;background:#E5DCC8;border:1px solid var(--ink);box-shadow:2px 3px 0 rgba(46,44,41,.12);animation:land .45s cubic-bezier(.2,1.3,.3,1)}
+@keyframes land{from{transform:translateY(-70px) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+.reading{margin-top:24px;border-top:1px solid var(--ink);padding-top:16px;display:grid;grid-template-columns:1fr 2fr;gap:30px}
+.reading .tag{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--wax)}
+.letter{font:italic clamp(15px,1.7vw,20px)/1.55 Georgia,serif;min-height:110px;max-width:62ch;white-space:pre-line}
+.ghost{position:fixed;z-index:50;pointer-events:none;opacity:.9;transform:translate(-50%,-50%) scale(.92)}
+@media(max-width:760px){.main{grid-template-columns:1fr;gap:24px}.stack{height:300px}.scale{min-height:250px}svg{height:240px}.reading{grid-template-columns:1fr;gap:8px}body{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>The Weight of Unsent Letters</h1><div class="sub">POSTAL BALANCE / 50 · WEIGHED BEFORE BEING READ</div>
+<div class="main">
+  <div class="stack" id="stack"></div>
+  <div class="scale"><svg viewBox="0 0 600 300"><path class="line" d="M300 78 v190 M250 268 h100 M282 268 l18-40 18 40"/><g class="beam" id="beam"><path class="line" d="M100 82 H500"/><circle cx="300" cy="82" r="8" fill="#F0E9DA" stroke="#2E2C29" stroke-width="2"/><path class="thin" d="M110 82 v56 M110 138 q40 34 80 0 Z M490 82 v56 M490 138 q40 34 80 0 Z"/><path class="thin" d="M110 138 l-16 34 M110 138 l16 34 M490 138 l-16 34 M490 138 l16 34"/></g></svg><div id="panstack"></div><div class="reading" style="border:0;padding:0;display:block"><div class="tag" id="total">TOTAL: 000 G / FIVE LETTERS STILL HELD</div></div></div>
+</div>
+<div class="reading"><div class="tag" id="label">THE LETTER / NOT OPENED</div><div class="letter" id="letter">Select an envelope to read what was never sent. Place it on the balance to learn what it weighed.</div></div>
+<script>
+const letters=[
+ ['TO THE VERSION OF ME WHO STAYED','12','Dear me,\n\nYou stayed, and nothing became of it. The curtains you never changed are still the colour of that November. I am writing from the other life to say: it was not cowardice. It was just a different kind of weather.'],
+ ['TO M., AFTER THE RAIN','140','M.,\n\nThe gutter outside your window made the same sound as the field at home. I nearly told you that. Instead I asked if you had an umbrella, and you said yes, and that was the whole conversation. I have kept the sentence. It weighs more than the umbrella.'],
+ ['TO THE LANDLADY, EXPLAINING THE PIANO','36','Dear Mrs Kemble,\n\nThe piano was not mine to remove. It arrived with the room, like the damp and the yellow light. I have written three times and posted none. If you are reading this, please know that I practised very badly and with great affection.'],
+ ['TO MY BROTHER, ON THE SUBJECT OF A DAGGER','86','Tom,\n\nI still have the little knife you gave me for my twelfth birthday. You said it was for opening letters. I used it for exactly that, once, on a letter from you that I could not finish. I am sorry. The knife is sharp still.'],
+ ['TO NO ONE, IN A HAND I DO NOT RECOGNISE','64','Whoever kept this,\n\nI found it in a book that was not mine. It says: “Meet me where the clock is slow.” I have walked past that clock every morning for nine years and never once looked at its face. Today I did. It was five minutes wrong, in your favour.']
+];
+const stack=document.getElementById('stack'),panstack=document.getElementById('panstack'),beam=document.getElementById('beam'),total=document.getElementById('total'),label=document.getElementById('label'),letter=document.getElementById('letter'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let weights=[],anim=null;
+letters.forEach((l,i)=>{const e=document.createElement('div');e.className='env';e.tabIndex=0;e.setAttribute('role','button');e.setAttribute('aria-label','Read letter: '+l[0]);e.style.setProperty('--i',i);e.style.setProperty('--rot',(i%2?1:-1)*(1+i*.7)+'deg');e.style.left=(20+i*14)+'px';e.style.top=(12+i*36)+'px';e.style.zIndex=i+1;e.innerHTML=`<div class="addr">${l[0]}</div><div class="seal"></div><div class="g">${l[1]} G</div>`;stack.appendChild(e);
+ let dragging=false,moved=0,ghost=null;
+ e.addEventListener('pointerdown',ev=>{if(e.dataset.placed)return;dragging=true;moved=0;e.setPointerCapture(ev.pointerId);ghost=e.cloneNode(true);ghost.classList.add('ghost');ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px';ghost.style.animation='none';ghost.style.transform='translate(-50%,-50%) rotate(0deg) scale(.92)';document.body.appendChild(ghost);e.style.opacity='.25'});
+ e.addEventListener('pointermove',ev=>{if(!dragging)return;moved++;ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px'});
+ e.addEventListener('pointerup',ev=>{if(!dragging)return;dragging=false;e.style.opacity='';ghost.remove();const r=panstack.getBoundingClientRect(),inside=ev.clientX>r.left-60&&ev.clientX<r.right+60&&ev.clientY>r.top-60&&ev.clientY<r.bottom+60;if(inside)place(i,e);else if(moved<5)read(i)});
+ e.addEventListener('pointercancel',()=>{dragging=false;e.style.opacity='';if(ghost)ghost.remove()});
+ e.addEventListener('keydown',ev=>{if(ev.key==='Enter'){read(i);ev.preventDefault()}else if(ev.key===' '){place(i,e);ev.preventDefault()}});
+});
+function read(i){label.textContent='LETTER / '+String(i+1).padStart(2,'0')+' · '+letters[i][1]+' G';letter.textContent=letters[i][2]}
+function place(i,e){if(e.dataset.placed)return;e.dataset.placed='1';e.style.display='none';weights.push(+letters[i][1]);const m=document.createElement('div');m.className='mini';m.style.left=(weights.length*9)+'px';m.style.top=(-weights.length*7)+'px';m.style.transform='rotate('+((i%2?1:-1)*3)+'deg)';panstack.appendChild(m);const sum=weights.reduce((a,b)=>a+b,0),held=5-weights.length;total.textContent='TOTAL: '+String(sum).padStart(3,'0')+' G / '+held+' LETTER'+(held===1?'':'S')+' STILL HELD';tilt(sum)}
+function tilt(sum){const target=Math.min(17,sum/9);if(anim)cancelAnimationFrame(anim);if(reduce){beam.style.transform=`rotate(${target}deg)`;return}const start=parseFloat(beam.dataset.angle||0),t0=performance.now(),dur=1100;function step(t){const p=Math.min(1,(t-t0)/dur),v=target+(start-target)*Math.exp(-5*p)*Math.cos(p*Math.PI*4);beam.style.transform=`rotate(${v}deg)`;beam.dataset.angle=v;if(p<1)anim=requestAnimationFrame(step);else{beam.style.transform=`rotate(${target}deg)`;beam.dataset.angle=target}}anim=requestAnimationFrame(step)}
+</script>
+</body>
+</html>

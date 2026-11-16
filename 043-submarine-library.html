@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Submarine Library — Books Kept Under Pressure</title>
+<style>
+:root{--deep:#253B68;--aqua:#BBD9D3;--coral:#E07A5F}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--deep);color:var(--aqua);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+h1{position:absolute;left:26px;top:20px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0;z-index:5}
+.surface{position:absolute;left:0;right:0;top:104px;height:2px;background:var(--aqua);opacity:.7;z-index:3}
+.sentence{position:absolute;left:26px;right:160px;top:112px;min-height:58px;font:italic clamp(16px,2vw,25px)/1.35 Georgia,serif;z-index:4}
+.gauge{position:absolute;right:26px;top:20px;text-align:right;font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;z-index:5}
+.gauge strong{display:block;font:400 27px Georgia,serif;margin-top:4px}
+.shelves{position:absolute;left:26px;right:26px;top:190px;bottom:66px;display:grid;grid-template-rows:repeat(6,1fr);gap:10px;z-index:2}
+.shelf{position:relative;border-bottom:3px solid var(--aqua);display:flex;align-items:flex-end;gap:8px;padding:0 10px 6px;animation:sink .8s cubic-bezier(.2,.9,.2,1.1) both;animation-delay:calc(var(--s)*.12s)}
+@keyframes sink{from{opacity:0;transform:translateY(-80px)}to{opacity:1;transform:none}}
+.book{position:relative;width:clamp(46px,7vw,88px);height:78%;border:1px solid var(--aqua);background:rgba(187,217,211,.1);color:var(--aqua);cursor:pointer;outline:none;display:flex;align-items:center;justify-content:center;text-align:center;font:9px/1.25 ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:6px;animation:drift 4s ease-in-out infinite alternate;animation-delay:calc(var(--b)*.4s);transform-origin:bottom center;transition:background .3s,transform .3s}
+.book:nth-child(3n){background:rgba(224,122,95,.28)}
+.book:nth-child(4n){height:66%}
+@keyframes drift{to{transform:skewX(1.5deg) translateY(-3px)}}
+.book:hover,.book:focus-visible{background:var(--aqua);color:var(--deep);transform:translateY(-8px)}
+.book:focus-visible{outline:2px solid var(--coral)}
+.book:after{content:'';position:absolute;left:5px;right:5px;top:8px;border-top:1px solid currentColor;opacity:.45}
+.bubble{position:absolute;z-index:6;border:1px solid var(--aqua);border-radius:50%;display:grid;place-items:center;font:9px ui-monospace,Menlo,monospace;color:var(--aqua);pointer-events:none;transform:translate(-50%,-50%)}
+.pop{position:absolute;font:italic 16px Georgia,serif;color:var(--coral);opacity:0;animation:popIn .45s ease-out forwards;pointer-events:none}
+@keyframes popIn{to{opacity:1;transform:translateY(-4px)}}
+.clear{position:absolute;right:26px;bottom:20px;background:transparent;border:1px solid var(--aqua);color:var(--aqua);padding:9px 12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;cursor:pointer;z-index:5}
+.clear:hover{background:var(--aqua);color:var(--deep)}
+@media(max-width:650px){h1{font-size:7px}.surface{top:80px}.sentence{top:88px;left:14px;right:14px;font-size:14px;min-height:46px}.shelves{top:150px;left:12px;right:12px}.book{font-size:6px;padding:2px}.gauge{font-size:7px}.gauge strong{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>BOOKS KEPT UNDER PRESSURE<br>READ MORE SLOWLY / 43</h1>
+<div class="surface"></div><div class="sentence" id="sentence">The surface is quiet. Nothing has been released yet.</div>
+<div class="gauge">PRESSURE GAUGE<strong id="depth">040 M</strong></div>
+<div class="shelves" id="shelves"></div><button class="clear" id="clear" type="button">CLEAR SURFACE</button>
+<script>
+const shelves=document.getElementById('shelves'),sentence=document.getElementById('sentence'),depth=document.getElementById('depth');
+const books=[
+ ['THE WEIGHT OF WATER','WATER / REMEMBERS / EVERY / SHAPE / IT / HELD'],
+ ['A HISTORY OF HOLDING BREATH','HOLD / STILL / AND / THE / SEA / WILL / SPEAK'],
+ ['LOW TIDE ALMANAC','THE / STONES / KEEP / THEIR / OWN / CALENDAR'],
+ ['THE QUIET PRESSURE','DEEP / HERE / IS / A / MANNER / OF / SPEAKING'],
+ ['NOTES FROM THE SECOND DECK','WE / HEARD / THE / ENGINE / DREAMING'],
+ ['A FIELD GUIDE TO ROPE','A / KNOT / IS / A / QUESTION / WITH / AN / ANSWER'],
+ ['THE SALT INDEX','EVERY / TEAR / IS / A / SMALL / OCEAN'],
+ ['LAMPS FOR READING UNDERWATER','LIGHT / TRAVELS / BADLY / BUT / RETURNS'],
+ ['CONVERSATIONS WITH ANCHORS','STAY / IS / A / VERB / TOO'],
+ ['THE SUBMARINE HERBARIUM','SEAWEED / HAS / NO / NEED / OF / WINTER'],
+ ['ATLAS OF SUNKEN ROOMS','SOME / HOUSES / ARE / ONLY / VISIBLE / FROM / BELOW'],
+ ['THE LAST SURFACE','ABOVE / US / THE / SKY / IS / STILL / READING']
+];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let opened=0,currentWords=[];
+books.forEach((b,i)=>{const s=document.createElement('div');s.className='shelf';s.style.setProperty('--s',Math.floor(i/4));for(let k=0;k<4;k++){const idx=Math.floor(i/4)*4+k,btn=document.createElement('button');btn.type='button';btn.className='book';btn.style.setProperty('--b',idx);btn.textContent=books[idx][0];btn.setAttribute('aria-label','Open '+books[idx][0]);btn.addEventListener('click',()=>release(idx,btn));s.appendChild(btn)}shelves.appendChild(s)});
+function release(i,btn){
+ const words=books[i][1].split(' / ');opened++;
+ depth.textContent=String(40+opened).padStart(3,'0')+' M';
+ if(reduce){sentence.textContent=words.join(' ').toLowerCase()+'.';return}
+ currentWords=[];sentence.textContent='';
+ const r=btn.getBoundingClientRect();
+ words.forEach((w,k)=>{
+  setTimeout(()=>{
+   const b=document.createElement('div');b.className='bubble';b.textContent=String(k+1);
+   b.style.width=(22+(k%3)*7)+'px';b.style.height=b.style.width;
+   b.style.position='fixed';b.style.left=(r.left+r.width/2+(Math.random()-.5)*80)+'px';
+   b.style.top=(r.top+r.height/2)+'px';document.body.appendChild(b);
+   const start=performance.now(),dur=1200+Math.random()*900;
+   const x0=parseFloat(b.style.left),y0=parseFloat(b.style.top);
+   function rise(t){
+    const p=Math.min(1,(t-start)/dur);
+    b.style.left=(x0+Math.sin(p*8+k)*22)+'px';
+    b.style.top=(y0+(112-y0)*p)+'px';
+    if(p<1){requestAnimationFrame(rise)}
+    else{b.remove();currentWords.push(w);const span=document.createElement('span');span.className='pop';span.textContent=w+' ';sentence.appendChild(span)}
+   }
+   requestAnimationFrame(rise);
+  },k*130);
+ });
+}
+document.getElementById('clear').addEventListener('click',()=>{sentence.textContent='The surface is quiet. Nothing has been released yet.';document.querySelectorAll('.pop').forEach(p=>p.remove())});
+</script>
+</body>
+</html>

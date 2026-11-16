@@ -1,0 +1,14 @@
+TITLE
+The Last Ferry — A Split-Flap Terminal Board
+
+PROMPT
+A navy #17324D, signal orange #E47C36 and off-white #EFE7D8 ferry terminal departure board. Five rows of split-flap cards list invented sailings: time, destination, gate and a small wind arrow. On load the cards flip down one row at a time into their first timetable. Clicking any row flips that sailing to the next entry, with a dry mechanical clack and a wind arrow that swings to a new bearing. A bottom strip scrolls the harbour master's note. No emoji, no photo of a real terminal, no purple.
+
+DESCRIPTION
+A split-flap ferry board whose rows flip to new sailings and shifting winds.
+
+VISUAL TECHNIQUES
+CSS split-flap halves with rotateX keyframes, staggered board reveal, rotating wind needle, Web Audio clack, scrolling status strip.
+
+INTERACTION MODEL
+Click any sailing row to advance it. Keyboard: arrow keys select rows, Enter flips. Reduced motion changes cards instantly without animation.

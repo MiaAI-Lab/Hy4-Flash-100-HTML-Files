@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Pharmacy of Rain — Dispensed by the Drop</title>
+<style>
+:root{--green:#35594F;--chalk:#E6EDE5;--amber:#E8B44A;--dark:#233E37}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--green);color:var(--chalk);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px 40px}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--amber);padding-bottom:12px}
+h1{font:400 clamp(20px,2.6vw,32px)/1 Georgia,serif;margin:0}
+.sign{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--dark);border:1px solid var(--dark);margin-top:28px;max-width:980px}
+.drawer{position:relative;height:118px;border:0;background:var(--green);color:var(--chalk);cursor:pointer;outline:none;padding:14px 12px;text-align:left;animation:shut .55s cubic-bezier(.2,1.3,.3,1) both;animation-delay:calc(var(--d)*.075s)}
+@keyframes shut{from{transform:translateY(10px);filter:brightness(1.35)}to{transform:none;filter:none}}
+.drawer:hover{background:#40685C}
+.drawer:focus-visible{outline:2px solid var(--amber);outline-offset:-4px}
+.drawer.open{background:#40685C;box-shadow:inset 0 8px 14px -8px var(--dark)}
+.no{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--amber)}
+.label{display:block;font:12px/1.3 Georgia,serif;margin-top:12px;letter-spacing:.02em}
+.pull{position:absolute;right:14px;bottom:12px;width:38px;height:10px;border:2px solid var(--amber);border-radius:0 0 9px 9px;border-top:0}
+.station{display:flex;gap:34px;align-items:flex-end;margin-top:30px;max-width:980px}
+.vialwrap{position:relative;width:90px;height:170px;flex:none}
+.vial{position:absolute;left:20px;top:0;width:50px;height:150px;border:2px solid var(--chalk);border-top:0;border-radius:0 0 22px 22px;overflow:hidden;background:rgba(230,237,229,.06)}
+.vial:before{content:'';position:absolute;left:-8px;right:-8px;top:0;height:4px;background:var(--chalk)}
+.mark{position:absolute;left:0;right:0;top:32px;height:1px;background:var(--amber);z-index:3}
+.fill{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--amber);transition:height .22s cubic-bezier(.2,.9,.3,1)}
+.refract{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%) scaleY(-1);font:7px ui-monospace,Menlo,monospace;color:var(--chalk);opacity:0;white-space:nowrap;z-index:4}
+.refract.show{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.rx{flex:1;border-left:1px solid var(--amber);padding:8px 0 8px 26px;min-height:150px}
+.rx .tag{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--amber)}
+.rx p{font:italic clamp(16px,2vw,23px)/1.45 Georgia,serif;margin:12px 0 0;max-width:40ch}
+.drop{position:fixed;width:11px;height:14px;border-radius:50% 50% 55% 55%;background:var(--amber);z-index:20;pointer-events:none;transform:translate(-50%,-50%) rotate(45deg)}
+.empty{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:10px 14px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;cursor:pointer;margin-top:20px}
+.empty:hover{background:var(--amber);color:var(--green)}
+@media(max-width:700px){body{padding:16px}.grid{grid-template-columns:repeat(2,1fr)}.drawer{height:92px}.station{gap:16px}.rx{padding-left:14px}.rx p{font-size:14px}.sign{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>A Pharmacy of Rain</h1><div class="sign">EST. 1911 &nbsp;·&nbsp; WE DO NOT SELL SUNSHINE</div></header>
+<div class="grid" id="grid"></div>
+<div class="station"><div class="vialwrap"><div class="vial"><div class="fill" id="fill"></div><div class="mark"></div><div class="refract" id="refract"></div></div></div><div class="rx"><div class="tag">DISPENSING NOTE / <span id="dose">00 DROPS</span></div><p id="note">The vial is empty. Choose a rain.</p><button class="empty" id="empty" type="button">EMPTY VIAL</button></div></div>
+<script>
+const rains=[
+ ['DRIZZLE FOR THE PATIENT','Take three drops before answering a letter you have avoided.'],
+ ['HARD RAIN FOR FORGETTING','Pour once over the name of a street you no longer live on.'],
+ ['RAIN BEFORE SNOW','Use when a room feels too quiet and you cannot say why.'],
+ ['SECOND-HAND RAIN','For the weather that fell on someone else and was remembered here.'],
+ ['RAIN ON A TIN ROOF','A loud remedy. Best taken with two witnesses.'],
+ ['THE LAST RAIN OF MARCH','One drop beneath the tongue for every plan you kept.'],
+ ['RAIN SEEN THROUGH WINDSCREEN','For journeys where the destination was never the point.'],
+ ['RAIN THAT ARRIVED TOO LATE','Dilute in tea. Do not hurry the dose.']
+];
+const grid=document.getElementById('grid'),fill=document.getElementById('fill'),note=document.getElementById('note'),dose=document.getElementById('dose'),refract=document.getElementById('refract'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+rains.forEach((r,i)=>{const b=document.createElement('button');b.type='button';b.className='drawer';b.style.setProperty('--d',i);b.innerHTML=`<span class="no">0${i+1} / SP</span><span class="label">${r[0]}</span><span class="pull"></span>`;b.setAttribute('aria-label','Dispense '+r[0]);b.addEventListener('click',()=>dispense(i,b));grid.appendChild(b)});
+function dispense(i,btn){document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open'));btn.classList.add('open');if(reduce){fill.style.height='76%';dose.textContent='11 DROPS';note.textContent=rains[i][1];return}
+ const r=btn.getBoundingClientRect(),v=fill.parentElement.getBoundingClientRect();fill.style.height='0%';note.textContent='';dose.textContent='00 DROPS';let n=0;const beats=[180,260,150,310,190,230,140,340,200,170,290];
+ function drop(){if(n===11){note.textContent=rains[i][1];return}const d=document.createElement('div');d.className='drop';d.style.left=(r.left+r.width*.5+(Math.random()-.5)*30)+'px';d.style.top=(r.bottom-8)+'px';document.body.appendChild(d);const x0=parseFloat(d.style.left),y0=parseFloat(d.style.top),t0=performance.now(),dur=380+Math.random()*150;
+ function fall(t){const p=Math.min(1,(t-t0)/dur),e=p*p;d.style.left=(x0+(v.left+v.width/2-x0)*e)+'px';d.style.top=(y0+(v.top+v.height-14-y0)*e)+'px';if(p<1)requestAnimationFrame(fall);else{d.remove();n++;fill.style.height=(n*7)+'%';dose.textContent=String(n).padStart(2,'0')+' DROPS';refract.textContent=rains[i][0];refract.classList.remove('show');void refract.offsetWidth;refract.classList.add('show');setTimeout(drop,beats[n]||200)}}requestAnimationFrame(fall)}
+ setTimeout(drop,220)}
+document.getElementById('empty').addEventListener('click',()=>{fill.style.height='0%';note.textContent='The vial is empty. Choose a rain.';dose.textContent='00 DROPS';document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open'))});
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pneumatic Dispatch — A Tube That Carries Paper</title>
+<style>
+:root{--copper:#B86B4B;--cream:#F0E6D2;--ink:#2D2A26}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:repeating-linear-gradient(90deg,rgba(45,42,38,.03) 0 1px,transparent 1px 6px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--copper)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.work{display:flex;gap:24px;height:calc(100vh - 100px);min-height:470px}
+.map{flex:1;position:relative;border:1px solid rgba(45,42,38,.3)}
+svg{width:100%;height:100%;display:block}
+.tube{fill:none;stroke:rgba(45,42,38,.2);stroke-width:16;stroke-linecap:round}
+.tube-inner{fill:none;stroke:var(--cream);stroke-width:10;stroke-linecap:round}
+.trail{fill:none;stroke:var(--copper);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 8;opacity:.55}
+.station{cursor:pointer;fill:var(--copper);stroke:var(--ink);stroke-width:3}
+.station:hover,.station:focus-visible{fill:var(--cream);stroke:var(--copper);outline:none}
+.slabel{fill:var(--ink);font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;pointer-events:none}
+.capsule{fill:var(--ink);stroke:var(--copper);stroke-width:3;filter:drop-shadow(0 3px 4px rgba(45,42,38,.4))}
+.slip{fill:var(--cream);stroke:var(--ink);stroke-width:1;font:8px ui-monospace,Menlo,monospace;opacity:0;transition:opacity .4s}
+.slip.show{opacity:1}
+.panel{width:230px;flex:none;border:1px solid rgba(45,42,38,.3);padding:14px;overflow:hidden}
+.panel h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--copper);margin:0 0 12px}
+.log div{font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:6px 0;border-bottom:1px dashed rgba(45,42,38,.25)}
+.log b{color:var(--copper);font-weight:400}
+.help{font:italic 12px/1.6 Georgia,serif;color:rgba(45,42,38,.65);margin-top:16px}
+@media(max-width:680px){body{padding:12px}.work{flex-direction:column}.panel{width:auto;height:160px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Pneumatic Dispatch</h1><span class="meta">TUBE NO. 091 · CARRIER READY · PRESSURE 4 BAR</span></header>
+<div class="work">
+ <div class="map"><svg viewBox="0 0 900 500" preserveAspectRatio="none" aria-hidden="true">
+  <path id="tube" class="tube" d="M120 380 C220 200 360 160 470 250 S700 400 790 220 C850 100 660 70 520 120 S250 90 180 180 C130 250 100 330 120 380 Z"/>
+  <path class="tube-inner" d="M120 380 C220 200 360 160 470 250 S700 400 790 220 C850 100 660 70 520 120 S250 90 180 180 C130 250 100 330 120 380 Z"/>
+  <path id="trail" class="trail" d="M120 380 C220 200 360 160 470 250 S700 400 790 220 C850 100 660 70 520 120 S250 90 180 180 C130 250 100 330 120 380 Z"/>
+  <g id="stations"></g><g id="slips"></g><circle class="capsule" id="capsule" cx="120" cy="380" r="13"/>
+ </svg></div>
+ <div class="panel"><h2>DISPATCH LOG</h2><div class="log" id="log"></div><div class="help">Click a brass station to send the carrier. The tube remembers every journey.</div></div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',tube=document.getElementById('tube'),stationsG=document.getElementById('stations'),slipsG=document.getElementById('slips'),capsule=document.getElementById('capsule'),trail=document.getElementById('trail'),log=document.getElementById('log'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const names=['SORTING','ACCOUNTS','ARCHIVE','DIRECTOR'],fracs=[0,.28,.58,.82],len=tube.getTotalLength();
+let at=0,busy=false,ac=null;
+function whistle(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(1500,t+.5);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.045,t+.08);g.gain.exponentialRampToValueAtTime(.0001,t+.6);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.65)}
+fracs.forEach((f,i)=>{const p=tube.getPointAtLength(f*len),c=document.createElementNS(NS,'circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',15);c.setAttribute('class','station');c.setAttribute('tabindex','0');c.dataset.i=i;stationsG.appendChild(c);const t=document.createElementNS(NS,'text');t.setAttribute('x',p.x+20);t.setAttribute('y',p.y-14);t.setAttribute('class','slabel');t.textContent=names[i];stationsG.appendChild(t)});
+function place(f){const p=tube.getPointAtLength(f*len);capsule.setAttribute('cx',p.x);capsule.setAttribute('cy',p.y);trail.setAttribute('stroke-dasharray','6 8');trail.setAttribute('stroke-dashoffset',f*len)}
+function send(i){if(busy||i===at)return;if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();busy=true;whistle();const from=at,to=i,start=performance.now(),dur=reduce?1:1500;
+ const slip=document.createElementNS(NS,'text');const p=tube.getPointAtLength(fracs[i]*len);slip.setAttribute('x',p.x-25);slip.setAttribute('y',p.y+32);slip.setAttribute('class','slip');slip.textContent='RECEIVED';slipsG.appendChild(slip);
+ function move(t){const k=Math.min(1,(t-start)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;place((fracs[from]+(fracs[to]-fracs[from])*e)%1);if(k<1)requestAnimationFrame(move);else{at=i;busy=false;slip.classList.add('show');const row=document.createElement('div');row.innerHTML=names[from]+' → <b>'+names[to]+'</b>';log.prepend(row)}}requestAnimationFrame(move)}
+stationsG.addEventListener('click',e=>{if(e.target.dataset.i!==undefined)send(+e.target.dataset.i)});
+stationsG.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i!==undefined){e.preventDefault();send(+e.target.dataset.i)}});
+document.addEventListener('keydown',e=>{if(/^[1-4]$/.test(e.key))send(+e.key-1);if(e.code==='Space'){e.preventDefault();send((at+1)%4)}});
+place(fracs[0]);setTimeout(()=>send(1),500);
+</script>
+</body>
+</html>

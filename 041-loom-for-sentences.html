@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Loom for Sentences — Warp, Weft, Words</title>
+<style>
+:root{--indigo:#2B3E60;--linen:#E8DCC4;--red:#C4513A;--dark:#1C2A42}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--indigo);color:var(--linen);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+header{position:absolute;left:0;right:0;top:0;height:96px;border-bottom:3px solid var(--linen);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 26px;z-index:6;background:var(--indigo)}
+h1{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0}
+.controls{display:flex;align-items:center;gap:12px}
+input{background:transparent;border:0;border-bottom:1px solid var(--linen);color:var(--linen);font:13px ui-monospace,Menlo,monospace;letter-spacing:.1em;width:min(32vw,330px);padding:7px 2px;outline:none}
+input:focus{border-bottom-color:var(--red)}
+input[type=range]{width:110px;accent-color:var(--red)}
+button{background:var(--red);color:var(--linen);border:0;padding:11px 16px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;cursor:pointer;outline:none}
+button:focus-visible{outline:3px solid var(--linen)}
+.loom{position:absolute;inset:96px 0 0;overflow:hidden}
+.beam{position:absolute;left:0;right:0;height:22px;background:var(--dark);border:2px solid var(--linen);z-index:5}
+.beam.top{top:0}.beam.bottom{bottom:0}
+.thread{position:absolute;left:0;right:0;height:2px;background:var(--linen);opacity:.65;transform:scaleX(0);transform-origin:left;animation:tighten .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--t)*.045s);z-index:2}
+@keyframes tighten{to{transform:none}}
+.letter{position:absolute;font:700 clamp(19px,2.3vw,32px)/1 Georgia,serif;color:var(--linen);transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform .35s cubic-bezier(.2,1.4,.3,1),opacity .25s;white-space:pre;z-index:1}
+.letter.under{z-index:1;color:#CBBFA5}
+.letter.over{z-index:3}
+.letter.in{transform:translate(-50%,-50%) scale(1);opacity:1}
+.shuttle{position:absolute;top:50%;left:4%;width:54px;height:20px;background:var(--red);border:2px solid var(--linen);transform:translate(-50%,-50%) rotate(-3deg);z-index:4;opacity:0;pointer-events:none}
+.shuttle:before,.shuttle:after{content:'';position:absolute;top:50%;width:12px;height:12px;background:var(--linen);border-radius:50%;transform:translateY(-50%)}
+.shuttle:before{left:-8px}.shuttle:after{right:-8px}
+.foot{position:absolute;left:26px;bottom:28px;font:italic 14px Georgia,serif;z-index:6}
+@media(max-width:700px){header{height:auto;flex-direction:column;align-items:flex-start;padding:10px 14px;gap:6px}.loom{top:116px}input{width:52vw}.foot{font-size:10px;bottom:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.thread{transform:none}.letter{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+</style>
+</head>
+<body>
+<header><h1>A LOOM FOR SENTENCES / 41<br>THE SHUTTLE CARRIES WORDS, NOT THREAD</h1><div class="controls"><input id="phrase" value="I KEEP MY PROMISES IN A DRAWER" aria-label="Phrase to weave" maxlength="46"><input id="tension" type="range" min="55" max="130" value="86" aria-label="Weave tension"><button id="weave" type="button">WEAVE</button></div></header>
+<div class="loom" id="loom"><div class="beam top"></div><div id="threads"></div><div id="letters"></div><div class="shuttle" id="shuttle"></div><div class="beam bottom"></div></div>
+<div class="foot">A sentence woven twice cannot be unread.</div>
+<script>
+const loom=document.getElementById('loom'),threads=document.getElementById('threads'),letters=document.getElementById('letters'),phrase=document.getElementById('phrase'),tension=document.getElementById('tension'),weaveBtn=document.getElementById('weave'),shuttle=document.getElementById('shuttle');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+for(let i=0;i<20;i++){const t=document.createElement('div');t.className='thread';t.style.top=(i*(100/20)+2.5)+'%';t.style.setProperty('--t',i);threads.appendChild(t)}
+function layout(){const chars=(phrase.value||' ').toUpperCase().split(''),r=loom.getBoundingClientRect(),count=chars.length,gap=Math.min((r.width*.86)/(count+1),(+tension.value)/100*46),start=(r.width-(count-1)*gap)/2;[...letters.children].forEach((el,i)=>{const row=i%8;el.style.left=(start+i*gap)+'px';el.style.top=(r.height*(.12+row*.1))+'px'});shuttle.style.top='50%'}
+function build(){letters.innerHTML='';const chars=(phrase.value||' ').toUpperCase().split('');chars.forEach((ch,i)=>{const s=document.createElement('span');s.className='letter '+(i%8%2?'under':'over');s.textContent=ch;letters.appendChild(s)});layout()}
+function weave(){build();if(reduce){[...letters.children].forEach(l=>l.classList.add('in'));shuttle.style.opacity=1;return}
+ const r=loom.getBoundingClientRect(),els=[...letters.children],left=r.width*.04,right=r.width*.96,dur=2200,t0=performance.now();shuttle.style.opacity=1;
+ function step(t){const p=Math.min(1,(t-t0)/dur),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2,x=left+(right-left)*e;shuttle.style.left=x+'px';els.forEach((el,i)=>{const at=(i+.5)/els.length;if(p>at)el.classList.add('in')});if(p<1)requestAnimationFrame(step);else setTimeout(()=>shuttle.style.opacity=0,350)}requestAnimationFrame(step)}
+weaveBtn.addEventListener('click',weave);phrase.addEventListener('keydown',e=>{if(e.key==='Enter')weave()});tension.addEventListener('input',layout);window.addEventListener('resize',layout);build();setTimeout(weave,400);
+</script>
+</body>
+</html>

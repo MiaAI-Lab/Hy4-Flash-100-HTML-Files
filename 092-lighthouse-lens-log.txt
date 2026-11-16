@@ -1,0 +1,14 @@
+TITLE
+The Lens Log — A Lighthouse That Reads Ships
+
+PROMPT
+A night-sea #102A3A, amber #F0B451 and chalk #EDE6D4 lighthouse study. A cutaway tower holds a faceted rotating lens; a pale amber beam sweeps over a circular horizon where invisible ships wait at fixed bearings. As the beam crosses each bearing, a ship's name is written into the lens log and glows for a moment on the water. On load the beam swings through the first ship in three seconds. Dragging the lens turns the beam; clicking it advances by a facet. No emoji, no lighthouse photograph, no purple.
+
+DESCRIPTION
+A rotating lighthouse beam that reveals ship names at their bearings.
+
+VISUAL TECHNIQUES
+SVG rotating beam wedge, faceted lens, bearing detection, log entries, Web Audio horn on discovery.
+
+INTERACTION MODEL
+Drag the lens to aim the beam or click to step one facet. Keyboard: arrow keys rotate, L log toggles. Reduced motion reveals all ships.

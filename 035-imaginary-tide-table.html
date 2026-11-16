@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tide Table for an Imaginary Coast — Fourteen Days of Water</title>
+<style>
+:root{--paper:#F4EDDB;--ink:#16383A;--sea:#2F6E68;--rust:#B6553A}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;display:grid;grid-template-columns:1fr minmax(280px,32vw)}
+header{grid-column:1/-1;border-bottom:2px solid var(--ink);padding:22px 30px;display:flex;justify-content:space-between;gap:20px;align-items:end}
+h1{font:300 clamp(20px,2.2vw,32px)/1.05 Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin:0}
+.sub{font:italic 14px/1.4 Georgia,serif;margin:0;max-width:34ch;opacity:.8}
+main{position:relative;padding:28px 30px 40px 76px;min-width:0}
+.marker{position:absolute;left:24px;width:34px;height:28px;background:var(--rust);color:var(--paper);font:10px ui-monospace,Menlo,monospace;display:grid;place-items:center;transform:translateY(-50%);cursor:ns-resize;z-index:4;touch-action:none;transition:top .5s cubic-bezier(.2,.9,.2,1.1)}
+.marker:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.row{display:grid;grid-template-columns:62px 52px 1fr 52px;gap:12px;align-items:center;height:30px;border-bottom:1px solid rgba(22,56,58,.2);font:11px ui-monospace,Menlo,monospace;letter-spacing:.1em;cursor:pointer;outline:none;padding:0 6px;transition:background .3s,height .3s}
+.row:nth-child(even){background:rgba(47,110,104,.045)}
+.row:hover,.row:focus-visible,.row.active{background:rgba(182,85,58,.12);height:34px}
+.row:focus-visible{outline:2px solid var(--rust)}
+.bar{overflow:hidden;white-space:nowrap;color:var(--sea);letter-spacing:.06em}
+.bar span{display:inline-block;clip-path:inset(0 100% 0 0);animation:type .65s steps(22) forwards;animation-delay:calc(var(--i)*.06s)}
+@keyframes type{to{clip-path:inset(0 0 0 0)}}
+.hi{color:var(--rust)}
+aside{border-left:2px solid var(--ink);padding:28px;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center}
+aside svg{width:min(100%,320px);height:auto}
+.water{fill:var(--sea);transition:y .6s cubic-bezier(.2,.8,.2,1),height .6s}
+.water2{fill:var(--rust);opacity:.85;transition:y .6s,height .6s}
+.secret{font:700 11px Arial,sans-serif;letter-spacing:.16em;fill:var(--paper);opacity:0;transition:opacity .4s}
+.show .secret{opacity:1}
+.read{font:11px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-align:center}
+.read strong{font:400 27px Georgia,serif;letter-spacing:normal}
+.foot{grid-column:1/-1;border-top:2px solid var(--ink);padding:14px 30px;font:italic 13px Georgia,serif}
+@media(max-width:760px){body{grid-template-columns:1fr}header{padding:16px}.sub{font-size:11px}main{padding:20px 16px 20px 54px}aside{border-left:0;border-top:2px solid var(--ink)}.row{grid-template-columns:48px 40px 1fr 40px;gap:6px;font-size:9px}.foot{padding:10px 16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.bar span{clip-path:none}}
+</style>
+</head>
+<body>
+<header><h1>Tide Table<br>for an Imaginary Coast</h1><p class="sub">The coast of Verr covers and uncovers the same six stones.</p></header>
+<main id="table"><div class="marker" id="marker" tabindex="0" role="slider" aria-label="Selected day" aria-valuemin="1" aria-valuemax="14" aria-valuenow="8">08</div></main>
+<aside>
+  <svg id="dial" viewBox="0 0 300 300" aria-label="Water level for the selected day">
+    <defs><clipPath id="circle"><circle cx="150" cy="150" r="120"/></clipPath></defs>
+    <circle cx="150" cy="150" r="120" fill="none" stroke="#16383A" stroke-width="2"/>
+    <g clip-path="url(#circle)"><rect class="water" id="w1" x="30" y="170" width="240" height="130"/><rect class="water2" id="w2" x="30" y="210" width="240" height="90"/><text class="secret" id="secret" x="150" y="155" text-anchor="middle">THE STONES ARE VISIBLE</text></g>
+    <path d="M150 14 v12 M150 274 v12 M14 150 h12 M274 150 h12" stroke="#16383A" stroke-width="2"/>
+  </svg>
+  <div class="read"><strong id="level">3.4m</strong><br><span id="time">HIGH WATER 06:12</span><br><span id="dayname">DAY 08 / ORBIT</span></div>
+</aside>
+<div class="foot">Spring tide: the sea briefly agrees with itself.</div>
+<script>
+const table=document.getElementById('table'),marker=document.getElementById('marker'),w1=document.getElementById('w1'),w2=document.getElementById('w2'),dial=document.getElementById('dial'),level=document.getElementById('level'),time=document.getElementById('time'),dayname=document.getElementById('dayname');
+const heights=[2.1,2.6,3.2,3.9,4.6,5.2,5.8,6.1,5.9,5.3,4.5,3.7,2.9,2.2],lows=[1.7,2.0,2.3,2.6,3.0,3.3,3.6,3.8,3.7,3.4,3.0,2.6,2.2,1.8],times=['05:48','06:12','06:36','07:01','07:26','07:52','08:18','08:44','09:10','09:36','10:02','10:28','10:54','11:20'];
+const rows=[];
+heights.forEach((h,i)=>{const r=document.createElement('div');r.className='row';r.tabIndex=0;r.setAttribute('role','button');r.setAttribute('aria-label','Day '+(i+1)+', high water '+h+' metres');const n=String(i+1).padStart(2,'0');const bar='~'.repeat(Math.round(h*5));const low='~'.repeat(Math.round(lows[i]*4));r.innerHTML=`<span>${n}</span><span class="hi">${h.toFixed(1)}</span><span class="bar"><span style="--i:${i}">${bar}</span></span><span>${lows[i].toFixed(1)}</span>`;r.addEventListener('click',()=>select(i));r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i)}});table.appendChild(r);rows.push(r)});
+let selected=7;
+function select(i){selected=Math.max(0,Math.min(13,i));const h=heights[selected];rows.forEach((r,k)=>r.classList.toggle('active',k===selected));marker.style.top=(rows[selected].offsetTop+rows[selected].offsetHeight/2+28)+'px';marker.textContent=String(selected+1).padStart(2,'0');marker.setAttribute('aria-valuenow',selected+1);w1.setAttribute('y',270-h*22);w1.setAttribute('height',h*22+30);w2.setAttribute('y',280-lows[selected]*24);w2.setAttribute('height',lows[selected]*24+30);level.textContent=h.toFixed(1)+'m';time.textContent='HIGH WATER '+times[selected];dayname.textContent='DAY '+String(selected+1).padStart(2,'0')+' / ORBIT';dial.classList.toggle('show',selected===6||selected===7)}
+let dragging=false;
+marker.addEventListener('pointerdown',e=>{dragging=true;marker.setPointerCapture(e.pointerId)});
+marker.addEventListener('pointermove',e=>{if(!dragging)return;const y=e.clientY-table.getBoundingClientRect().top-28;let best=0,d=Infinity;rows.forEach((r,i)=>{const dd=Math.abs(r.offsetTop+r.offsetHeight/2-y);if(dd<d){d=dd;best=i}});select(best)});
+marker.addEventListener('pointerup',()=>dragging=false);marker.addEventListener('pointercancel',()=>dragging=false);
+marker.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();select(selected+1)}if(e.key==='ArrowUp'){e.preventDefault();select(selected-1)}});
+window.addEventListener('resize',()=>select(selected));
+select(0);setTimeout(()=>select(7),700);
+</script>
+</body>
+</html>

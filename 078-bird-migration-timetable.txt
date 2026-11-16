@@ -1,0 +1,14 @@
+TITLE
+Flyway Timetable — Five Journeys Written Across a Map
+
+PROMPT
+A pale sky #DCE8E8 chart on a desk, printed in ink #2F4A55 with orange #D5753D accents. A simplified map carries five curved flyways between breeding grounds and wintering cities. Below it, a real timetable lists species, departure time, stopovers and distance. Hovering a row lights its route and sends a pulse of small bird marks along the line at a speed matching the printed journey length; hovering a route highlights its row. On load the routes draw themselves one after another, each followed by a first pulse. Signature moment: the timetable and map answering each other without a legend. No emoji, no generic dashboard, no gradient.
+
+DESCRIPTION
+A migration timetable linked to a map: hovering a journey animates a flock along its flyway in schedule time.
+
+VISUAL TECHNIQUES
+Abstract SVG coastline, generated curved routes, linked table and map states, pointer-driven flock pulse, drawn bird glyphs.
+
+INTERACTION MODEL
+Hover or focus a timetable row or route to highlight and animate that migration. Keyboard: rows are buttons. Reduced motion shows a static highlighted flock.

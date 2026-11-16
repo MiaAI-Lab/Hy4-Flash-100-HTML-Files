@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency Band — A Radio Dial With Something Under the Static</title>
+<style>
+:root{--olive:#56634B;--cream:#E6DDC8;--rust:#B05C3B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--olive);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:26px 30px;background-image:repeating-linear-gradient(90deg,rgba(230,221,200,.025) 0 1px,transparent 1px 5px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(230,221,200,.45);padding-bottom:10px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--cream)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.radio{margin-top:32px;border:2px solid var(--cream);padding:28px 34px 20px;background:rgba(20,26,19,.45);box-shadow:inset 0 0 50px rgba(0,0,0,.5)}
+.dial{position:relative;height:120px;touch-action:none;cursor:ew-resize;outline:0}
+.dial:focus-visible{outline:2px dashed var(--cream);outline-offset:6px}
+.scale{position:absolute;left:0;right:0;top:38px;height:2px;background:var(--cream);opacity:.65}
+.tick{position:absolute;top:38px;width:1px;background:rgba(230,221,200,.5)}
+.tick.major{height:22px;top:28px;background:var(--cream)}
+.tick b{position:absolute;top:-24px;left:-12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:var(--cream);white-space:nowrap}
+.needle{position:absolute;top:6px;width:3px;height:76px;background:var(--rust);box-shadow:0 0 12px var(--rust);transform:translateX(-50%);pointer-events:none}
+.needle:after{content:'';position:absolute;left:-5px;bottom:-10px;width:13px;height:13px;background:var(--rust);transform:rotate(45deg)}
+.readout{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;border-top:1px solid rgba(230,221,200,.3);padding-top:14px;gap:20px}
+.freq{font:400 clamp(34px,6vw,64px)/1 Georgia,serif;color:var(--rust);letter-spacing:.04em}
+.freq small{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--cream);vertical-align:top;margin-left:8px}
+.lock{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-align:right;line-height:1.8}
+.lock b{color:var(--rust);font-weight:400}
+.morse{display:flex;gap:12px;align-items:center;height:30px;margin-top:8px;font:18px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--rust)}
+.morse i{font-style:normal;opacity:.18;transition:opacity .12s}
+.morse i.on{opacity:1;text-shadow:0 0 10px var(--rust)}
+.message{font:italic 13px Georgia,serif;color:rgba(230,221,200,.75);margin-top:10px;min-height:20px}
+.controls{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
+button{font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;background:transparent;border:1px solid var(--cream);color:var(--cream);padding:8px 12px;cursor:pointer}
+button:hover{background:var(--cream);color:var(--olive)}button:focus-visible{outline:2px dashed var(--rust);outline-offset:3px}
+.hint{font:italic 12px Georgia,serif;color:rgba(230,221,200,.6)}
+@media(max-width:600px){body{padding:12px}.radio{padding:18px 14px;margin-top:18px}.tick b{font-size:7px}.freq{font-size:38px}.lock{font-size:8px}.hint{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Emergency Band</h1><span class="meta">FIELD RECEIVER · BAND 086 · AERIAL EXTENDED</span></header>
+<div class="radio">
+  <div class="dial" id="dial" tabindex="0" aria-label="Radio tuning dial, use arrow keys"><div class="scale"></div><div id="ticks"></div><div class="needle" id="needle"></div></div>
+  <div class="readout"><div class="freq"><span id="freq">93.6</span><small>MHz</small></div><div class="lock">SIGNAL <b id="signal">LOCKED</b><br>STATION <b id="station">K-9 RELAY</b><br>AUDIO <b id="audioState">MUTED</b></div></div>
+  <div class="morse" id="morse"></div>
+  <div class="message" id="message">The call sign is repeating beneath the carrier.</div>
+  <div class="controls"><button type="button" id="mute">ENABLE AUDIO</button><span class="hint">Drag to tune · arrow keys step · M mutes</span></div>
+</div>
+<script>
+const dial=document.getElementById('dial'),ticks=document.getElementById('ticks'),needle=document.getElementById('needle'),freqEl=document.getElementById('freq'),signal=document.getElementById('signal'),station=document.getElementById('station'),morse=document.getElementById('morse'),message=document.getElementById('message'),mute=document.getElementById('mute'),audioState=document.getElementById('audioState'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const stations=[{f:93.6,name:'K-9 RELAY',code:'· − · · · · − ·',text:'The call sign is repeating beneath the carrier.'},{f:101.2,name:'NORTH VOICE',code:'− · − − · −',text:'A voice counts bridges, never roads.'},{f:106.7,name:'SALT STATION',code:'· · · − · · ·',text:'The sea is transmitting its own warning.'}];
+const code=['·','−','·','·','·','·','−','·'];
+code.forEach(c=>{const i=document.createElement('i');i.textContent=c;morse.appendChild(i)});
+for(let i=0;i<=100;i++){const t=document.createElement('div');t.className='tick'+(i%10===0?' major':'');t.style.left=i+'%';if(i%10===0){const b=document.createElement('b');b.textContent=88+i/5;t.appendChild(b)}ticks.appendChild(t)}
+stations.forEach(s=>{const t=document.createElement('div');t.className='tick';t.style.left=((s.f-88)/20*100)+'%';t.style.height='32px';t.style.top='22px';t.style.background='var(--rust)'});
+let freq=88,muted=true,ac=null,staticSrc=null,staticGain=null,drag=false;
+function pos(){needle.style.left=((freq-88)/20*100)+'%'}
+function nearest(){let best=null,d=99;stations.forEach(s=>{const k=Math.abs(s.f-freq);if(k<d){d=k;best=s}});return{best,d}}
+function render(){freqEl.textContent=freq.toFixed(1);const{best,d}=nearest(),locked=d<.6;signal.textContent=locked?'LOCKED':'SEEKING';station.textContent=locked?best.name:'— — —';message.textContent=locked?best.text:'Only weather and interference between stations.';if(locked){morse.dataset.code=best.code.replace(/\s/g,'')}else morse.dataset.code='';pos()}
+function startAudio(){if(ac)return;ac=new (window.AudioContext||window.webkitAudioContext)();const buf=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;staticSrc=ac.createBufferSource();staticSrc.buffer=buf;staticSrc.loop=true;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1400;f.Q.value=.6;staticGain=ac.createGain();staticGain.gain.value=.03;staticSrc.connect(f);f.connect(staticGain);staticGain.connect(ac.destination);staticSrc.start()}
+function beep(){if(!ac||muted)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=680;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.07,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.14)}
+function setMute(){muted=!muted;if(!muted){startAudio();if(ac.state==='suspended')ac.resume()}if(staticGain&&ac)staticGain.gain.value=muted?0:.04;mute.textContent=muted?'ENABLE AUDIO':'MUTE AUDIO';audioState.textContent=muted?'MUTED':'ON';render()}
+function tuneFrom(e){const r=dial.getBoundingClientRect();freq=Math.max(88,Math.min(108,88+(e.clientX-r.left)/r.width*20));render()}
+dial.addEventListener('pointerdown',e=>{drag=true;dial.setPointerCapture(e.pointerId);tuneFrom(e)});
+dial.addEventListener('pointermove',e=>{if(drag)tuneFrom(e)});
+dial.addEventListener('pointerup',()=>drag=false);
+dial.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')freq=Math.max(88,freq-.2);else if(e.key==='ArrowRight')freq=Math.min(108,freq+.2);else return;e.preventDefault();render()});
+document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='m')setMute()});
+mute.addEventListener('click',setMute);
+ticks.addEventListener('click',e=>{const r=ticks.getBoundingClientRect();freq=Math.max(88,Math.min(108,88+(e.clientX-r.left)/r.width*20));render()});
+let step=0;setInterval(()=>{const chars=[...morse.querySelectorAll('i')];chars.forEach((i,n)=>i.classList.remove('on'));const active=morse.dataset.code||'';if(active&&step<active.length&&!muted){chars[step]?.classList.add('on');if(active[step]==='·')beep();else setTimeout(beep,90)}step=(step+1)%(active.length||8)},420);
+if(reduce){freq=93.6;render()}else{const start=performance.now();function sweep(t){const k=Math.min(1,(t-start)/2600);freq=88+(k<.75?k/.75:1)*14.6;render();if(k<1)requestAnimationFrame(sweep);else{freq=93.6;render()}}requestAnimationFrame(sweep)}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Railway Model — The Line That Chooses</title>
+<style>
+:root{--sage:#8DA98D;--cream:#EFE9D8;--brick:#A95643;--ink:#314334}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sage);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+h1{font:400 clamp(21px,2.8vw,34px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.board{margin-top:18px;border:1px solid var(--ink);background:#94AF94;position:relative}
+svg{display:block;width:100%;height:auto}
+.rail{fill:none;stroke:var(--cream);stroke-width:5;stroke-dasharray:1600;stroke-dashoffset:1600;animation:lay 1.6s ease-out forwards}
+.rail.dim{opacity:.32}
+@keyframes lay{to{stroke-dashoffset:0}}
+.tie{stroke:var(--ink);stroke-width:2;opacity:.4}
+.label{font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;fill:var(--ink)}
+#lever{cursor:pointer;outline:none}
+#lever line{stroke:var(--brick);stroke-width:6;stroke-linecap:round;transition:transform .35s cubic-bezier(.2,1.2,.3,1);transform-origin:300px 300px}
+#lever circle{fill:var(--cream);stroke:var(--ink);stroke-width:2}
+#lever:focus-visible circle{stroke:var(--brick);stroke-width:4}
+.timetable{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;border-top:1px solid var(--ink);padding-top:10px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.14em}
+.timetable b{font-weight:400;color:var(--brick)}
+@media(max-width:650px){body{padding:14px}.timetable{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rail{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<h1>Railway Model</h1><div class="sub">SINGLE CARRIAGE · WORKING POINTS · SCALE 1:87</div>
+<div class="board"><svg id="svg" viewBox="0 0 1000 520">
+  <g id="scenery">
+    <g opacity=".45" stroke="#314334" fill="none" stroke-width="1.2"><circle cx="620" cy="120" r="17"/><circle cx="672" cy="102" r="20"/><circle cx="724" cy="130" r="15"/><path d="M600 160 v-24 M620 140 v-20 M644 160 v-20 M672 126 v-24 M700 160 v-20 M724 146 v-18"/></g>
+    <g stroke="#314334" fill="none" stroke-width="1.4" opacity=".5"><path d="M700 400 h180 M720 400 v-40 h50 v40 M810 400 v-54 h44 v54 M890 400 v-34 h40 v34"/><path d="M745 360 l18-40 M832 346 l20-46 M910 366 l16-34"/></g>
+    <text class="label" x="596" y="80">ORCHARD</text><text class="label" x="790" y="470">HARBOUR</text>
+  </g>
+  <path id="pathA" class="rail" d="M20 300 H300 C420 300 430 160 560 160 H980"/>
+  <path id="pathB" class="rail dim" d="M20 300 H300 C420 300 430 440 560 440 H980"/>
+  <g id="ties"></g>
+  <g id="lever" role="button" tabindex="0" aria-label="Throw the points lever"><line x1="300" y1="300" x2="300" y2="260"/><circle cx="300" cy="300" r="9"/><text class="label" x="322" y="252">POINTS</text></g>
+  <g id="train"></g>
+</svg></div>
+<div class="timetable"><span>08:10 — <b>ORCHARD LINE</b></span><span>08:26 — <b>HARBOUR LINE</b></span><span id="current">POINTS SET: ORCHARD</span></div>
+<script>
+const NS='http://www.w3.org/2000/svg',svg=document.getElementById('svg'),a=document.getElementById('pathA'),b=document.getElementById('pathB'),train=document.getElementById('train'),ties=document.getElementById('ties'),lever=document.getElementById('lever'),current=document.getElementById('current'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let route='A',progress=0,last=performance.now(),history=[],pivot=null;
+function buildTies(){for(let i=0;i<40;i++){const l=document.createElementNS(NS,'line');l.setAttribute('class','tie');ties.appendChild(l)}}
+buildTies();
+function point(path,d){const L=path.getTotalLength(),p=path.getPointAtLength(Math.max(0,Math.min(L,d))),q=path.getPointAtLength(Math.max(0,Math.min(L,d+2)));return{x:p.x,y:p.y,ang:Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI}}
+function drawTrain(){train.innerHTML='';const pts=history.length?history:[point(route==='A'?a:b,progress)];const front=pts[pts.length-1],back=pts[0];const dx=front.x-back.x,dy=front.y-back.y,ang=Math.atan2(dy,dx)*180/Math.PI;const g=document.createElementNS(NS,'g');g.setAttribute('transform',`translate(${front.x} ${front.y}) rotate(${ang})`);g.innerHTML='<rect x="-46" y="-11" width="92" height="22" fill="#A95643" stroke="#314334" stroke-width="2"/><rect x="-34" y="-7" width="26" height="14" fill="#EFE9D8" opacity=".7"/><rect x="4" y="-7" width="26" height="14" fill="#EFE9D8" opacity=".7"/><circle cx="-30" cy="12" r="4" fill="#314334"/><circle cx="30" cy="12" r="4" fill="#314334"/>';train.appendChild(g)}
+function frame(now){const dt=Math.min(50,now-last);last=now;if(!reduce||progress===0)progress+=dt*.055;const path=route==='A'?a:b,L=path.getTotalLength(),d=progress%L;const p=point(path,d);history.push(p);if(history.length>26)history.shift();drawTrain();
+ const pa=point(a,(d-60+L)%L),pb=point(b,(d-60+L)%L);[...ties.children].forEach((l,i)=>{const base=i*32+L%64,pp=i<2?pa:pb;l.setAttribute('x1',pp.x-6);l.setAttribute('y1',pp.y+13);l.setAttribute('x2',pp.x+6);l.setAttribute('y2',pp.y+13)});
+ requestAnimationFrame(frame)}
+function toggle(){route=route==='A'?'B':'A';a.classList.toggle('dim',route==='B');b.classList.toggle('dim',route==='A');lever.querySelector('line').style.transform=route==='A'?'rotate(0deg)':'rotate(28deg)';current.textContent='POINTS SET: '+(route==='A'?'ORCHARD':'HARBOUR');history=[]}
+lever.addEventListener('click',toggle);svg.addEventListener('keydown',e=>{if(e.key===' '||e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();toggle()}});
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

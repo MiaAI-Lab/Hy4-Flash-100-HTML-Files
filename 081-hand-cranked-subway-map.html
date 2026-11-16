@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Line Nine — The Subway Map You Have to Crank</title>
+<style>
+:root{--red:#B23B3B;--cream:#F2E9D8;--ink:#1C1C1C}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:linear-gradient(90deg,rgba(28,28,28,.035) 1px,transparent 1px);background-size:38px 100%}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px}
+h1{font:400 clamp(21px,2.9vw,34px)/1 Georgia,serif;margin:0;color:var(--red)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.wrap{display:flex;gap:26px;height:calc(100vh - 96px);min-height:500px;margin-top:10px}
+.rail{width:190px;flex:none;border-right:1px solid rgba(28,28,28,.3);padding-right:18px;display:flex;flex-direction:column;align-items:center}
+.wheel{position:relative;width:148px;height:148px;border-radius:50%;border:2px solid var(--ink);background:repeating-conic-gradient(from 0deg,var(--red) 0 2deg,transparent 2deg 30deg),var(--cream);cursor:grab;touch-action:none;transform:rotate(0deg);box-shadow:0 0 0 7px rgba(178,59,59,.1)}
+.wheel:active{cursor:grabbing}.wheel:focus-visible{outline:2px dashed var(--red);outline-offset:12px}
+.wheel:before{content:'';position:absolute;inset:34px;border-radius:50%;border:2px solid var(--ink);background:var(--cream)}
+.wheel:after{content:'';position:absolute;left:calc(50% - 5px);top:10px;width:10px;height:18px;background:var(--ink);border-radius:5px}
+.turns{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:20px 0 8px}
+.log{font:10px ui-monospace,Menlo,monospace;line-height:2;width:100%;color:#5B5450}
+.log div{opacity:.28;transition:opacity .3s}.log div.reached{opacity:1;color:var(--red)}
+.log b{float:right;font-weight:400}
+.hint{font:italic 12px Georgia,serif;color:#6E655F;text-align:center;margin-top:auto}
+.map{flex:1;position:relative;min-width:0}
+svg{width:100%;height:100%;display:block;overflow:visible}
+.route{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round}
+.station{cursor:pointer;fill:var(--cream);stroke:var(--ink);stroke-width:2;transition:fill .3s,stroke .3s}
+.station.reached{fill:var(--red);stroke:var(--red)}
+.train{fill:var(--ink);stroke:var(--cream);stroke-width:3}
+.label{position:absolute;transform:translate(-50%,-50%) scaleX(.4);transform-origin:center;opacity:.2;font:11px ui-monospace,Menlo,monospace;letter-spacing:.14em;white-space:nowrap;transition:transform .5s cubic-bezier(.2,1.2,.3,1),opacity .4s;pointer-events:none}
+.label.reached{transform:translate(-50%,-50%) scaleX(1);opacity:1}
+.current{position:absolute;left:0;top:0;font:400 30px Georgia,serif;color:var(--red)}
+.sub{position:absolute;left:2px;top:42px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em}
+@media(max-width:700px){body{padding:12px}.wrap{flex-direction:column}.rail{width:100%;height:190px;flex:none;border-right:0;border-bottom:1px solid rgba(28,28,28,.3);padding:0 0 8px}.wheel{width:100px;height:100px}.wheel:before{inset:24px}.log{font-size:8px;line-height:1.6}.hint{display:none}.current{font-size:20px}.sub{top:30px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Line Nine</h1><span class="meta">HAND-CRANKED TRANSIT DIAGRAM · SERVICE 080</span></header>
+<div class="wrap">
+  <div class="rail">
+    <button class="wheel" id="wheel" type="button" aria-label="Crank the subway train forward"></button>
+    <div class="turns" id="turns">CRANK 000°</div>
+    <div class="log" id="log"></div>
+    <div class="hint">Drag in circles to crank.<br>Click a station to jump.</div>
+  </div>
+  <div class="map" id="map">
+    <div class="current" id="current">DEPOT</div><div class="sub" id="sub">NEXT: ASH YARD · 05:12</div>
+    <svg viewBox="0 0 900 520" preserveAspectRatio="none" aria-hidden="true">
+      <path id="route" class="route" d="M120 400 C180 260 300 200 430 250 S690 400 780 250 C830 160 720 80 590 110 S310 90 240 160 C170 230 90 310 120 400 Z"/>
+      <g id="stations"></g><circle class="train" id="train" cx="120" cy="400" r="10"/>
+    </svg>
+  </div>
+</div>
+<script>
+const names=['DEPOT','ASH YARD','COLD ARCH','NINE ELMS','GLASS HOUSE','TIDE GATE','OLD KILN','TERMINUS'],times=['05:12','05:19','05:27','05:36','05:44','05:53','06:02','06:11'],fracs=[0,.13,.27,.40,.54,.67,.81,.94],reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const route=document.getElementById('route'),stationG=document.getElementById('stations'),train=document.getElementById('train'),map=document.getElementById('map'),wheel=document.getElementById('wheel'),log=document.getElementById('log'),turns=document.getElementById('turns'),current=document.getElementById('current'),sub=document.getElementById('sub'),len=route.getTotalLength();
+let progress=0,angle=0,ac=null,stops=[];
+function ratchet(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.setValueAtTime(420,t);o.frequency.exponentialRampToValueAtTime(180,t+.03);g.gain.setValueAtTime(.045,t);g.gain.exponentialRampToValueAtTime(.0001,t+.05);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.06)}
+function build(){fracs.forEach((f,i)=>{const p=route.getPointAtLength(f*len),c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',8);c.setAttribute('class','station');c.dataset.i=i;stationG.appendChild(c);const l=document.createElement('div');l.className='label';l.textContent=names[i];l.style.left=(p.x/900*100)+'%';l.style.top=(p.y/520*100+7)+'%';map.appendChild(l);const row=document.createElement('div');row.innerHTML=names[i]+'<b>'+times[i]+'</b>';log.appendChild(row);stops.push({p,c,l,row})})}
+function update(){const p=route.getPointAtLength(progress*len);train.setAttribute('cx',p.x);train.setAttribute('cy',p.y);let reached=0;stops.forEach((s,i)=>{if(progress>=fracs[i]-.006){s.c.classList.add('reached');s.l.classList.add('reached');s.row.classList.add('reached');reached=i}});current.textContent=names[reached];sub.textContent='NEXT: '+(names[Math.min(7,reached+1)])+' · '+times[Math.min(7,reached+1)];wheel.style.transform='rotate('+angle+'deg)';turns.textContent='CRANK '+String(Math.round(angle)%360).padStart(3,'0')+'°'}
+function advance(d){const before=progress;progress=Math.max(0,Math.min(1,progress+d));if(Math.floor(progress*7)>Math.floor(before*7))ratchet();update()}
+build();update();
+let down=null;
+wheel.addEventListener('pointerdown',e=>{const r=wheel.getBoundingClientRect();down={a:Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2)),angle,progress,moved:false};wheel.setPointerCapture(e.pointerId)});
+wheel.addEventListener('pointermove',e=>{if(!down)return;const r=wheel.getBoundingClientRect(),a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2));let da=a-down.a;if(da>Math.PI)da-=2*Math.PI;if(da<-Math.PI)da+=2*Math.PI;down.moved=true;down.a=a;angle+=da*180/Math.PI;progress=Math.max(0,Math.min(1,down.progress+da/(2*Math.PI)*.75));update()});
+wheel.addEventListener('pointerup',()=>{if(down&&!down.moved){angle+=72;progress=Math.min(1,progress+.107);ratchet();update()}down=null});
+wheel.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowUp'){angle+=45;advance(.067);e.preventDefault()}if(e.key==='ArrowLeft'||e.key==='ArrowDown'){angle-=45;advance(-.067);e.preventDefault()}});
+stationG.addEventListener('click',e=>{const c=e.target.closest('.station');if(!c)return;const i=+c.dataset.i;angle+=144;progress=fracs[i];ratchet();update()});
+if(reduce){progress=fracs[1];update()}else{const start=performance.now();function opening(t){const k=Math.min(1,(t-start)/1900),e=1-Math.pow(1-k,3);progress=e*fracs[1];angle=e*360;update();if(k<1)requestAnimationFrame(opening)}requestAnimationFrame(opening)}
+</script>
+</body>
+</html>

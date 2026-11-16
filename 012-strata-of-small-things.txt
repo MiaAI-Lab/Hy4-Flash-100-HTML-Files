@@ -1,0 +1,14 @@
+TITLE
+Strata of Small Things — An Excavation You Control
+
+PROMPT
+A single vertical excavation cut fills the screen: six broad soil layers in exact earth colours — pale sand #E8DCC6, ochre #C7956F, red clay #8A5B43, grey ash #6E6B63, dark humus #3E3833, bedrock #1E211E. A narrow left sidebar in the same dark humus carries the title “STRATA OF SMALL THINGS” in tall condensed sans-serif capitals, a depth scale, and a range slider labelled TROWEL DEPTH. The main face of the cut is dense and tactile: grit drawn with radial-gradient speckles, tiny roots, one artifact embedded per layer (a button, a tooth, a coin, a shard, a seed, a fossil). Hovering or focusing an artifact updates the sidebar with a specific museum label, depth and one-sentence field note. Entrance: the cut rises from the bottom edge as if a core sample were being pushed up, each layer arriving at a slightly different speed. Interaction: drag the trowel-depth slider; soil above the selected depth becomes translucent and recedes, exposing deeper artifacts. Signature moment: at maximum depth all six layers separate by a few pixels, revealing a black void between them and the small objects suspended inside it. Copy: field notes should be concrete — “bone button, four holes, one chipped”, “found with a grain of wheat still in the thread”. No map pins, no emoji, no generic cards. Reduced motion skips the rise.
+
+DESCRIPTION
+An archaeological cross-section that responds to excavation depth. Dragging a single slider peels back layers of soil and lets visitors interrogate the objects found in each.
+
+VISUAL TECHNIQUES
+Layered CSS backgrounds with radial-gradient grit, range input styled as a trowel scale, clip-path entrance, per-layer opacity and transform transitions, accessible artifact buttons, live field-note panel.
+
+INTERACTION MODEL
+Drag trowel depth to uncover layers; hover, focus or click artifacts to read their catalogue entries. Keyboard ranges and buttons work normally.

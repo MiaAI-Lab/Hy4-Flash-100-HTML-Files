@@ -1,0 +1,14 @@
+TITLE
+Admit One — A Ticket Chopper That Makes Patterns
+
+PROMPT
+A ticket #E7D9B8, red #B33A2B and ink #242321 punch station. A long numbered ticket strip feeds under a red iron chopper. On load three round holes are punched in sequence during the first three seconds while the lever snaps down and the strip advances. Clicking anywhere along the ticket punches a hole at that position; when six holes exist the strip scrolls away and ticket No. 002 slides in. A small ledger shows how many tickets have been issued. No emoji, no cinema photograph, no purple.
+
+DESCRIPTION
+A ticket punch station where clicking the strip makes holes and issues new tickets.
+
+VISUAL TECHNIQUES
+SVG ticket strip and punches, animated chopper lever, feed motion, Web Audio snip, issued-ticket ledger.
+
+INTERACTION MODEL
+Click the ticket to punch; click the lever to advance. Keyboard: Space punches at a rotating position, Enter advances. Reduced motion shows a pre-punched ticket.

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lens Log — A Lighthouse That Reads Ships</title>
+<style>
+:root{--sea:#102A3A;--amber:#F0B451;--chalk:#EDE6D4}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sea);color:var(--chalk);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:radial-gradient(circle at 50% 70%,rgba(240,180,81,.08),transparent 55%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(237,230,212,.4);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--amber)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.work{display:flex;gap:24px;height:calc(100vh - 100px);min-height:470px}
+.scene{flex:1;position:relative;min-width:0;cursor:grab;touch-action:none}
+.scene:active{cursor:grabbing}
+svg{width:100%;height:100%;display:block}
+.beam{fill:url(#beamGrad);opacity:.75;transition:opacity .2s}
+.beam-group{transform-origin:450px 300px;transition:transform .45s cubic-bezier(.2,1,.3,1)}
+.tower{fill:#1B3A4B;stroke:var(--amber);stroke-width:2}
+.lens{fill:rgba(240,180,81,.2);stroke:var(--amber);stroke-width:3;cursor:grab}
+.lens:focus-visible{outline:2px dashed var(--chalk);outline-offset:4px}
+.facet{fill:none;stroke:rgba(240,180,81,.6);stroke-width:1}
+.ship{fill:rgba(237,230,212,.18);font:10px ui-monospace,Menlo,monospace;letter-spacing:.14em;transition:fill .4s,opacity .4s;opacity:.25}
+.ship.lit{fill:var(--amber);opacity:1;text-shadow:0 0 10px var(--amber)}
+.panel{width:230px;flex:none;border:1px solid rgba(237,230,212,.3);padding:14px;overflow:hidden}
+.panel h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--amber);margin:0 0 12px}
+.entry{font:10px ui-monospace,Menlo,monospace;line-height:1.9;border-bottom:1px dashed rgba(237,230,212,.2)}
+.entry b{color:var(--amber);font-weight:400}
+.help{font:italic 12px/1.6 Georgia,serif;color:rgba(237,230,212,.65);margin-top:16px}
+@media(max-width:680px){body{padding:12px}.work{flex-direction:column}.panel{width:auto;height:145px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Lens Log</h1><span class="meta">NORTH POINT · BEARING 092 · KEEPER'S RECORD</span></header>
+<div class="work">
+ <div class="scene" id="scene"><svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <defs><linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F0B451" stop-opacity=".8"/><stop offset="1" stop-color="#F0B451" stop-opacity="0"/></linearGradient></defs>
+  <circle cx="450" cy="300" r="240" fill="none" stroke="rgba(237,230,212,.12)" stroke-width="1"/>
+  <circle cx="450" cy="300" r="170" fill="none" stroke="rgba(237,230,212,.08)" stroke-width="1"/>
+  <g class="beam-group" id="beamGroup"><path class="beam" d="M450 300 L880 210 L880 390 Z"/></g>
+  <g id="ships"></g>
+  <path class="tower" d="M410 520 L425 300 H475 L490 520 Z"/><path class="tower" d="M420 300 L450 240 L480 300 Z"/>
+  <circle class="lens" id="lens" cx="450" cy="292" r="30" tabindex="0" role="button" aria-label="Rotate the lighthouse lens" transform="rotate(0)"/>
+  <g class="facet"><path d="M450 266 V318 M424 292 H476 M431 273 L469 311 M469 273 L431 311"/><circle cx="450" cy="292" r="10"/></g>
+  <text x="430" y="542" fill="rgba(237,230,212,.5)" font-size="9" font-family="ui-monospace,monospace">KEEPER</text>
+ </svg></div>
+ <div class="panel"><h2>VESSELS OBSERVED</h2><div id="entries"><div class="entry">AWAITING BEARING · <b>000°</b></div></div><div class="help">Drag or click the lens. Names appear only where the light falls.</div></div>
+</div>
+<script>
+const scene=document.getElementById('scene'),lens=document.getElementById('lens'),beamGroup=document.getElementById('beamGroup'),shipsG=document.getElementById('ships'),entries=document.getElementById('entries'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const ships=[{a:20,name:'MOTH ISLAND'},{a:95,name:'CROW ROCK'},{a:170,name:'SALT QUAY'},{a:255,name:'NORTH LIGHT'},{a:315,name:'THE FAR SHORE'}];
+let angle=-40,ac=null,drag=null,seen=new Set();
+ships.forEach(s=>{const r=s.a*Math.PI/180,x=450+Math.cos(r)*230,y=300+Math.sin(r)*230,t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('class','ship');t.textContent=s.name;shipsG.appendChild(t);s.el=t});
+function horn(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(70,t+.7);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.06,t+.08);g.gain.exponentialRampToValueAtTime(.0001,t+.8);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.85)}
+function render(){const a=((angle%360)+360)%360;beamGroup.style.transform='rotate('+a+'deg)';lens.setAttribute('transform','rotate('+a+' 450 292)');ships.forEach(s=>{const d=Math.abs(((s.a-a+540)%360)-180)<16;if(d&&!s.found){s.found=true;seen.add(s.name);s.el.classList.add('lit');horn();const row=document.createElement('div');row.className='entry';row.innerHTML=String(s.a).padStart(3,'0')+'° · <b>'+s.name+'</b>';entries.prepend(row)}else if(!d)s.el.classList.remove('lit')})}
+function step(d){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();angle+=d;render()}
+scene.addEventListener('pointerdown',e=>{const r=scene.getBoundingClientRect();drag={a:Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2)),start:angle};scene.setPointerCapture(e.pointerId)});
+scene.addEventListener('pointermove',e=>{if(!drag)return;const r=scene.getBoundingClientRect(),a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2));let d=(a-drag.a)*180/Math.PI;if(d>180)d-=360;if(d<-180)d+=360;angle=drag.start+d;render()});
+scene.addEventListener('pointerup',()=>drag=null);
+lens.addEventListener('click',e=>{e.stopPropagation();step(45)});
+lens.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(30)}if(e.key==='ArrowLeft'){e.preventDefault();step(-30)}});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')step(12);if(e.key==='ArrowLeft')step(-12)});
+if(reduce){ships.forEach(s=>{s.found=true;s.el.classList.add('lit');entries.insertAdjacentHTML('beforeend','<div class="entry">'+String(s.a).padStart(3,'0')+'° · <b>'+s.name+'</b></div>')});angle=20;render()}else{const start=performance.now();function sweep(t){const k=Math.min(1,(t-start)/2800);angle=-40+k*160;render();if(k<1)requestAnimationFrame(sweep)}requestAnimationFrame(sweep)}
+render();
+</script>
+</body>
+</html>

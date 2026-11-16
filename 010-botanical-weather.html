@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Botanical Weather — A Forecast Kept by Plants</title>
+<style>
+  :root{--paper:#F2EBD9;--sage:#7C9875;--rust:#B45A3C;--sky:#D8E3DD;--leaf:#6E8E68;--leaf2:#A9BC9C;--dark:#3E4C42}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--dark);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden;transition:background-color .8s cubic-bezier(.2,.8,.2,1)}
+  body.s1{background:#E7EFE7}body.s2{background:#F4E7CF}body.s3{background:#DDE6E3}
+  header{padding:clamp(18px,3vw,44px) clamp(18px,4vw,64px) 12px;border-bottom:1px solid var(--dark);max-width:1600px;margin:auto}
+  .issue{font:9px "Courier New",monospace;letter-spacing:.3em}
+  h1{font-weight:400;font-size:clamp(48px,9vw,138px);line-height:.82;letter-spacing:-.06em;margin:22px 0 6px;color:var(--dark)}
+  h1 em{font-style:italic;color:var(--rust)}
+  .sub{font:10px "Courier New",monospace;letter-spacing:.22em}
+  .main{max-width:1600px;margin:auto;padding:0 clamp(18px,4vw,64px);display:grid;grid-template-columns:minmax(280px,.85fr) 1.15fr;gap:clamp(20px,4vw,70px)}
+  .chapters{padding-bottom:12vh}
+  .chapter{min-height:88vh;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid rgba(62,76,66,.25);opacity:.35;transition:opacity .6s cubic-bezier(.2,.8,.2,1)}
+  .chapter.active{opacity:1}
+  .chapter .no{font:10px "Courier New",monospace;letter-spacing:.3em;color:var(--rust)}
+  .chapter h2{font-weight:400;font-size:clamp(46px,6vw,92px);line-height:.86;letter-spacing:-.05em;margin:16px 0 22px}
+  .reading{font:11px "Courier New",monospace;letter-spacing:.15em;display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid var(--dark);border-bottom:1px solid var(--dark);padding:10px 0;margin-bottom:20px}
+  .chapter p{font-size:clamp(15px,1.4vw,19px);line-height:1.6;max-width:38ch}
+  .plate{position:sticky;top:0;height:100vh;min-height:540px;display:grid;place-items:center}
+  .plate svg{width:100%;height:100%;max-height:94vh;display:block;overflow:visible}
+  .marks{position:fixed;right:clamp(8px,1.6vw,22px);top:50%;transform:translateY(-50%);z-index:10;display:grid;gap:10px}
+  .marks a{display:block;width:9px;height:9px;border:1px solid var(--dark);border-radius:50%;background:transparent;transition:background .3s ease,transform .3s ease}
+  .marks a.active{background:var(--rust);transform:scale(1.4)}
+  .marks a:focus-visible{outline:2px solid var(--rust);outline-offset:4px}
+  #skyRect{fill:var(--sky);transition:fill .8s ease}
+  body.s2 #skyRect{fill:#F0D9A8}body.s3 #skyRect{fill:#C5D1D1}
+  #cloud{fill:#F6F3E9;stroke:var(--dark);stroke-width:1.5;transform-origin:430px 190px;transition:transform .9s cubic-bezier(.2,.9,.2,1),fill .6s ease}
+  body.s0 #cloud{fill:#DCE5E0;transform:translateY(8px) scaleX(1.05)}
+  body.s3 #cloud{fill:#AAB8B8;transform:translateX(26px) scaleX(.72) scaleY(1.14)}
+  .leafGroup{transform-origin:500px 430px;transition:transform 1s cubic-bezier(.16,.9,.2,1),fill .8s ease;cursor:help;outline:none}
+  .leafGroup path:first-child{fill:var(--leaf);stroke:var(--dark);stroke-width:1.4;transition:fill .8s ease}
+  .leafGroup path:last-child{fill:none;stroke:var(--dark);stroke-width:1;opacity:.5}
+  .leafGroup:hover path:first-child,.leafGroup:focus path:first-child{fill:var(--rust)}
+  body.s0 .leafGroup{transform:rotate(-7deg) scaleY(.94)}
+  body.s1 .leafGroup{transform:rotate(3deg) scaleY(1.04)}
+  body.s2 .leafGroup{transform:rotate(12deg) scaleY(1.1)}
+  body.s3 .leafGroup{transform:rotate(-16deg) scaleY(.9)}
+  body.s3 .leafGroup path:first-child{fill:var(--leaf2)}
+  #stem{transform-origin:500px 680px;transition:transform 1s cubic-bezier(.2,.9,.2,1)}
+  body.s3 #stem{transform:rotate(6deg)}
+  .rain line{stroke:#6C8F9A;stroke-width:2;stroke-linecap:round;opacity:0}
+  body.s0 .rain line,body.s3 .rain line{animation:fall 1.25s cubic-bezier(.4,0,.7,1) infinite;animation-delay:var(--d)}
+  body.s3 .rain line{stroke:#54747D;animation-duration:.62s;transform:skewX(-18deg)}
+  @keyframes fall{0%{opacity:0;transform:translateY(-40px)}20%{opacity:.8}100%{opacity:0;transform:translateY(260px)}}
+  #sun{opacity:0;transition:opacity .8s ease}body.s2 #sun{opacity:1}
+  #leafNote{font:italic 14px Georgia,serif;fill:var(--rust);opacity:0;transition:opacity .25s ease}
+  body.s3 #leafNote{opacity:1}
+  @media(max-width:850px){.main{grid-template-columns:1fr}.plate{position:sticky;top:0;height:52vh;min-height:0;order:-1;background:var(--paper);z-index:2}.chapter{min-height:64vh}.marks{display:none}h1{font-size:clamp(44px,14vw,78px)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body class="s0">
+<header><div class="issue">GARDEN OFFICE · BULLETIN 17 · AUTUMN YEAR OF THE SNAIL</div><h1>BOTANICAL<br><em>WEATHER</em></h1><div class="sub">FORECASTS FROM SPECIMENS THAT HAVE NEVER BEEN RIGHT TWICE</div></header>
+<nav class="marks" aria-label="Forecast chapters"><a class="active" href="#c0" aria-label="Drizzle"></a><a href="#c1" aria-label="Clearing"></a><a href="#c2" aria-label="Heat"></a><a href="#c3" aria-label="Storm"></a></nav>
+<div class="main">
+  <div class="chapters">
+    <section class="chapter active" id="c0"><div class="no">01 / DRIZZLE</div><h2>The small<br>wet hour</h2><div class="reading"><span>11°C</span><span>1004 hPa</span><span>WEST, TIRED</span></div><p>The ferns have turned their faces sideways and begun to count. Expect rain in intervals of seven minutes, each one shorter than the last. The barometer is lying politely; the moss is not.</p></section>
+    <section class="chapter" id="c1"><div class="no">02 / CLEARING</div><h2>A green<br>interrupt</h2><div class="reading"><span>16°C</span><span>1012 hPa</span><span>NORTH, GENTLE</span></div><p>By ten the leaves will have remembered they are leaves. The benches will dry from the edges inward. Put the watering can away before the sparrow notices it.</p></section>
+    <section class="chapter" id="c2"><div class="no">03 / HEAT</div><h2>The pot<br>bakes</h2><div class="reading"><span>29°C</span><span>1018 hPa</span><span>NO WIND</span></div><p>Every leaf has leaned toward the east as if listening to a distant kettle. The terracotta is warm enough to worry about. Water at dusk, and only the lower soil.</p></section>
+    <section class="chapter" id="c3"><div class="no">04 / STORM</div><h2>Undersides<br>up</h2><div class="reading"><span>08°C</span><span>986 hPa</span><span>SOUTH, WILD</span></div><p>The cloud has put its shoulder into the glasshouse. In nine minutes the leaves will show their pale undersides, all at once, like a crowd turning toward a far bell. Close the little window.</p></section>
+  </div>
+  <section class="plate" aria-label="Botanical illustration responding to the forecast">
+    <svg viewBox="0 0 900 860" aria-hidden="true">
+      <rect id="skyRect" x="0" y="0" width="900" height="860"/>
+      <g id="sun"><circle cx="730" cy="150" r="62" fill="#E7A94F" opacity=".8"/><circle cx="730" cy="150" r="92" fill="none" stroke="#B45A3C" stroke-width="1" stroke-dasharray="3 10"/></g>
+      <g id="cloud"><path d="M300 210c-40 0-62-26-55-55 6-25 30-39 58-35 12-38 48-61 88-54 28 5 47 23 55 48 12-8 27-12 43-10 36 5 58 31 56 62-2 26-24 44-56 44z"/></g>
+      <g class="rain">
+        <line x1="330" y1="240" x2="312" y2="290" style="--d:0s"/><line x1="380" y1="250" x2="362" y2="300" style="--d:.18s"/>
+        <line x1="430" y1="238" x2="412" y2="288" style="--d:.36s"/><line x1="480" y1="252" x2="462" y2="302" style="--d:.12s"/>
+        <line x1="530" y1="240" x2="512" y2="290" style="--d:.5s"/><line x1="580" y1="250" x2="562" y2="300" style="--d:.28s"/>
+        <line x1="350" y1="290" x2="332" y2="340" style="--d:.62s"/><line x1="450" y1="300" x2="432" y2="350" style="--d:.44s"/>
+        <line x1="550" y1="292" x2="532" y2="342" style="--d:.7s"/>
+      </g>
+      <path d="M500 700V430" stroke="#3E4C42" stroke-width="12" fill="none" id="stem"/>
+      <g id="leaf-Bellows" class="leafGroup" tabindex="0" data-note="BELLOWS LEAF — says rain is a kind of punctuation"><path d="M500 620 C420 596 360 620 334 676 C390 700 456 682 500 620Z"/><path d="M500 620 Q420 648 348 672"/></g>
+      <g id="leaf-Spoon" class="leafGroup" tabindex="0" data-note="SPOON LEAF — refuses to forecast before tea"><path d="M500 570 C580 542 642 566 666 622 C610 648 544 630 500 570Z"/><path d="M500 570 Q580 600 654 618"/></g>
+      <g id="leaf-Compass" class="leafGroup" tabindex="0" data-note="COMPASS LEAF — points toward the last warm day"><path d="M500 520 C426 476 370 490 344 540 C402 574 462 558 500 520Z"/><path d="M500 520 Q424 528 356 538"/></g>
+      <g id="leaf-Candle" class="leafGroup" tabindex="0" data-note="CANDLE LEAF — measures the afternoon in wax"><path d="M500 470 C574 426 634 442 658 492 C598 526 538 510 500 470Z"/><path d="M500 470 Q576 478 650 490"/></g>
+      <g id="leaf-Ferry" class="leafGroup" tabindex="0" data-note="FERRY LEAF — predicts delays, never departures"><path d="M500 420 C432 382 382 400 362 448 C414 478 466 458 500 420Z"/><path d="M500 420 Q432 430 372 446"/></g>
+      <g id="leaf-Clock" class="leafGroup" tabindex="0" data-note="CLOCK LEAF — opens exactly one minute late"><path d="M500 370 C564 336 614 354 634 400 C584 428 536 410 500 370Z"/><path d="M500 370 Q564 380 626 398"/></g>
+      <path d="M380 700h240l-28 118H408z" fill="#B45A3C" stroke="#3E4C42" stroke-width="2"/>
+      <path d="M372 700h256v22H372z" fill="#C96E4D" stroke="#3E4C42" stroke-width="2"/>
+      <path d="M0 724h900" stroke="#3E4C42" stroke-width="2"/>
+      <text id="leafNote" x="60" y="800">Every leaf turned at once.</text>
+      <text x="60" y="828" font-family="Courier New,monospace" font-size="10" letter-spacing="3" fill="#3E4C42">FIG. 17 — SPECIMEN KEEPTONIA VULGARIS, DRAWN AT 06:40</text>
+    </svg>
+  </section>
+</div>
+<script>
+(function(){
+  const chapters=[...document.querySelectorAll('.chapter')],marks=[...document.querySelectorAll('.marks a')],note=document.getElementById('leafNote');
+  function set(i){document.body.className='s'+i;chapters.forEach((c,j)=>c.classList.toggle('active',j===i));marks.forEach((m,j)=>m.classList.toggle('active',j===i));note.textContent=i===3?'Every leaf turned at once.':'';}
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)set(chapters.indexOf(e.target));});},{threshold:.55});
+  chapters.forEach(c=>io.observe(c));
+  document.querySelectorAll('.leafGroup').forEach(g=>{
+    const show=()=>{note.textContent=g.dataset.note;};
+    const hide=()=>{note.textContent=document.body.classList.contains('s3')?'Every leaf turned at once.':'';};
+    g.addEventListener('pointerenter',show);g.addEventListener('focus',show);g.addEventListener('pointerleave',hide);g.addEventListener('blur',hide);
+  });
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)set(3);
+})();
+</script>
+</body>
+</html>

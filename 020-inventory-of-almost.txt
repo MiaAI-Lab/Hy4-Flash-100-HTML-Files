@@ -1,0 +1,14 @@
+TITLE
+The Inventory of Almost — A Cabinet of Objects That Nearly Existed
+
+PROMPT
+A flat, frontal filing cabinet occupying the whole page, drawn without perspective. Palette: terracotta #B45F3C cabinet, sage #7C8F7B recesses, cream #F3EADC drawer fronts, ink #2B2A26 type. Six shallow drawers are stacked vertically, each labelled with a handwritten-style serif name and a small inventory number. The title “THE INVENTORY OF ALMOST” sits in the top margin with a subtitle: “Objects withdrawn before manufacture, 1908–1964.” Each drawer face is a button. Opening one slides the cream panel to the right by 58% with a dry mechanical trajectory, revealing a sage recess containing a simple drawn object (a clock with thirteen marks, a cup with no handle, a key with one tooth, etc.) and one sentence explaining why it was not made. Only one drawer is open at a time. A thin ruler printed beside the cabinet shows the opening distance in millimetres and updates as the drawer moves. Entrance: drawers settle into place from top to bottom with tiny differences in overshoot; the ruler draws itself last. Signature moment: when a drawer passes 40 mm, a faint dust line appears along its lower edge and the object is revealed in two drawn strokes. No emoji, no cards, no gradients on text. Reduced motion opens instantly.
+
+DESCRIPTION
+A cabinet of rejected inventions. Each drawer contains one object that almost existed and the precise, unromantic reason it was withdrawn.
+
+VISUAL TECHNIQUES
+CSS transform sliding drawer fronts with custom spring easing, clip-path cavity reveals, CSS-drawn objects, measured ruler beside the cabinet, staged stroke animation, keyboard-accessible buttons.
+
+INTERACTION MODEL
+Click a drawer to open it; click again or choose another to close. Arrow keys move between drawers; Escape closes all. The ruler updates with the drawer state.

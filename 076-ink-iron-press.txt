@@ -1,0 +1,14 @@
+TITLE
+Ink & Iron — A Press That Prints the Word You Bring It
+
+PROMPT
+A cream #EFE8D7 print shop with a black-iron #1F1D1A hand press drawn in fine SVG lines and a red #A8342B ink slab. Four paper word cards — SLOW, HAND, INK, PRESS — sit in a type case. Drag one onto the press bed, then drag the long lever down. The platen descends; the paper receives the word with a slow red ink bleed, then settles into a crisp embossed impression. A small counter records how many sheets have been pulled. Signature moment: watching ink spread through the fibres before the letters sharpen. No emoji, no generic tool UI, no gradients.
+
+DESCRIPTION
+A letterpress toy: drag a word into the bed, pull the lever, and watch red ink bleed into a printed sheet.
+
+VISUAL TECHNIQUES
+SVG iron press with articulated lever, pointer dragging and snapping, staged ink-bleed animation, embossed text shadow, hand-set type cards.
+
+INTERACTION MODEL
+Drag a word card onto the press bed, then drag the lever down past its stop to print. Keyboard: choose a word with number keys and press P to print. RESET clears the sheet.

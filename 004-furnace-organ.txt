@@ -1,0 +1,14 @@
+TITLE
+Furnace Organ — Boiler Room No. 6
+
+PROMPT
+An instrument page built around the fiction of a pipe organ installed in a derelict boiler room. Palette: near-black charcoal #171412, ember #E85D2A, brass #C9A24D, with a little ash grey. The composition is frontal and theatrical: a row of seven tall brass organ pipes fills the upper two-thirds, a small monitor shows the currently held note in monospace, and a physical-looking seven-key console sits at the bottom. Sound must remain off until the viewer presses a clearly labelled “SOUND: OFF / ON” control; visual playing works without audio. Use system fonts only: a condensed-looking Georgia for the boiler-room sign and Courier for technical labels. Entrance: pipes rise from the floor with staggered 70ms delays and a heavy cubic-bezier(.16,.9,.2,1) ease, then a furnace glow pulses once behind them. Interaction: click/touch keys or use A S D F G H J; holding a key sustains a tuned oscillator with a slight detuned second voice and a filtered noise breath. Each active pipe erupts with animated flame, vibrates horizontally, and its brass label darkens as if scorched. Signature moment: a held chord makes the furnace mouth open and throw a wave of light across the ceiling pipes. Copy: invented stop names such as Cinder Quiet, Boiler Whisper, Ash Trombone, with plate numbers and temperature readings. No generic “click to play” phrasing; the console should print “PRESS KEYS · SOUND STAYS OFF UNTIL OPENED”.
+
+DESCRIPTION
+A theatrical seven-note organ whose pipes behave like industrial flues. Holding a key sends fire up a pipe, scorches its label and—once sound is opened—sustains a warm, breathy tone in the boiler room.
+
+VISUAL TECHNIQUES
+Web Audio oscillator pairs with low-pass filter and noise buffer, canvas flame particles with capped count, SVG brass pipes, CSS staggered entrance, pointer and keyboard event handling, focus-visible controls, reduced-motion still flames.
+
+INTERACTION MODEL
+Toggle sound explicitly, then press or hold the seven console keys with mouse, touch, or A–J keys. Releasing a key stops the voice and cools the pipe. All visual feedback works even with sound off.

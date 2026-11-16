@@ -1,0 +1,14 @@
+TITLE
+Thermal Portrait — A Face at Fourteen Temperatures
+
+PROMPT
+A front-facing portrait constructed from fourteen horizontal bands of colour, not outlines: a heat map of a person who is also a weather system. Palette range from cold cobalt #2B5A8C through cream #E8DFC8 to fever red #C43B2B, on a pale clinical ground #EEEAE0. Title “THERMAL PORTRAIT” in small spaced capitals upper left; a thermometer-style vertical slider at left with exact marks from −5°C to 42°C. The bands form a head-and-shoulders silhouette when seen at rest. Dragging the temperature changes every band's colour through a fixed interpolation, and the face changes with it: at cold the eyelids narrow and the bands shiver one pixel; at heat the mouth opens slightly and three drops appear at the temple. A readout shows the temperature and a invented diagnosis: “within expected range for a Tuesday”, “mild optimism”, “a small internal summer”. Entrance: the bands arrive one by one from the left and lock into the portrait. Signature moment: exactly at 37°C the bands briefly align into a readable sentence across the face — “I AM NOT ILL, I AM WEATHER” — then settle back. No emoji, no glass, no stock-photo feel. Reduced motion jumps between states without shiver.
+
+DESCRIPTION
+A portrait made of temperature. Moving the thermometer changes colour, expression and diagnosis, with a brief hidden sentence emerging at body temperature.
+
+VISUAL TECHNIQUES
+SVG horizontal band mask, HSL interpolation driven by range input, band-by-band entrance, CSS expression morphing, threshold-triggered text reveal, accessible labelled slider.
+
+INTERACTION MODEL
+Drag the vertical thermometer or use arrow keys. The portrait and diagnosis update continuously; 37°C triggers the hidden sentence.

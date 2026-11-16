@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Inventory of Almost — A Cabinet of Objects That Nearly Existed</title>
+<style>
+:root{--terra:#B45F3C;--sage:#7C8F7B;--cream:#F3EADC;--ink:#2B2A26}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:Georgia,'Times New Roman',serif}
+body{padding:clamp(18px,3vw,42px);display:flex;flex-direction:column;gap:18px;min-height:100vh;overflow-x:hidden}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:3px solid var(--ink);padding-bottom:12px}
+h1{font:400 clamp(28px,4vw,58px)/.95 Georgia,serif;letter-spacing:-.045em;margin:0}
+header p{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;margin:0;text-align:right;color:#6A655C}
+.wrap{display:grid;grid-template-columns:1fr 54px;gap:clamp(14px,2vw,34px);flex:1;min-height:0}
+.cabinet{background:var(--terra);padding:clamp(12px,1.6vw,24px);display:grid;grid-template-rows:repeat(6,1fr);gap:7px;box-shadow:10px 10px 0 rgba(43,42,38,.14)}
+.drawer{position:relative;min-height:74px;animation:settle .75s cubic-bezier(.18,.9,.2,1.12) both;animation-delay:calc(var(--i)*.09s)}
+@keyframes settle{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+.cavity{position:absolute;inset:0;background:var(--sage);display:flex;align-items:center;gap:clamp(10px,1.4vw,22px);padding:0 clamp(12px,1.5vw,24px);overflow:hidden}
+.cavity .obj{position:relative;flex:0 0 58px;height:58px;opacity:0;transform:translateY(9px);transition:opacity .45s .2s,transform .55s .2s cubic-bezier(.2,.8,.2,1)}
+.cavity .why{font:13px/1.35 Georgia,serif;color:#F6F1E4;opacity:0;transform:translateY(7px);transition:opacity .45s .34s,transform .55s .34s cubic-bezier(.2,.8,.2,1);max-width:34ch}
+.drawer.open .cavity .obj,.drawer.open .cavity .why{opacity:1;transform:none}
+.front{position:relative;z-index:2;width:100%;height:100%;background:var(--cream);border:0;text-align:left;padding:0 clamp(14px,1.8vw,26px);display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--ink);cursor:pointer;transform:translateX(0);transition:transform .86s cubic-bezier(.16,.86,.2,1.06),background .3s;box-shadow:inset 0 0 0 1px rgba(43,42,38,.18)}
+.drawer.open .front{transform:translateX(58%)}
+.front:hover{background:#FFF7E8}
+.front:focus-visible{outline:3px solid var(--ink);outline-offset:-6px}
+.front b{font:400 clamp(17px,1.8vw,26px)/1 Georgia,serif;letter-spacing:-.02em}
+.front b i{font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:#8A7D6D;margin-right:14px;font-style:normal}
+.handle{width:54px;height:8px;background:var(--ink);border-radius:4px;box-shadow:0 3px 0 rgba(43,42,38,.25);flex:0 0 auto}
+.drawer.open .front:before{content:"";position:absolute;left:0;right:0;bottom:1px;height:1px;background:rgba(43,42,38,.32)}
+.obj-clock{border:3px solid #F6F1E4;border-radius:50%;background:conic-gradient(from 0deg,rgba(246,241,228,.55) 0 1deg,transparent 1deg 27.7deg)}
+.obj-cup{width:52px;height:48px;border:3px solid #F6F1E4;border-top:0;border-radius:0 0 26px 26px}
+.obj-key{border:4px solid #F6F1E4;border-radius:50%;width:42px;left:4px}
+.obj-key:after{content:"";position:absolute;left:34px;top:26px;width:24px;height:6px;background:#F6F1E4;box-shadow:9px 6px 0 -1px #F6F1E4}
+.obj-bell{border:3px solid #F6F1E4;border-radius:50% 50% 8% 8%;height:50px}
+.obj-shoe{border:3px solid #F6F1E4;border-radius:60% 12% 20% 20%;transform:rotate(-14deg);width:60px;height:36px;top:12px}
+.obj-ruler{border:3px solid #F6F1E4;width:26px;height:64px;transform:rotate(12deg);background:repeating-linear-gradient(0deg,rgba(246,241,228,.7) 0 2px,transparent 2px 11px)}
+.ruler{position:relative;background:var(--cream);border-left:2px solid var(--ink);animation:grow .9s cubic-bezier(.2,.8,.2,1) both 1s;transform-origin:top}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.ruler:before{content:"";position:absolute;left:8px;top:0;bottom:0;width:10px;background:repeating-linear-gradient(0deg,var(--ink) 0 1px,transparent 1px 24px),repeating-linear-gradient(0deg,var(--ink) 0 1px,transparent 1px 6px);background-size:auto,7px 6px;background-position:0 0,0 0;opacity:.7}
+.marker{position:absolute;left:-6px;right:-4px;top:0;height:3px;background:var(--terra);transition:top .8s cubic-bezier(.16,.86,.2,1.06)}
+.marker:after{content:"";position:absolute;right:-2px;top:-5px;border-left:9px solid var(--terra);border-top:6px solid transparent;border-bottom:6px solid transparent}
+.reading{position:absolute;right:-2px;top:calc(100% + 8px);writing-mode:vertical-rl;font:10px ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#6A655C;white-space:nowrap}
+footer{display:flex;justify-content:space-between;gap:20px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#6A655C;text-transform:uppercase}
+@media(max-width:700px){.front b{font-size:15px}.front b i{display:none}.cavity .why{font-size:10px}.cavity .obj{flex-basis:34px;transform:scale(.7)}.wrap{grid-template-columns:1fr 34px}.reading{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Inventory of Almost</h1><p>Objects withdrawn before manufacture<br>1908–1964 · Six surviving drawings</p></header>
+<div class="wrap">
+  <div class="cabinet" id="cabinet">
+    <div class="drawer" style="--i:0"><div class="cavity"><span class="obj obj-clock"></span><p class="why">Thirteen marks on the dial. The foreman said nobody could be asked to wait that long.</p></div><button class="front"><b><i>NO. 014</i>Thirteen-hour clock</b><span class="handle"></span></button></div>
+    <div class="drawer" style="--i:1"><div class="cavity"><span class="obj obj-cup"></span><p class="why">A cup without a handle, patented in 1922. Withdrawn after the designer tried to hold it.</p></div><button class="front"><b><i>NO. 027</i>Handleless cup</b><span class="handle"></span></button></div>
+    <div class="drawer" style="--i:2"><div class="cavity"><span class="obj obj-key"></span><p class="why">One tooth, one purpose. It opened a door that was bricked up before the second prototype.</p></div><button class="front"><b><i>NO. 031</i>Single-tooth key</b><span class="handle"></span></button></div>
+    <div class="drawer" style="--i:3"><div class="cavity"><span class="obj obj-bell"></span><p class="why">A bell with no clapper. Intended for rooms where silence was part of the service.</p></div><button class="front"><b><i>NO. 048</i>Silent bell</b><span class="handle"></span></button></div>
+    <div class="drawer" style="--i:4"><div class="cavity"><span class="obj obj-shoe"></span><p class="why">A left shoe for the right foot. The factory lost the mirror and never recovered.</p></div><button class="front"><b><i>NO. 053</i>Reverse shoe</b><span class="handle"></span></button></div>
+    <div class="drawer" style="--i:5"><div class="cavity"><span class="obj obj-ruler"></span><p class="why">A bending ruler for measuring corners. It could not decide which measurement to keep.</p></div><button class="front"><b><i>NO. 061</i>Bent ruler</b><span class="handle"></span></button></div>
+  </div>
+  <div class="ruler"><div class="marker" id="marker"></div><div class="reading" id="reading">000 MM / CLOSED</div></div>
+</div>
+<footer><span>One drawer at a time · 148 mm travel</span><span>Keyboard: arrows between drawers · Escape closes</span></footer>
+<script>
+const drawers=[...document.querySelectorAll('.drawer')],fronts=[...document.querySelectorAll('.front')],marker=document.getElementById('marker'),reading=document.getElementById('reading');
+let open=-1;
+function update(){drawers.forEach((d,i)=>d.classList.toggle('open',i===open));if(open<0){marker.style.top='0%';reading.textContent='000 MM / CLOSED'}else{marker.style.top=(8+open*16.4)+'%';reading.textContent='148 MM / OPEN '+String(open+1).padStart(2,'0')}}
+fronts.forEach((b,i)=>b.addEventListener('click',()=>{open=open===i?-1:i;update()}));
+fronts.forEach((b,i)=>b.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=(i+(e.key==='ArrowDown'?1:-1)+fronts.length)%fronts.length;fronts[n].focus()}if(e.key==='Escape'){open=-1;update()}}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){open=-1;update()}});
+</script>
+</body>
+</html>

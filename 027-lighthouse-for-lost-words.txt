@@ -1,0 +1,14 @@
+TITLE
+A Lighthouse for Lost Words — Beam Study 27
+
+PROMPT
+A dark green sea of typography at night, #0F2B24, with a single lighthouse at the lower left built from flat geometric shapes in chalk #E9E2CB and signal amber #F0A93B. Scattered across the sea are twelve forgotten words, each set in a different size but always in the same chalk serif: VESPERTINE, APricity, HALCYON, NUSJA, SAUDADE, PETRICHOR, DRIZZLE, LUMEN, KEFUDING, MORROW, GLOAMING, ELEGIE. An amber beam rotates continuously from the lighthouse — a wide translucent cone made with a conic gradient, genuinely a beam of light. Words caught inside the cone brighten from dim green to chalk, and a faint underline appears. Clicking a lit word salvages it: the word flies along the beam to the lighthouse and joins a horizontal log at the bottom, replacing the oldest entry. The headline “WHAT THE TIDE BROUGHT IN” sits upper right in small spaced capitals; a counter records SALVAGED 00/12. Entrance: the beam starts at the left edge and sweeps once across the whole field before settling into its slow rotation. Signature moment: dragging anywhere sets the beam direction and briefly holds it, like grabbing a light. No emoji, no cards, no purple. Reduced motion keeps the beam static and lets all words be clicked.
+
+DESCRIPTION
+A lighthouse sweeps a beam across a sea of forgotten words. Only what the light touches can be rescued, making reading an act of attention.
+
+VISUAL TECHNIQUES
+Conic-gradient beam with rotational transform, angular/distance hit testing in JavaScript, CSS flight animation along a custom property path, live salvage log, responsive absolutely positioned typography.
+
+INTERACTION MODEL
+The beam rotates automatically; dragging steers and holds it. Click a lit word to salvage it. Keyboard users use left/right arrows to steer and Enter to salvage the current word.

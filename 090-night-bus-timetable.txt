@@ -1,0 +1,14 @@
+TITLE
+Night Service 090 — A Timetable Drawn in Thread
+
+PROMPT
+A deep teal #123F45, lemon #E3D45F and paper #EFE8D6 night-bus diagram. Four routes are drawn as coloured threads between small station nodes, and a digital roll sign above the map names the current destination. On load the threads draw themselves in the first three seconds while the roll sign clicks through three destinations and settles on LAST LIGHT. Hovering a node reveals its departure time; clicking it extends a bright thread from the last stop to that node and changes the sign. A narrow timetable column fills with the stops visited. No emoji, no street map imagery, no purple.
+
+DESCRIPTION
+A night-bus map whose threads extend when stations are clicked, updating a roll sign and timetable.
+
+VISUAL TECHNIQUES
+SVG polylines with dash draw, hover tooltips, dynamic route extension, roll-sign text swap, timetable generation.
+
+INTERACTION MODEL
+Click any node to extend the highlighted route; hover to read times. Keyboard: Tab between nodes, Enter extends, R resets. Reduced motion shows all threads drawn.

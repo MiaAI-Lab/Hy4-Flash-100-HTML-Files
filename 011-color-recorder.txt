@@ -1,0 +1,14 @@
+TITLE
+Color Recorder — A Loom for Typed Words
+
+PROMPT
+A tool that treats typing as weaving. Off-white #F5F1E6 ground with a restrained prism palette: red #D94141, ochre #E7A81D, teal #2A8A7A, ink #20201D. Layout: a tall loom frame occupies the centre and right, with a narrow left column carrying the title “COLOR RECORDER” in tight Georgia capitals, a short explanation of the invented colour alphabet, and a single refined text input. Every character typed adds a horizontal weft row to the canvas loom: each letter maps to a hue by a fixed alphabet table, each space to a pale gap, punctuation to thin black slubs. Rows appear with a quick thread-drawing motion from left to right, not a generic fade. Above the loom, a live strip shows the last typed word split into coloured character blocks. Entrance: the loom warp threads draw first, then a demonstration phrase threads itself across twelve rows. Interaction: type into the input; Backspace removes the last row; a small “EMPTY SHUTTLE” control clears the canvas. Signature moment: holding a key threads a continuous band of colour while the warp threads visibly deflect under the shuttle. Copy: explain the mapping with specific letter groups and invented names such as “A–F: kiln red”. Keyboard focus visible; touch users get an on-screen text field. Reduced motion draws rows instantly. No sound.
+
+DESCRIPTION
+A calm generative tool that makes the act of typing physical. Words become woven bands of colour, with the loom’s warp subtly reacting to every thread.
+
+VISUAL TECHNIQUES
+Canvas 2D weaving with high-DPI scaling, per-character colour map, animated row progress, DOM input events, CSS warp-thread overlay, reduced-motion draw state.
+
+INTERACTION MODEL
+Type, backspace and clear. The loom responds immediately and keyboard focus stays in the text field; all controls are labelled.

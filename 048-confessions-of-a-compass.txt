@@ -1,0 +1,14 @@
+TITLE
+Confessions of a Compass — True North Is a Feeling
+
+PROMPT
+A deep teal #0F4C5C field with cream #F5EFE1 engraved type and a vermilion #E85D3F needle. A large compass rose fills the centre, its cardinal marks replaced by four human directions: N — APPROVAL, E — ESCAPE, S — STAYING, W — BEGINNING AGAIN. The needle points north on load and trembles slightly, as if uncertain. Drag the needle around the dial: the direction labels glow as it passes, and a small cream caption under the dial updates with the confession for that quarter: “N: I still check whether you read the message.” Release and the needle swings past the true direction twice before settling, spring-like. A thin ring of degree ticks is drawn in cream, with every thirtieth tick in vermilion. Entrance: ticks appear clockwise in a quick sweep, then the needle drops in from above with a damped bounce. Signature moment: the needle overshoots and returns, and the caption word “APPROVAL” is crossed out and rewritten as “SOMETHING LIKE APPROVAL” when settled. No emoji, no glass, no gradients. Reduced motion snaps without overshoot.
+
+DESCRIPTION
+A compass whose north is emotional rather than geographic. Drag the needle to find what it actually points toward; it always ends somewhere honest.
+
+VISUAL TECHNIQUES
+SVG compass rose with generated degree ticks, pointer drag, spring easing with overshoot, engraved typography, cross-out reveal.
+
+INTERACTION MODEL
+Drag the needle or click a direction. Keyboard: arrow keys rotate in 45-degree steps; Enter releases the needle.

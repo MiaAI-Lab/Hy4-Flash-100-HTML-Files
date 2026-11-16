@@ -1,0 +1,14 @@
+TITLE
+Folded Atlas — The Same Country, Two Sides
+
+PROMPT
+A washi-paper atlas sheet, #F4EFE4, centred on a deep ink #263E5C desktop. The front map is drawn only in vermilion #C8482F and ink: contour lines, a single river, six place names with invented, precise names like BELLS WITHOUT CLOCKS and LOW COUNTRY OF THE INNER POCKET. A horizontal crease divides the sheet. Dragging a small ink fold tab at the right edge folds the upper half down over the lower half in convincing 3D perspective, with a subtle shadow cast by the moving paper. As it folds, the front map disappears and the back of the folded half is revealed: the same geography at night, with pale chalk roads and tiny vermilion lights at each settlement. The title “FOLDED ATLAS / SHEET 29” sits upper left of the desktop in small monospaced spaced capitals. At the bottom: “A country fits in a pocket only when it is willing to become smaller.” When fully folded, the hidden map's lights come on one by one. A small RESET tab unfolds it. Entrance: the sheet unfolds from fully folded to flat on load over 1.4 seconds with an eased hinge. Signature moment: the same river appears continuous across front and back even though the paper is folded — the cartography refuses to obey the crease. No emoji, no buttons with default styling, no gradients on type.
+
+DESCRIPTION
+An interactive paper map. Folding the sheet reveals the same country after dark, proving that a place can be carried in two states at once.
+
+VISUAL TECHNIQUES
+CSS preserve-3d folding panel with perspective, front/back faces with backface-visibility, generated SVG contour cartography, cast shadow driven by fold angle, staggered night-light reveal.
+
+INTERACTION MODEL
+Drag the fold tab vertically or use the range slider to fold and unfold. A reset control returns to flat. Keyboard: slider arrows control the fold.

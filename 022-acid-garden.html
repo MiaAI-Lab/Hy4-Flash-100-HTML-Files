@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acid Garden — A Plant That Grows Toward Attention</title>
+<style>
+:root{--black:#0A0D0B;--acid:#B8FF3D;--bone:#F2F5EC;--deep:#3F6C22}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--black);color:var(--bone);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+svg{display:block;width:100%;height:100%;touch-action:none}
+.head{position:absolute;left:clamp(20px,3vw,48px);top:clamp(20px,3vw,40px);z-index:3;pointer-events:none}
+.head h1{font:300 clamp(24px,3.2vw,46px)/1 Arial,sans-serif;letter-spacing:.26em;margin:0;color:var(--acid)}
+.head p{font:10px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#91A386;margin:10px 0 0;text-transform:uppercase}
+.count{position:absolute;right:clamp(20px,3vw,48px);bottom:clamp(20px,3vw,40px);z-index:3;text-align:right;pointer-events:none}
+.count strong{font:300 58px/.8 Arial,sans-serif;letter-spacing:-.07em;color:var(--acid)}
+.count span{display:block;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#91A386;margin-top:9px;text-transform:uppercase}
+.tip{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--acid);box-shadow:0 0 10px var(--acid);animation:pulse 1.2s ease-in-out infinite alternate;pointer-events:none}
+body.sync .tip{animation-duration:.48s}
+@keyframes pulse{from{opacity:.5;transform:scale(.7)}to{opacity:1;transform:scale(1.35)}}
+.vine{fill:none;stroke:var(--acid);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(184,255,61,.65));transition:opacity .8s}
+.vine.old{stroke:var(--deep);opacity:.55;filter:none}
+.vine.branch{stroke-width:1.7;opacity:.8}
+.seed{fill:var(--acid);filter:drop-shadow(0 0 6px var(--acid));animation:seedIn .6s cubic-bezier(.2,.9,.2,1.2) both}
+@keyframes seedIn{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+.guide{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#6F7F64;z-index:3;pointer-events:none}
+@media(max-width:600px){.head h1{font-size:21px}.head p{display:none}.count strong{font-size:40px}}
+@media(prefers-reduced-motion:reduce){.tip,.seed{animation:none}}
+</style>
+</head>
+<body>
+<div class="head"><h1>Acid Garden</h1><p>Specimen 22 · phototropic toward cursor<br>Do not touch the tip</p></div>
+<div class="count"><strong id="grown">00</strong><span>specimens grown · <span id="seeds">00</span> seeds opened</span></div>
+<div class="guide">PRESS AND HOLD TO GROW · MOVE TO STEER · SPACE FOR A CENTRE SEED</div>
+<svg id="field" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-label="A growing field of luminous vines">
+  <g id="paths"></g><g id="seeds"></g>
+</svg>
+<script>
+const SVGNS='http://www.w3.org/2000/svg',svg=document.getElementById('field'),paths=document.getElementById('paths'),seedLayer=document.getElementById('seeds'),grown=document.getElementById('grown'),seedsN=document.getElementById('seeds');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let vines=[],pointer={x:600,y:320},grownCount=0,seedCount=0,last=performance.now();
+function coord(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const m=svg.getScreenCTM();return m?p.matrixTransform(m.inverse()):{x:600,y:320}}
+function updateCount(){grown.textContent=String(grownCount).padStart(2,'0');seedsN.textContent=String(seedCount).padStart(2,'0')}
+function node(v){const d=document.createElement('div');d.className='tip';document.body.appendChild(d);v.node=d}
+function placeNode(v){const r=svg.getBoundingClientRect();v.node.style.left=(v.x/1200*r.width)+'px';v.node.style.top=(v.y/800*r.height)+'px'}
+function burst(v){
+  if(v.node){v.node.remove();v.node=null}
+  for(let i=0;i<5;i++){const c=document.createElementNS(SVGNS,'circle');c.setAttribute('class','seed');c.setAttribute('cx',v.x+Math.cos(i*1.256)*20);c.setAttribute('cy',v.y+Math.sin(i*1.256)*20);c.setAttribute('r',4);seedLayer.appendChild(c)}
+  seedCount++;updateCount();v.active=false;v.path.classList.add('old')
+}
+function make(x,y,tx,ty,demo=false,branch=false){
+  const p=document.createElementNS(SVGNS,'path');p.setAttribute('class','vine'+(branch?' branch':''));p.setAttribute('d',`M ${x} ${y}`);paths.appendChild(p);
+  const v={path:p,d:`M ${x} ${y}`,x,y,tx,ty,angle:Math.atan2(ty-y,tx-x),active:true,demo,branch,age:0,branches:0};
+  vines.push(v);if(!demo)grownCount++;updateCount();node(v);placeNode(v);
+  if(reduce){const steps=34;for(let i=0;i<steps;i++){v.x+=(v.tx-v.x)/ (steps-i);v.y+=(v.ty-v.y)/(steps-i);v.d+=` L ${v.x.toFixed(1)} ${v.y.toFixed(1)}`}v.path.setAttribute('d',v.d);burst(v)}
+  return v
+}
+function frame(now){
+  const dt=Math.min(2,(now-last)/16.7);last=now;
+  vines.forEach(v=>{
+    if(!v.active)return;
+    v.tx=v.demo?v.tx:pointer.x;v.ty=v.demo?v.ty:pointer.y;
+    const want=Math.atan2(v.ty-v.y,v.tx-v.x);let diff=((want-v.angle+Math.PI*3)%(Math.PI*2))-Math.PI;
+    v.angle+=diff*.055*dt+(Math.random()-.5)*.055*dt;
+    v.x+=Math.cos(v.angle)*3.4*dt;v.y+=Math.sin(v.angle)*3.4*dt;v.age+=dt;
+    v.d+=` L ${v.x.toFixed(1)} ${v.y.toFixed(1)}`;v.path.setAttribute('d',v.d);
+    if(v.node)placeNode(v);
+    if(v.age>40&&v.branches<2&&!v.branch&&Math.random()<.012){v.branches++;make(v.x,v.y,v.tx+((Math.random()-.5)*260),v.ty-120,false,true)}
+    if(Math.hypot(v.tx-v.x,v.ty-v.y)<18)burst(v);
+    if(v.y<12||v.x<12||v.x>1188||v.age>700){v.active=false;if(v.node)v.node.remove();v.path.classList.add('old')}
+  });
+  document.body.classList.toggle('sync',vines.filter(v=>v.active).length>=5);
+  requestAnimationFrame(frame)
+}
+svg.addEventListener('pointerdown',e=>{const p=coord(e);pointer=p;make(p.x,795,p.x,p.y)});
+svg.addEventListener('pointermove',e=>pointer=coord(e));
+document.addEventListener('pointerup',()=>vines.forEach(v=>{if(!v.demo&&v.active){v.active=false;if(v.node){v.node.remove();v.node=null};v.path.classList.add('old')}}));
+document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();pointer={x:600,y:250};make(600,795,600,250)}});
+setTimeout(()=>make(540,795,600,240,true),420);
+if(!reduce)requestAnimationFrame(frame);
+</script>
+</body>
+</html>

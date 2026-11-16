@@ -1,0 +1,14 @@
+TITLE
+X-Ray Type — An Alphabet With Bones
+
+PROMPT
+A clinical black #0C1216 specimen drawer containing twenty-six letters. At rest each glyph is only a cold blue-white #D8EDF2 outline. Hovering or focusing a letter illuminates it from inside: vertebrae, ribs and fine hatching appear clipped precisely to the letterform, like a plate held up to light. Clicking pins the letter into a large viewing window on the right, where a scan line travels down the form and labels name the structures: SPINE, RIBS, MARROW, PRESSURE. Palette stays black, blue-white and gray #6F8994. Signature moment: the first illuminated “A”, where the letter's own counter becomes a rib cage. No emoji, no glow blobs, no UI chrome. Reduced motion shows the bones immediately.
+
+DESCRIPTION
+A typographic specimen whose letters reveal imagined skeletal interiors when illuminated.
+
+VISUAL TECHNIQUES
+SVG text as clipPath, clipped rib/spine drawings, staggered grid entrance, custom scan-line animation, precise clinical labels.
+
+INTERACTION MODEL
+Hover or focus to preview a letter; click to pin it in the viewing window. Keyboard: letter buttons are tabbable; Enter pins.

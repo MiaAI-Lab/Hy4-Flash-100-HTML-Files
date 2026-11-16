@@ -1,0 +1,14 @@
+TITLE
+Missed Calls — Tape from a Machine That Still Remembers
+
+PROMPT
+A cream #EEE8DA answering-machine face with black #252321 mechanical type and a red #B13B33 record light. A cassette sits in the centre with two reels and a strip of paper tape hanging from it. A large red PLAY control sits below. Clicking PLAY slowly unwinds the tape: a paper strip grows downward from the cassette, and a typewriter head prints one missed-call message at a time, each with a timestamp and a named caller: “23:14 — M. — ‘I am outside the station. It doesn’t matter now.’” After four messages the tape reaches a torn lower edge and the record light stops blinking. Clicking the tape at any point skips to the next message. Entrance: the reels turn once, the red light starts blinking, and the first centimetre of tape curls out. Signature moment: the paper unwinds in visible increments in sync with the typing, so the message appears exactly where the tape has emerged. No emoji, no glass, no gradients. Reduced motion shows all four messages at once.
+
+DESCRIPTION
+An answering machine whose paper tape unwinds as it replays four missed calls. The messages type themselves exactly where the tape has emerged.
+
+VISUAL TECHNIQUES
+Animated paper-tape height, typewriter-style message reveal, rotating cassette reels, blinking record LED, perforated tape edges.
+
+INTERACTION MODEL
+Click PLAY to unwind. Click the tape to skip to the next message. REWIND restores the cassette.

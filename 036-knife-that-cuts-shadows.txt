@@ -1,0 +1,14 @@
+TITLE
+The Knife That Cuts Shadows — A Study in Split Light
+
+PROMPT
+A flat terracotta #C85A3C studio floor with a chalk #F3EAD7 shadow cast diagonally across it. The shadow is not an object's silhouette but a soft, slightly absurd shape: part umbrella, part animal, part coat hanger. Moving the pointer moves an unseen light source, so the shadow bends and stretches with a simple inverse-square rule. A chalk knife handle follows the pointer; clicking makes a bright blade sweep across the shadow along the pointer's recent direction. The shadow splits cleanly into two pieces that slide apart by a few millimetres and rotate slightly, leaving a thin terracotta cut line. Each cut adds a new piece to a growing pile at the bottom edge. Copy at upper left: “SHADOW CUTTING, 4TH CLASS / THE BLADE DOES NOT TOUCH THE OBJECT.” A counter tracks CUTS 00. Entrance: the shadow arrives from offscreen, overshoots, and settles. Signature moment: the first cut makes a soundless flash and the two halves breathe outward once before resting. No emoji, no gradients on type, no purple. Reduced motion cuts without the sweep, placing pieces directly.
+
+DESCRIPTION
+A small tool for slicing a responsive shadow. Each cut divides the shadow further, until a single light source becomes a pile of pieces.
+
+VISUAL TECHNIQUES
+SVG path geometry driven by pointer position, animated blade sweep with clip paths, polygon splitting by a line, drifting pieces with custom easing, live cut counter.
+
+INTERACTION MODEL
+Move the pointer to bend the shadow; click to cut. Press C to cut at the last blade position. A RESET SHADE button restores the uncut shadow.

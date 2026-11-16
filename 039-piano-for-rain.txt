@@ -1,0 +1,14 @@
+TITLE
+A Piano for Rain — Eight Keys, One Storm
+
+PROMPT
+A narrow upright piano reduced to eight keys, drawn as cream #EFE7D6 slabs on a slate #3E5B63 body with one brass #E5B94C sustain bar. Above it, a canvas sky receives rain. Each key is labeled with a weather word instead of a note: DRIZZLE, SHOWER, SLEET, HAZE, DOWNPOUR, THAW, MIST, THUNDER. Pressing a key plays a short synthesized tone and releases a specific rain pattern: fine vertical lines for drizzle, slanted dashes for sleet, large slow drops for downpour, and one brief brass flash for thunder. Rain lands on the piano's upper edge and splashes into tiny horizontal marks. Holding the sustain bar lets patterns accumulate; releasing it clears the sky slowly. Copy at upper left: “PLAYED IN THE KEY OF LOW PRESSURE.” A small indicator reads WEATHER: UNSETTLED and changes with the last key. Entrance: a single drop falls, then the keys lower into place. Signature moment: when all eight keys have been played, the storm briefly plays itself in a staggered arpeggio and the sky fills. No emoji, no gradients on type, no purple. Reduced motion plays tones without falling drops.
+
+DESCRIPTION
+An eight-key piano that makes weather instead of music. Each key has its own rain pattern, and playing all eight lets the storm compose itself.
+
+VISUAL TECHNIQUES
+Canvas rain particles with per-key emission profiles, Web Audio tones, sustain toggle, completion arpeggio, custom key press animation.
+
+INTERACTION MODEL
+Click or Tab to keys and press Enter/Space. Hold the sustain bar with pointer or keyboard. A CLEAR SKY button resets the storm.

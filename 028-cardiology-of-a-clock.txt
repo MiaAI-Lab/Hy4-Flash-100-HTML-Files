@@ -1,0 +1,14 @@
+TITLE
+Cardiology of a Clock — Twelve Arteries, One Second
+
+PROMPT
+A clock face reimagined as a heart: bone-white #EDE7D8 ground, ink #1F1D1A numerals and hands, one arterial red #B4362C used only for blood. The face is a large circle with twelve radial arteries running outward from a dark centre to the hour numerals, each artery drawn as a slightly curved SVG path. Every beat, a red droplet travels along one artery and arrives at the numeral exactly as the hand passes it. The hour and minute hands are thin ink needles; the second hand is a red thread with a drop at its tip. A BPM control in the lower left runs from 40 to 140, with the current rate printed in a monospace tabular figure. Copy at upper left: “THE SECOND IS NOT A UNIT. IT IS A SMALL ANIMAL.” Every twelfth beat a waveform briefly draws itself across the face, replacing the numerals with a red ECG line, then fades. Entrance: arteries grow outward from the centre in sequence, then the numerals appear, then the hands drop into place. Signature moment: the drop and hand arrive at the same numeral together — a small synchronisation that feels impossible until you notice the arteries are numbered. No emoji, no glassmorphism, no purple. Reduced motion keeps the clock and beats but suppresses droplet travel and ECG draw.
+
+DESCRIPTION
+A clock that behaves like a circulatory system. Blood drops keep time with the hands, and once a dozen beats the face briefly becomes an ECG.
+
+VISUAL TECHNIQUES
+SVG radial paths, per-frame point sampling with getPointAtLength, synchronised droplet and hand angles, stroke-dashoffset ECG reveal, pulse scale on the central heart, numbered arteries.
+
+INTERACTION MODEL
+Drag the BPM slider to change the rate. Click the face to pause or resume the heartbeat. Keyboard: slider arrows adjust rate; space on the face pauses.

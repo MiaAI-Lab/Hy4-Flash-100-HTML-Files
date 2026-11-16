@@ -1,0 +1,14 @@
+TITLE
+Lunar Post Office — Letters for the Far Side
+
+PROMPT
+A black #0D0E10, cream #ECE4D1 and gold #C7A35C night desk. A cream envelope rests under a small moon. Three gold stamps orbit the envelope, then land on its corner and fuse into a wax seal. On load the orbit and landing happen during the first three seconds. Dragging the envelope moves it; the stamps break orbit, chase it and seal again. A printed line reads “TO THE FAR SIDE, VIA THE THIRD QUARTER.” No emoji, no photograph, no purple.
+
+DESCRIPTION
+An envelope whose orbiting stamps settle into a wax seal and follow it when dragged.
+
+VISUAL TECHNIQUES
+SVG envelope and moon, orbital motion, drag tracking, wax seal drawing, Web Audio tick.
+
+INTERACTION MODEL
+Drag the envelope to move it. Keyboard: arrows move it, Space releases the stamps again. Reduced motion shows the sealed envelope.

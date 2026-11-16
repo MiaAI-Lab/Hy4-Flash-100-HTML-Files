@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Tanks Above the City — A Rooftop Pressure Study</title>
+<style>
+:root{--blue:#7D9AA1;--rust:#B45B3E;--concrete:#D8D3C6}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--blue);color:var(--concrete);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:linear-gradient(180deg,rgba(216,211,198,.1),transparent 60%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(216,211,198,.5);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.scene{position:relative;height:calc(100vh - 100px);min-height:470px;margin-top:8px;overflow:hidden}
+svg{width:100%;height:100%;display:block}
+.tank{cursor:pointer;outline:0}.tank:focus-visible .body{stroke:#fff;stroke-width:3}
+.body{fill:#C6B6A2;stroke:var(--rust);stroke-width:2}
+.water{fill:rgba(125,154,161,.85);transition:y .9s ease,height .9s ease}
+.ripple{fill:none;stroke:var(--concrete);stroke-width:2;opacity:0}
+.tank.open .ripple{animation:ripple 1.8s ease-out infinite}
+.tank.open .ripple:nth-of-type(2){animation-delay:.6s}
+@keyframes ripple{0%{opacity:.8;transform:scale(.2)}100%{opacity:0;transform:scale(1)}}
+.num{fill:var(--rust);font:700 15px ui-monospace,Menlo,monospace;letter-spacing:.1em}
+.bird{fill:none;stroke:var(--concrete);stroke-width:2;stroke-linecap:round}
+.flock{animation:cross 12s linear infinite}
+.flock.b{animation-duration:16s;animation-delay:-5s;opacity:.7}
+@keyframes cross{from{transform:translate(-120px,20px)}to{transform:translate(1100px,-50px)}}
+.flock.scatter{animation:scatter 1.2s ease-out forwards}
+@keyframes scatter{to{transform:translate(180px,-180px) scale(1.4);opacity:0}}
+.drip{fill:var(--concrete);animation:drip 2.4s ease-in infinite}
+@keyframes drip{0%,70%{transform:translateY(0);opacity:0}72%{opacity:1}100%{transform:translateY(90px);opacity:0}}
+.hud{position:absolute;left:6px;top:8px;display:flex;gap:26px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;pointer-events:none}
+.hud b{color:var(--rust);font-weight:400}
+.gauge{position:absolute;right:10px;top:6px;width:120px;height:70px;pointer-events:none}
+.needle{stroke:var(--rust);stroke-width:3;transform-origin:60px 60px;transition:transform .6s}
+.note{position:absolute;right:14px;bottom:12px;font:italic 12px Georgia,serif;color:rgba(216,211,198,.75);pointer-events:none}
+@media(max-width:600px){body{padding:12px}.hud{font-size:7px;gap:10px}.gauge{width:80px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Tanks Above the City</h1><span class="meta">ROOF SURVEY 087 · PRESSURE LOG · ELEVATION 34 M</span></header>
+<div class="scene" id="scene">
+ <svg viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g class="flock" id="flock"><path class="bird" d="M180 90 q7 -7 14 0 q7 -7 14 0"/><path class="bird" d="M220 110 q5 -5 10 0 q5 -5 10 0"/><path class="bird" d="M250 75 q6 -6 12 0 q6 -6 12 0"/></g>
+  <g class="flock b" id="flock2"><path class="bird" d="M100 130 q6 -6 12 0 q6 -6 12 0"/><path class="bird" d="M140 100 q5 -5 10 0 q5 -5 10 0"/></g>
+  <path d="M0 520 V330 H90 V270 H190 V350 H280 V230 H400 V300 H500 V210 H620 V320 H730 V260 H840 V340 H1000 V520 Z" fill="#A9B7B6"/>
+  <path d="M0 520 V390 H120 V350 H240 V420 H360 V370 H520 V400 H650 V360 H790 V420 H900 V380 H1000 V520 Z" fill="#8FA3A6"/>
+  <g class="tank" data-i="0" tabindex="0" role="button" aria-label="Toggle tank one" transform="translate(120,214)"><rect class="body" x="0" y="0" width="66" height="70" rx="8"/><rect class="water" x="2" y="26" width="62" height="42" rx="5"/><ellipse class="body" cx="33" cy="0" rx="33" ry="9"/><ellipse class="ripple" cx="33" cy="0" rx="22" ry="6" style="transform-origin:33px 0"/><ellipse class="ripple" cx="33" cy="0" rx="22" ry="6" style="transform-origin:33px 0"/><text class="num" x="18" y="46">01</text><path d="M62 0 v-14 M-4 70 v-84 M-4 -14 h66" fill="none" stroke="var(--rust)" stroke-width="2"/></g>
+  <g class="tank" data-i="1" tabindex="0" role="button" aria-label="Toggle tank two" transform="translate(330,174)"><rect class="body" x="0" y="0" width="58" height="62" rx="7"/><rect class="water" x="2" y="18" width="54" height="42" rx="4"/><ellipse class="body" cx="29" cy="0" rx="29" ry="8"/><ellipse class="ripple" cx="29" cy="0" rx="19" ry="5" style="transform-origin:29px 0"/><ellipse class="ripple" cx="29" cy="0" rx="19" ry="5" style="transform-origin:29px 0"/><text class="num" x="15" y="41">02</text><path d="M54 0 v-12 M-4 62 v-74 M-4 -12 h58" fill="none" stroke="var(--rust)" stroke-width="2"/></g>
+  <g class="tank" data-i="2" tabindex="0" role="button" aria-label="Toggle tank three" transform="translate(560,154)"><rect class="body" x="0" y="0" width="72" height="76" rx="8"/><rect class="water" x="2" y="30" width="68" height="44" rx="5"/><ellipse class="body" cx="36" cy="0" rx="36" ry="10"/><ellipse class="ripple" cx="36" cy="0" rx="24" ry="7" style="transform-origin:36px 0"/><ellipse class="ripple" cx="36" cy="0" rx="24" ry="7" style="transform-origin:36px 0"/><text class="num" x="20" y="50">03</text><path d="M68 0 v-15 M-4 76 v-91 M-4 -15 h72" fill="none" stroke="var(--rust)" stroke-width="2"/></g>
+  <g class="tank" data-i="3" tabindex="0" role="button" aria-label="Toggle tank four" transform="translate(820,204)"><rect class="body" x="0" y="0" width="62" height="66" rx="7"/><rect class="water" x="2" y="22" width="58" height="42" rx="4"/><ellipse class="body" cx="31" cy="0" rx="31" ry="8"/><ellipse class="ripple" cx="31" cy="0" rx="20" ry="5" style="transform-origin:31px 0"/><ellipse class="ripple" cx="31" cy="0" rx="20" ry="5" style="transform-origin:31px 0"/><text class="num" x="16" y="43">04</text><path d="M58 0 v-13 M-4 66 v-79 M-4 -13 h62" fill="none" stroke="var(--rust)" stroke-width="2"/></g>
+  <circle class="drip" cx="153" cy="286" r="3"/>
+ </svg>
+ <div class="hud"><span>FLOW <b id="flow">01 OPEN</b></span><span>TANKS <b>04</b></span><span>ROOF <b>34 M</b></span></div>
+ <svg class="gauge" viewBox="0 0 120 70"><path d="M14 60 A46 46 0 0 1 106 60" fill="none" stroke="rgba(216,211,198,.6)" stroke-width="2"/><line class="needle" id="needle" x1="60" y1="60" x2="60" y2="24"/><circle cx="60" cy="60" r="5" fill="var(--rust)"/><text x="42" y="69" fill="var(--concrete)" font-size="8" font-family="ui-monospace,monospace">PSI</text></svg>
+ <div class="note" id="note">Click a tank to open its valve.</div>
+</div>
+<script>
+const tanks=[...document.querySelectorAll('.tank')],needle=document.getElementById('needle'),flow=document.getElementById('flow'),note=document.getElementById('note'),scene=document.getElementById('scene'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let ac=null;
+function dripSound(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(260,t+.12);g.gain.setValueAtTime(.07,t);g.gain.exponentialRampToValueAtTime(.0001,t+.16);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.18)}
+function pressure(){const open=tanks.filter(t=>t.classList.contains('open')).length;needle.style.transform='rotate('+(-70+open*47)+'deg)';flow.textContent=String(open).padStart(2,'0')+' OPEN';note.textContent=open?'Water moving through '+open+' valve'+(open>1?'s':'')+'.':'All valves closed. The city is quiet.'}
+tanks.forEach(t=>{const w=t.querySelector('.water');w.dataset.base=w.getAttribute('y')});
+function toggle(t){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const open=t.classList.toggle('open'),w=t.querySelector('.water'),base=+w.dataset.base;w.setAttribute('y',open?base-14:base);w.setAttribute('height',open?56:42);dripSound();const f=document.getElementById('flock');f.classList.remove('scatter');void f.getBoundingClientRect();f.classList.add('scatter');setTimeout(()=>{f.classList.remove('scatter');f.style.animation=''},1300);pressure()}
+tanks.forEach(t=>{t.addEventListener('click',()=>toggle(t));t.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(t)}})});
+scene.addEventListener('dblclick',()=>{const f=document.getElementById('flock2');f.classList.add('scatter')});
+if(reduce){tanks[0].classList.add('open');pressure()}else{setTimeout(()=>{tanks[0].classList.add('open');pressure()},1600)}
+</script>
+</body>
+</html>

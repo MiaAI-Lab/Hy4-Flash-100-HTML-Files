@@ -1,0 +1,14 @@
+TITLE
+Bauhaus Bake Sale — Form Follows Appetite
+
+PROMPT
+A flat geometric poster in cream #F3EBDD built from red #D84032, yellow #F0C626 and blue #2E62A0 shapes. The header reads “BAUHAUS BACKSTUBE / FORM FOLLOWS APPETITE” in strict upper-case type with extreme scale contrast. Six pastries are arranged as pure geometry: a semicircular pretzel, a rectangular slice of seed cake, concentric-ring bun, quarter-circle streusel, triangular pastry, and a circle of four biscuits. Each has a number and a mechanical price flap showing “—” initially. Clicking a pastry rotates its flap down like a split-flap display to reveal a price and a one-line description: “NO. 03 / RINGBUN / 18 PFENNIG / CINNAMON, HONEY, ONE ALMOND.” A yellow circle behind a selected pastry slides to it, and the remaining pastries dim slightly. Entrance: shapes arrive in strict sequence — circle, rectangle, triangle — then the type prints. Signature moment: the price flap rotates with a two-stage mechanical snap and the yellow selection disc travels along a hidden rail. No emoji, no glass, no gradients. Reduced motion switches instantly.
+
+DESCRIPTION
+A bake sale designed as a Bauhaus poster. Each geometric pastry has a split-flap price that falls into place when selected.
+
+VISUAL TECHNIQUES
+CSS geometric shapes, split-flap price rotation, travelling selection disc, strict poster grid, staggered constructivist entrance.
+
+INTERACTION MODEL
+Click pastries. Keyboard: pastry buttons with arrow-key navigation. A CLEAR control resets the selection.

@@ -1,0 +1,14 @@
+TITLE
+Tide Ledger — Port of St. Oriel
+
+PROMPT
+A single-screen nautical tide instrument for an invented harbor. The viewer should feel they have opened a folded, slightly foxed survey sheet: warm paper #F3EBD8, deep ink #17333A, brass #B08A44. Compose a dense but calm chart with a small royal-blue-free header, a monumental outlined title set in Georgia, tiny monospaced coordinates, and a large SVG harbor cross-section occupying most of the viewport. Draw several hairline waterlines at historical heights, a brass vertical gauge on the right, and a live water polygon whose surface is a sum of two sine tides (roughly 12h25 and 24h cycles). The current local time drives a subtle brushed-steel pointer; dragging horizontally across the chart scrubs through a twenty-four-hour window and returns to live time with a labelled button. Typography: Georgia for the title and the tide names, Courier New for all measurements, uppercase letterspaced labels. Motion: a 1.4s cubic-bezier entrance draws the chart rules from left to right, water rises from the bottom with a soft overshoot, and the gauge pointer eases to its current height. Interaction: hover any historical waterline to highlight its year and height; drag anywhere on the chart to scrub; keyboard arrows scrub by fifteen minutes; the live button restores the clock. Signature moment: the waterline visibly breathes with the real clock while a brass marker ticks upward, and scrubbing makes the entire harbor cross-section tilt fractionally like a floating ledger. Copy: specific harbor names, tide heights in metres, times in 24-hour notation, and margin notes in the voice of a harbourmaster. No generic instructions; label the drag affordance as a printed scale reading “DRAG THE HOUR”.
+
+DESCRIPTION
+A measured, paper-based tide instrument that turns the viewer’s clock into the motion of water. Historical waterlines, a brass gauge and a slow-breathing live surface create the feeling of an instrument that has been recording the harbor for a century.
+
+VISUAL TECHNIQUES
+SVG cross-section with animated path data, CSS paper texture via layered gradients, hand-set typographic hierarchy, requestAnimationFrame tide calculation, custom cubic-bezier entrance, high-DPI-friendly vector rendering.
+
+INTERACTION MODEL
+Hover historic rules for annotations, drag or use arrow keys to scrub the day, and press the live-time control to return to the actual clock. All controls remain visible and focusable.

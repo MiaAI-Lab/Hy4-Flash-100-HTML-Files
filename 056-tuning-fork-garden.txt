@@ -1,0 +1,14 @@
+TITLE
+Tuning Fork Garden — Flowers That Open at a Frequency
+
+PROMPT
+A sage #B9CBA8 garden page with cream #F2ECD9 petals and ochre #B88A42 tuning forks. Six brass forks stand in a row, each labelled with a note: C, E, G, B♭, D, F. Beneath them, six closed cream flowers are drawn as overlapping petal outlines. Clicking a fork sounds its note with a Web Audio oscillator and sends a visible ring of vibration across the soil; the matching flower opens in four slow petal movements, then closes halfway, leaving a small ochre seed visible. Clicking two forks whose notes form a chord (C–E–G or B♭–D–F) makes all three flowers in that chord open together and briefly turn the soil cream. A sign reads “PLEASE PLAY QUIETLY — THE GARDEN IS LISTENING”. Entrance: forks ring once silently, then the flowers close from a half-open position. Signature moment: the chord detection causes the three flowers to breathe in sequence rather than at once, like a held note being passed between them. No emoji, no glass, no gradients. Reduced motion: no sound, flowers toggle open instantly.
+
+DESCRIPTION
+A small garden of brass tuning forks. Each note opens one flower; play a chord and three flowers pass the note between them.
+
+VISUAL TECHNIQUES
+Web Audio oscillator tones, SVG petal transforms with staggered easing, visual vibration rings, chord-state detection, botanical labeling.
+
+INTERACTION MODEL
+Click forks. Keyboard: forks are buttons. A SILENCE control closes all flowers.

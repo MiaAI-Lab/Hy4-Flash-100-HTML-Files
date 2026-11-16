@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Tears — A Sentence in Five Pieces</title>
+<style>
+:root{--cream:#F1E8D7;--red:#B43C36;--blue:#3A6386}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--red);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px;overflow-x:auto}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--red);padding-bottom:10px}
+h1{font:400 clamp(21px,3vw,34px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--blue)}
+.stage{position:relative;width:1100px;max-width:1100px;height:540px;margin:18px auto 0;border:1px solid rgba(58,99,134,.35);background:#F5EEDF;overflow:hidden;touch-action:none}
+.ghost{position:absolute;top:212px;height:110px;border:1px dashed rgba(58,99,134,.45);opacity:.7}
+.ghost:after{content:attr(data-n);position:absolute;bottom:-18px;left:4px;font:8px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:rgba(58,99,134,.55)}
+.scrap{position:absolute;height:110px;border:0;padding:0;color:var(--cream);font:400 25px/1.05 Georgia,serif;text-align:center;cursor:grab;outline:none;clip-path:polygon(0 8%,4% 2%,9% 7%,14% 0,20% 6%,26% 1%,32% 7%,39% 0,46% 6%,53% 1%,60% 7%,67% 0,74% 6%,81% 1%,88% 7%,94% 0,100% 8%,98% 20%,100% 34%,97% 48%,100% 62%,98% 76%,100% 92%,94% 100%,88% 94%,81% 99%,74% 93%,67% 100%,60% 94%,53% 99%,46% 93%,39% 100%,32% 94%,26% 99%,20% 93%,14% 100%,9% 94%,4% 99%,0 92%,2% 76%,0 62%,3% 48%,0 34%,2% 20%);transition:left .5s cubic-bezier(.2,1.2,.3,1),top .5s cubic-bezier(.2,1.2,.3,1),transform .5s cubic-bezier(.2,1.2,.3,1);touch-action:none}
+.scrap.red{background:var(--red)}.scrap.blue{background:var(--blue)}
+.scrap:hover{filter:brightness(1.08)}.scrap:focus-visible{outline:3px solid #2B2B2B;outline-offset:4px}
+.scrap.placed{cursor:default;transition:left .45s cubic-bezier(.2,1.5,.3,1),top .45s cubic-bezier(.2,1.5,.3,1),transform .45s cubic-bezier(.2,1.5,.3,1)}
+.thread{position:absolute;left:70px;top:214px;width:960px;height:108px;opacity:0;transition:opacity .8s .3s;pointer-events:none}
+.complete .thread{opacity:1}
+.attribution{position:absolute;left:0;right:0;top:352px;text-align:center;font:italic 13px Georgia,serif;color:var(--blue);opacity:0;transition:opacity .8s .6s}
+.complete .attribution{opacity:1}
+.foot{display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:12px auto 0;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--blue)}
+.reset{background:none;border:0;border-bottom:1px solid var(--red);color:var(--red);font:inherit;letter-spacing:inherit;cursor:pointer;padding:0 0 2px}
+.reset:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>A sentence in five pieces</h1><span class="meta">COLLAGE 070 · FROM THE MARGINS OF A 1978 DIARY</span></header>
+<div class="stage" id="stage"><svg class="thread" viewBox="0 0 960 108" preserveAspectRatio="none" aria-hidden="true"><path d="M0 54 Q80 48 160 54 T320 54 T480 54 T640 54 T800 54 T960 54" fill="none" stroke="var(--red)" stroke-width="2" stroke-dasharray="7 6"/><g fill="var(--red)"><circle cx="160" cy="54" r="3"/><circle cx="320" cy="54" r="3"/><circle cx="480" cy="54" r="3"/><circle cx="640" cy="54" r="3"/><circle cx="800" cy="54" r="3"/></g></svg><div class="attribution">— FOUND BETWEEN THE PAGES OF A TRAIN TIMETABLE, 1978</div></div>
+<div class="foot"><span>DRAG EACH SCRAP TO ITS DASHED GHOST</span><button class="reset" id="reset" type="button">RESET</button></div>
+<script>
+const stage=document.getElementById('stage'),reset=document.getElementById('reset');
+const pieces=[
+ {t:'WE WERE NEVER',w:250,x:70,c:'red',home:[70,212],start:[80,62],rot:-9},
+ {t:'LATE.',w:110,x:330,c:'blue',home:[330,212],start:[655,78],rot:7},
+ {t:'THE CLOCK WAS',w:230,x:450,c:'red',home:[450,212],start:[286,386],rot:-5},
+ {t:'SIMPLY GOING',w:220,x:690,c:'blue',home:[690,212],start:[812,342],rot:11},
+ {t:'OUR WAY.',w:150,x:930,c:'red',home:[930,212],start:[142,410],rot:-12}
+];
+let drag=null,placed=0;
+pieces.forEach((p,i)=>{const g=document.createElement('div');g.className='ghost';g.style.left=p.home[0]+'px';g.style.width=p.w+'px';g.setAttribute('data-n',String(i+1).padStart(2,'0'));stage.appendChild(g)});
+pieces.forEach((p,i)=>{const b=document.createElement('button');b.type='button';b.className='scrap '+p.c;b.textContent=p.t;b.style.width=p.w+'px';b.style.left=p.start[0]+'px';b.style.top=p.start[1]+'px';b.style.transform='rotate('+p.rot+'deg)';b.dataset.i=i;b.setAttribute('aria-label','Paper piece '+p.t+'. Arrow keys move, Enter snaps into place.');b.addEventListener('pointerdown',e=>{if(b.classList.contains('placed'))return;const r=b.getBoundingClientRect();drag={b,i,dx:e.clientX-r.left,dy:e.clientY-r.top};b.style.transition='none';b.setPointerCapture(e.pointerId);b.focus()});b.addEventListener('pointermove',e=>{if(!drag||drag.b!==b)return;const s=stage.getBoundingClientRect();b.style.left=Math.max(0,Math.min(stage.clientWidth-p.w,e.clientX-s.left-drag.dx))+'px';b.style.top=Math.max(0,Math.min(stage.clientHeight-110,e.clientY-s.top-drag.dy))+'px';b.style.transform='rotate('+Math.max(-12,Math.min(12,(e.movementX||0)*.4))+'deg)'});b.addEventListener('pointerup',()=>{if(!drag||drag.b!==b)return;drag=null;b.style.transition='';check(b,i)});b.addEventListener('keydown',e=>{if(b.classList.contains('placed'))return;const step=e.shiftKey?30:8;let x=parseFloat(b.style.left),y=parseFloat(b.style.top);if(e.key==='ArrowLeft')x-=step;else if(e.key==='ArrowRight')x+=step;else if(e.key==='ArrowUp')y-=step;else if(e.key==='ArrowDown')y+=step;else if(e.key==='Enter'){snap(b,i);return}else return;e.preventDefault();b.style.left=x+'px';b.style.top=y+'px'});stage.appendChild(b)});
+function check(b,i){const x=parseFloat(b.style.left),y=parseFloat(b.style.top),p=pieces[i];if(Math.hypot(x-p.home[0],y-p.home[1])<70)snap(b,i)}
+function snap(b,i){const p=pieces[i];if(b.classList.contains('placed'))return;b.classList.add('placed');b.style.left=p.home[0]+'px';b.style.top=p.home[1]+'px';b.style.transform='rotate(0deg)';placed++;if(placed===pieces.length)stage.classList.add('complete')}
+reset.addEventListener('click',()=>{placed=0;stage.classList.remove('complete');stage.querySelectorAll('.scrap').forEach(b=>{const p=pieces[+b.dataset.i];b.classList.remove('placed');b.style.left=p.start[0]+'px';b.style.top=p.start[1]+'px';b.style.transform='rotate('+p.rot+'deg)'})});
+</script>
+</body>
+</html>

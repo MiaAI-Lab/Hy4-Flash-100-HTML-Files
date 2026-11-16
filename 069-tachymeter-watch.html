@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tachymeter 069 — An Instrument for the Speed of Attention</title>
+<style>
+:root{--black:#16171A;--steel:#C7CBCD;--orange:#E17628}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--steel);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+header{width:100%;max-width:1000px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(199,203,205,.25);padding-bottom:12px}
+h1{font:400 clamp(20px,3vw,34px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#7E878A}
+.watch{width:min(74vw,480px);aspect-ratio:1;margin:12px auto 0;position:relative;touch-action:none}
+svg{width:100%;height:100%;display:block}
+.dial{fill:#1D1F22;stroke:var(--steel);stroke-width:2}
+.rim{fill:none;stroke:#5B6164;stroke-width:18}
+.bezel{cursor:grab;outline:none}.bezel:active{cursor:grabbing}.bezel:focus-visible circle{stroke:var(--orange)}
+.tick{stroke:var(--steel);stroke-width:1.5;opacity:.75}
+.tick.major{stroke-width:3;opacity:1}
+.num{fill:var(--steel);font:11px ui-monospace,Menlo,monospace;text-anchor:middle;dominant-baseline:middle;letter-spacing:.05em}
+.hand{stroke:var(--orange);stroke-width:3;stroke-linecap:round}
+.hub{fill:var(--orange)}
+.trace{fill:none;stroke:var(--orange);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+.readout{display:flex;gap:28px;align-items:baseline;margin-top:8px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.readout b{font:400 44px/1 Georgia,serif;color:var(--orange);letter-spacing:0}
+.note{margin-top:12px;font:italic 13px Georgia,serif;color:#7E878A;text-align:center;max-width:460px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Tachymeter</h1><span class="meta">CAL. 1968 · MEASURES THE SPEED OF ATTENTION</span></header>
+<div class="watch" id="watch"><svg id="svg" viewBox="0 0 400 400" aria-label="Tachymeter watch dial"><circle class="dial" cx="200" cy="200" r="178"/><circle class="rim" cx="200" cy="200" r="183"/><g class="bezel" id="bezel" tabindex="0" role="slider" aria-label="Rotate bezel" aria-valuemin="-180" aria-valuemax="180" aria-valuenow="0"><circle cx="200" cy="200" r="183" fill="none" stroke="#3B4043" stroke-width="26"/><g id="knurl"></g></g><g id="scale"></g><circle cx="200" cy="200" r="120" fill="none" stroke="#3B4043" stroke-width="1"/><text x="200" y="150" class="num" style="font-size:8px;letter-spacing:.28em">UNITS / SEC</text><text x="200" y="285" class="num" style="font-size:8px;letter-spacing:.28em">NO. 069</text><polyline class="trace" id="trace" points=""/><g id="needle"><line class="hand" x1="200" y1="228" x2="200" y2="82"/><circle class="hub" cx="200" cy="200" r="7"/></g></svg></div>
+<div class="readout"><span>READING <b id="reading">000</b></span><span>SCALE <b id="offset" style="font-size:18px">+0</b></span></div>
+<div class="note">Move quickly and the hand will chase you. Drag the knurled bezel to correct the scale.</div>
+<script>
+const svg=document.getElementById('svg'),scale=document.getElementById('scale'),knurl=document.getElementById('knurl'),bezel=document.getElementById('bezel'),needle=document.getElementById('needle'),trace=document.getElementById('trace'),reading=document.getElementById('reading'),offsetEl=document.getElementById('offset'),watch=document.getElementById('watch'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+for(let i=0;i<60;i++){const a=i/60*6.283-1.5708,r1=i%5===0?150:158,r2=168,l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class','tick'+(i%5===0?' major':''));l.setAttribute('x1',200+Math.cos(a)*r1);l.setAttribute('y1',200+Math.sin(a)*r1);l.setAttribute('x2',200+Math.cos(a)*r2);l.setAttribute('y2',200+Math.sin(a)*r2);scale.appendChild(l)}
+[[60,-1.5708],[120,-.785],[180,0],[240,.785],[300,1.5708],[60,2.356],[120,3.1416],[180,3.927],[240,4.712]].forEach((n,i)=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('class','num');t.setAttribute('x',200+Math.cos(n[1])*143);t.setAttribute('y',200+Math.sin(n[1])*143);t.textContent=n[0];scale.appendChild(t)});
+for(let i=0;i<72;i++){const a=i/72*6.283,l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',200+Math.cos(a)*175);l.setAttribute('y1',200+Math.sin(a)*175);l.setAttribute('x2',200+Math.cos(a)*191);l.setAttribute('y2',200+Math.sin(a)*191);l.setAttribute('stroke','#7E878A');l.setAttribute('stroke-width','2');knurl.appendChild(l)}
+let angle=-120,target=-120,vel=0,offset=0,dragging=false,lastAngle=0,lastMove={x:0,y:0,t:0},speed=0,points=[],testStart=performance.now(),testing=!reduce;
+function svgAngle(e){const r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*400-200,y=(e.clientY-r.top)/r.height*400-200;return Math.atan2(y,x)*180/Math.PI}
+bezel.addEventListener('pointerdown',e=>{dragging=true;lastAngle=svgAngle(e);bezel.setPointerCapture(e.pointerId)});
+bezel.addEventListener('pointermove',e=>{if(!dragging)return;const a=svgAngle(e);let d=a-lastAngle;if(d>180)d-=360;if(d<-180)d+=360;offset=Math.max(-180,Math.min(180,offset+d));lastAngle=a;updateOffset()});
+bezel.addEventListener('pointerup',()=>dragging=false);
+bezel.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){offset=Math.min(180,offset+6);updateOffset();e.preventDefault()}if(e.key==='ArrowLeft'){offset=Math.max(-180,offset-6);updateOffset();e.preventDefault()}});
+function updateOffset(){svg.querySelector('#scale').setAttribute('transform','rotate('+offset+' 200 200)');bezel.setAttribute('aria-valuenow',Math.round(offset));offsetEl.textContent=(offset>=0?'+':'')+Math.round(offset/6)}
+addEventListener('pointermove',e=>{const t=performance.now(),d=Math.hypot(e.clientX-lastMove.x,e.clientY-lastMove.y),dt=Math.max(8,t-lastMove.t);if(lastMove.t){const v=d/dt*1000;speed=speed*.55+v*.45}lastMove={x:e.clientX,y:e.clientY,t}});
+function frame(t){if(testing){const q=Math.min(1,(t-testStart)/2200);angle=-120+240*(1-Math.pow(1-q,3));if(q>=1){testing=false;target=-120}}else{target=-120+Math.min(300,speed)/300*240;const diff=target-angle;vel=vel*.78+diff*.16;angle+=vel;if(!reduce){const a=(angle-90)*Math.PI/180,px=200+Math.cos(a)*118,py=200+Math.sin(a)*118;points.push([px,py]);if(points.length>70)points.shift();trace.setAttribute('points',points.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '))}}speed*=.94;needle.setAttribute('transform','rotate('+angle.toFixed(2)+' 200 200)');reading.textContent=String(Math.max(0,Math.round(((angle+120)/240*300+offset/6)))).padStart(3,'0');requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+TITLE
+The Tanks Above the City — A Rooftop Pressure Study
+
+PROMPT
+A dusty blue #7D9AA1, rust #B45B3E and concrete #D8D3C6 rooftop skyline. Four cylindrical water tanks stand on different roofs. On load a small flock of drawn birds crosses the sky and a single drip falls from the nearest tank, sending a ripple across its top. Clicking a tank opens or closes its valve: the water level moves, concentric ripples spread across the lid, a pressure needle changes, and nearby birds lift off. Each tank has a hand-painted number and a thin ladder. No emoji, no city photograph, no purple.
+
+DESCRIPTION
+A skyline of rooftop tanks whose valves change water level, ripples and pressure.
+
+VISUAL TECHNIQUES
+SVG skyline and tanks, animated bird paths, CSS ripple rings, water-level clip, pressure gauge, Web Audio drips.
+
+INTERACTION MODEL
+Click a tank to toggle its valve; click the sky to scatter birds. Keyboard: Tab selects tanks, Enter toggles. Reduced motion shows settled water and still birds.

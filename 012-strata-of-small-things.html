@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strata of Small Things — An Excavation You Control</title>
+<style>
+:root{--humus:#3E3833;--bed:#1E211E;--paper:#E8DCC6;--ochre:#C7956F;--clay:#8A5B43;--ash:#6E6B63}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bed);color:var(--paper);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{display:grid;grid-template-columns:minmax(270px,25vw) 1fr}
+aside{background:var(--humus);padding:clamp(22px,2.6vw,44px);display:flex;flex-direction:column;gap:20px;border-right:6px solid #181a18;z-index:2}
+.tag{font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:#C9B79C}
+h1{font:800 clamp(38px,4.4vw,68px)/.84 'Arial Narrow',Impact,sans-serif;letter-spacing:-.045em;text-transform:uppercase;margin:10px 0 0}
+.rule{height:1px;background:#6b6157;margin:4px 0}
+.readout{display:flex;align-items:baseline;gap:10px}
+.readout strong{font:300 58px/1 Georgia,serif;color:#F3E8D1;font-variant-numeric:tabular-nums}
+.readout span{font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:#BAA78D}
+label{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:#D8C7AC}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:ew-resize;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#D8C7AC var(--fill,0%),#6b6157 var(--fill,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:30px;background:#E8DCC6;border:0;margin-top:-13px;clip-path:polygon(50% 0,100% 24%,78% 100%,22% 100%,0 24%)}
+input[type=range]::-moz-range-track{height:4px;background:#6b6157}
+input[type=range]::-moz-range-progress{height:4px;background:#D8C7AC}
+input[type=range]::-moz-range-thumb{width:14px;height:30px;border:0;border-radius:0;background:#E8DCC6}
+input[type=range]:focus-visible{outline:2px solid #D8C7AC;outline-offset:6px}
+.note{margin-top:auto;border-top:1px solid #6b6157;padding-top:16px;min-height:130px}
+.note .no{font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#BAA78D}
+.note h2{font:400 25px/1.1 Georgia,serif;margin:8px 0 8px;color:#F5E8CD}
+.note p{font:13px/1.55 Georgia,serif;color:#D3C2A7;margin:0}
+.cut{display:flex;flex-direction:column;gap:0;background:#0a0b0a;transition:gap .55s cubic-bezier(.2,.8,.2,1)}
+body.deep .cut{gap:10px}
+.layer{flex:1;min-height:0;position:relative;overflow:visible;transition:opacity .5s cubic-bezier(.2,.8,.2,1),transform .5s cubic-bezier(.2,.8,.2,1);clip-path:inset(100% 0 0 0);animation:core .82s cubic-bezier(.16,.84,.24,1) forwards;animation-delay:calc(var(--i)*.09s)}
+@keyframes core{to{clip-path:inset(0)}}
+.layer.past{opacity:.13;transform:translateY(-16px)}
+.layer:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;background-image:radial-gradient(circle,rgba(0,0,0,.5) 1px,transparent 1.5px),radial-gradient(circle,rgba(255,255,255,.35) 1px,transparent 1.4px);background-size:13px 17px,23px 19px;background-position:0 0,7px 9px}
+.l0{background:var(--paper)}.l1{background:var(--ochre)}.l2{background:var(--clay)}.l3{background:var(--ash)}.l4{background:var(--humus)}.l5{background:var(--bed)}
+.depth{position:absolute;left:20px;top:9px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:rgba(30,24,18,.62)}
+.l3 .depth,.l4 .depth,.l5 .depth{color:rgba(255,244,220,.55)}
+.artifact{position:absolute;border:0;padding:0;background:none;cursor:pointer;z-index:3;transition:transform .35s cubic-bezier(.2,.9,.2,1),filter .35s}
+.artifact:hover,.artifact:focus-visible{transform:scale(1.35) rotate(-6deg);filter:drop-shadow(0 5px 6px rgba(0,0,0,.5));outline:none}
+.artifact:focus-visible{box-shadow:0 0 0 3px #F2D98A}
+.a0{left:28%;top:38%;width:38px;height:38px;border-radius:50%;background:#E9D9B8;border:5px solid #C3AC85;box-shadow:inset 0 0 0 2px #7d6b50}
+.a0:before,.a0:after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;background:#4b3e2d;transform:translate(-50%,-50%);box-shadow:-8px -8px #4b3e2d,8px 8px #4b3e2d,-8px 8px #4b3e2d,8px -8px #4b3e2d}
+.a1{left:63%;top:44%;width:22px;height:34px;background:#F0E7D2;clip-path:polygon(50% 0,100% 30%,70% 100%,38% 90%,0 32%)}
+.a2{left:40%;top:35%;width:40px;height:40px;border-radius:50%;background:#C9A53E;border:4px solid #8C7027;box-shadow:inset 0 0 0 3px #E0C462}
+.a3{left:72%;top:48%;width:38px;height:32px;background:#D7CEC0;clip-path:polygon(0 100%,24% 16%,68% 0,100% 62%,72% 100%)}
+.a4{left:22%;top:42%;width:20px;height:32px;border-radius:50%;background:#B98A51;transform:rotate(22deg)}
+.a5{left:54%;top:40%;width:44px;height:44px;border:5px solid #D7D1C2;border-radius:50%;border-right-color:transparent}
+.a5:after{content:"";position:absolute;inset:9px;border:4px solid #D7D1C2;border-radius:50%;border-left-color:transparent}
+.hint{position:absolute;right:24px;bottom:18px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(255,255,255,.5);z-index:4}
+@media(max-width:760px){body{grid-template-columns:1fr;grid-template-rows:auto 1fr;overflow:auto;height:auto;min-height:100%}aside{border-right:0;border-bottom:5px solid #181a18}h1{font-size:38px}.note{min-height:0}.cut{height:72vh}}
+@media(prefers-reduced-motion:reduce){.layer{animation:none;clip-path:inset(0)}*{transition:none!important}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="tag">Field archive / cutting 04</div>
+  <h1>Strata of Small Things</h1>
+  <div class="rule"></div>
+  <div class="readout"><strong id="depth">000</strong><span>CM BELOW TURF</span></div>
+  <label for="trowel">Trowel depth</label>
+  <input id="trowel" type="range" min="0" max="100" value="0" style="--fill:0%">
+  <div class="note" aria-live="polite">
+    <div class="no" id="no">SURVEY / 00</div>
+    <h2 id="title">Six layers, six small witnesses</h2>
+    <p id="copy">Drag the trowel to remove soil. Then choose any object in the open cut to read its field note.</p>
+  </div>
+</aside>
+<main class="cut" aria-label="Excavation cross-section">
+  <div class="layer l0" style="--i:0"><span class="depth">00–18 CM / TOPSOIL</span><button class="artifact a0" data-no="SF-011" data-title="Bone button, four holes" data-copy="Recovered from the plough zone. One hole chipped; a grain of wheat still caught in the thread." aria-label="Bone button"></button></div>
+  <div class="layer l1" style="--i:1"><span class="depth">18–42 CM / OCHRE SILT</span><button class="artifact a1" data-no="SF-024" data-title="Molar, probably sheep" data-copy="Worn almost flat. The root cavity was filled with ochre, not soil — someone had placed it here." aria-label="Sheep molar"></button></div>
+  <div class="layer l2" style="--i:2"><span class="depth">42–76 CM / RED CLAY</span><button class="artifact a2" data-no="SF-038" data-title="Coin of an unlisted town" data-copy="Struck copper, green at the rim. The mint mark reads VERA but appears on no known catalogue." aria-label="Copper coin"></button></div>
+  <div class="layer l3" style="--i:3"><span class="depth">76–104 CM / ASH LENS</span><button class="artifact a3" data-no="SF-051" data-title="Shard from a glazed jar" data-copy="A single curved wall, pale green glaze. The break is old; the edges have been smoothed by water." aria-label="Glazed shard"></button></div>
+  <div class="layer l4" style="--i:4"><span class="depth">104–131 CM / HUMUS</span><button class="artifact a4" data-no="SF-066" data-title="Charred seed, barley" data-copy="One of eleven. The others were scattered in a ring around a hearth that left no stone." aria-label="Charred barley seed"></button></div>
+  <div class="layer l5" style="--i:5"><span class="depth">131 CM+ / BEDROCK</span><button class="artifact a5" data-no="SF-080" data-title="Ammonite, weathered" data-copy="Embedded in the rock before anyone dug here. The spiral was facing upward when the cut was opened." aria-label="Ammonite fossil"></button></div>
+  <div class="hint">DRAG TROWEL · CHOOSE AN OBJECT</div>
+</main>
+<script>
+const trowel=document.getElementById('trowel'),layers=[...document.querySelectorAll('.layer')],no=document.getElementById('no'),title=document.getElementById('title'),copy=document.getElementById('copy'),depth=document.getElementById('depth');
+function setDepth(){
+  const v=+trowel.value,shown=Math.round(v*1.86);
+  depth.textContent=String(shown).padStart(3,'0');
+  trowel.style.setProperty('--fill',v+'%');
+  layers.forEach((l,i)=>l.classList.toggle('past',i<v/100*6));
+  document.body.classList.toggle('deep',v>=97);
+}
+trowel.addEventListener('input',setDepth);
+document.querySelectorAll('.artifact').forEach(btn=>{
+  const show=()=>{no.textContent='CATALOGUE / '+btn.dataset.no;title.textContent=btn.dataset.title;copy.textContent=btn.dataset.copy};
+  btn.addEventListener('pointerenter',show);btn.addEventListener('focus',show);btn.addEventListener('click',show);
+});
+setDepth();
+</script>
+</body>
+</html>

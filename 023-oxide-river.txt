@@ -1,0 +1,14 @@
+TITLE
+Oxide River — A Current You Can Disturb
+
+PROMPT
+A wide canvas river in oxide red #C4462B on warm cream #F2E8D6, with ink-black #1C1B18 typography. The surface is made of thousands of short dark-red dashes flowing left to right along a smooth sine-driven field; the trail never fully clears, so motion leaves a fine sediment. Title “OXIDE RIVER” in heavy condensed capitals at upper left and a small notice: “Flow measured at the ford, 16:20.” Moving the pointer pulls the current toward it with a visible lag, like a hand trailing in water. Clicking drops a stone: a circular vortex appears at that point, dashes spiral around it for a few seconds, then the river returns to its original direction. Entrance: the river starts as a flat band of dashes and bends itself into the full flow over two seconds. Signature moment: when a vortex forms, the dashes inside it reverse direction for one frame, producing a brief black ring before the spiral settles. Counters at lower right show current speed and number of stones dropped. No emoji, no gradients on type, no glass. Reduced motion shows a static field of dashes; clicks add a still ring.
+
+DESCRIPTION
+A 2D flow field you can disturb. The river is always moving; the visitor's hand and dropped stones bend it temporarily, and the traces settle back into the main current.
+
+VISUAL TECHNIQUES
+Canvas flow-field integration with persistent low-alpha trails, pointer attraction with lag, click-spawned vortices with finite lifetime, high-DPI scaling, live numeric counters.
+
+INTERACTION MODEL
+Move to pull the current; click to drop a stone; keyboard users get a button that drops a stone at the centre.

@@ -1,0 +1,14 @@
+TITLE
+Gallery of Failed Machines — A Museum of Almost
+
+PROMPT
+A small museum gallery hung in claret #6E2630, with brass #C6A15B fixtures and paper #F1E7D2 plaques. Along the left wall, a vertical index lists five inventions: THE SELF-WINDING STAIR, THE PERPETUAL KETTLE, THE AMBITIOUS PENDULUM, THE HONEST MIRROR, THE LADDER TO YESTERDAY. Each has a year and a one-line reason for failure. Selecting one brings a large line-drawing exhibit to the centre: wheels, belts, pulleys, buckets and little arrows, all drawn in brass on paper. Every machine attempts to work: the stair climbs itself for two steps then tips, the kettle pours into its own fire, the pendulum swings wider until it stops, the mirror reflects a sentence that is not there, the ladder folds into a compact unsuccessful object. After two seconds a red JAM stamp appears over the drawing. Copy under the title: “Five machines that worked perfectly right up to the part that mattered.” Entrance: lights come up over the gallery one at a time and the first machine starts. Signature moment: each failure is mechanically specific, not a generic stop — you can see exactly where the idea gave up. No emoji, no glass, no purple. Reduced motion shows the final jammed state immediately.
+
+DESCRIPTION
+A museum of inventions that failed for interesting reasons. Each exhibit runs once, demonstrates its own precise flaw, and stamps itself JAM.
+
+VISUAL TECHNIQUES
+Swappable SVG exhibit drawings, per-machine CSS keyframes with overshoot and collapse, stamp reveal, wall-light entrance, live plaque with real copy.
+
+INTERACTION MODEL
+Click or Tab through the index to select an exhibit. Each selection restarts the machine's attempt. Keyboard arrows move through the index.

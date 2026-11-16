@@ -1,0 +1,14 @@
+TITLE
+Insect Hotel Nocturnal — A Cutaway With Tenants
+
+PROMPT
+An isometric cutaway of a wooden insect hotel, drawn as clean SVG polygons on a warm kraft #CBA36C field. Structure in ochre #A86B32 and dark umber #3B3225; tenants in moss #647A4E; one signal colour, lantern yellow #F2D06B. The title “INSECT HOTEL NOCTURNAL” sits upper left in narrow spaced capitals, with a note: “Occupancy recorded at dusk. Tenants are not disturbed by visitors.” The hotel has twelve compartments of different shapes — straw tubes, pinecone scales, drilled blocks, hollow stems — each containing one small resident that moves continuously: a beetle patrols, a spider bobs, a earwig turns in place, a moth opens and closes its wings. Hovering or focusing a compartment lights it and reveals a specimen label in a fixed margin with a precise invented species name and a one-line behaviour. Entrance: compartments slide into place from the bottom of the drawing in three groups. Signature moment: a LIGHTS button turns the whole hotel to night — the wood darkens, every tenant's eyes become two lantern-yellow points, and the drawing briefly becomes a glowing grid. No emoji, no rounded cards, no gradients on type. Reduced motion stops tenant movement but keeps hover labels.
+
+DESCRIPTION
+An illustrated habitat that comes alive at dusk. The hotel is both a diagram and a small theatre: each compartment has a tenant with a routine, and night turns the whole structure into a lantern.
+
+VISUAL TECHNIQUES
+Inline SVG isometric polygons, CSS keyframe motion inside SVG groups, focusable compartment groups, live specimen label, night-mode class with simultaneous eye highlights.
+
+INTERACTION MODEL
+Hover, focus or click a compartment to read its label; press the Lights button to switch day/night. Keyboard access through named buttons over each compartment.

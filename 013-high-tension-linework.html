@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>High-Tension Linework — A Surveyor's Panorama</title>
+<style>
+:root{--paper:#F4F2EB;--ink:#142B3D;--red:#C7472B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:clamp(18px,3vw,44px);display:flex;flex-direction:column;gap:18px;overflow-x:hidden}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:14px;position:relative}
+.head:after{content:"";position:absolute;left:0;bottom:-2px;width:23%;height:2px;background:var(--red)}
+h1{font-size:clamp(18px,3.1vw,44px);line-height:1;letter-spacing:.16em;text-transform:uppercase;margin:0;font-weight:800}
+.meta{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-align:right;color:#435769}
+.reg{position:absolute;width:9px;height:9px}
+.reg:before,.reg:after{content:"";position:absolute;background:var(--ink)}
+.reg:before{left:4px;top:0;width:1px;height:9px}.reg:after{top:4px;left:0;height:1px;width:9px}
+.r1{left:-14px;top:-8px}.r2{right:-14px;top:-8px}
+.scale{display:flex;align-items:center;gap:8px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.1em}
+.scale i{display:block;width:38px;height:7px;border:1px solid var(--ink);border-top:0}
+.scale i:nth-child(even){background:var(--ink)}
+.pano{position:relative;width:100%;cursor:crosshair;flex:1;min-height:280px;max-height:56vh}
+svg{display:block;width:100%;height:100%;overflow:visible}
+.line{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:2400;stroke-dashoffset:2400;animation:draw 1.5s cubic-bezier(.2,.75,.2,1) forwards;vector-effect:non-scaling-stroke}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fill{opacity:0;animation:fillin .7s ease-out .8s forwards;transition:opacity .3s}
+@keyframes fillin{to{opacity:1}}
+.peak{cursor:pointer}
+.peak.active .line{stroke-width:4.5;stroke:var(--red)}
+.peak.active .fill{opacity:.92}
+.base{stroke:var(--ink);stroke-width:1}
+.cross{position:absolute;top:0;bottom:0;width:0;border-left:1px solid var(--red);pointer-events:none;transition:left .08s linear;z-index:3}
+.cross:before{content:"";position:absolute;top:0;left:-5px;width:10px;height:10px;border:1px solid var(--red);border-radius:50%;background:var(--paper)}
+.cross:after{content:"";position:absolute;bottom:0;left:-8px;width:16px;height:1px;background:var(--red)}
+.bearing{position:absolute;top:8px;left:10px;white-space:nowrap;background:var(--red);color:var(--paper);padding:4px 7px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.1em}
+.peaks{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;border-top:1px solid var(--ink);padding-top:10px}
+.peaks button{text-align:left;background:none;border:0;border-left:3px solid transparent;padding:4px 8px;cursor:pointer;font:11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.04em;color:var(--ink)}
+.peaks button:hover,.peaks button:focus-visible,.peaks button.active{border-left-color:var(--red);outline:none;background:rgba(199,71,43,.07)}
+.peaks b{display:block;font:700 12px/1.3 Arial,sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.note{display:grid;grid-template-columns:120px 1fr;gap:18px;border-top:2px solid var(--red);padding-top:12px;min-height:64px}
+.note span{font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.note p{margin:0;font:15px/1.5 Georgia,serif;max-width:80ch}
+@media(max-width:700px){.pano{min-height:240px}.peaks{grid-template-columns:1fr 1fr}.note{grid-template-columns:1fr;gap:5px}.head{flex-wrap:wrap}.meta{text-align:left}}
+@media(prefers-reduced-motion:reduce){.line{stroke-dashoffset:0;animation:none}.fill{opacity:1;animation:none}.cross{transition:none}}
+</style>
+</head>
+<body>
+<header class="head">
+  <span class="reg r1"></span><span class="reg r2"></span>
+  <h1>High-Tension Linework</h1>
+  <div class="meta"><div>SURVEY SHEET 04 / NORTH RANGE</div><div>1:25 000 · MAGNETIC NORTH CORRECTED</div><div class="scale"><i></i><i></i><i></i> 2 KM</div></div>
+</header>
+<div class="pano" id="pano">
+  <svg viewBox="0 0 1200 460" preserveAspectRatio="none" aria-label="Five overlapping mountain ridges drawn as survey linework">
+    <defs>
+      <pattern id="h1" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(48)"><line x1="0" y1="0" x2="0" y2="9" stroke="#142B3D" stroke-width="1" opacity=".22"/></pattern>
+      <pattern id="h1b" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-48)"><line x1="0" y1="0" x2="0" y2="9" stroke="#C7472B" stroke-width="1.3" opacity=".42"/></pattern>
+      <pattern id="h2" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="6" stroke="#142B3D" stroke-width="1.1" opacity=".3"/></pattern>
+      <pattern id="h2b" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="6" stroke="#C7472B" stroke-width="1.4" opacity=".45"/></pattern>
+      <pattern id="h3" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><line x1="0" y1="0" x2="0" y2="12" stroke="#142B3D" stroke-width=".8" opacity=".2"/></pattern>
+      <pattern id="h3b" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-60)"><line x1="0" y1="0" x2="0" y2="12" stroke="#C7472B" stroke-width="1.3" opacity=".4"/></pattern>
+    </defs>
+    <g class="peak" data-i="0"><path class="fill" fill="url(#h1)" d="M20 430 L190 178 L330 430Z"/><path class="line" d="M20 430 L190 178 L330 430"/></g>
+    <g class="peak" data-i="1"><path class="fill" fill="url(#h2)" d="M250 430 L420 96 L570 430Z"/><path class="line" d="M250 430 L420 96 L570 430"/></g>
+    <g class="peak" data-i="2"><path class="fill" fill="url(#h3)" d="M500 430 L650 158 L790 430Z"/><path class="line" d="M500 430 L650 158 L790 430"/></g>
+    <g class="peak" data-i="3"><path class="fill" fill="url(#h1)" d="M720 430 L885 70 L1030 430Z"/><path class="line" d="M720 430 L885 70 L1030 430"/></g>
+    <g class="peak" data-i="4"><path class="fill" fill="url(#h2)" d="M940 430 L1080 190 L1190 430Z"/><path class="line" d="M940 430 L1080 190 L1190 430"/></g>
+    <path class="base" d="M0 430H1200"/>
+  </svg>
+  <div class="cross" id="cross"><span class="bearing" id="bearing">BRG 000 · 0.0 KM</span></div>
+</div>
+<nav class="peaks" aria-label="Peaks">
+  <button data-i="0"><b>01 Kestrel Shoulder</b>1,841 m · cairn</button>
+  <button data-i="1"><b>02 Anvil Tooth</b>2,206 m · ice</button>
+  <button data-i="2"><b>03 Quiet Sister</b>1,702 m · scree</button>
+  <button data-i="3"><b>04 High Tension</b>2,488 m · mast</button>
+  <button data-i="4"><b>05 Low Mercy</b>1,455 m · grazing track</button>
+</nav>
+<div class="note" aria-live="polite"><span id="noteTag">FIELD NOTE / 01</span><p id="noteText">Kestrel Shoulder, 1,841 m — the last reliable cairn before the snow line. The stone underneath is warm to the hand even in March.</p></div>
+<script>
+const data=[
+ {tag:'FIELD NOTE / 01',text:'Kestrel Shoulder, 1,841 m — the last reliable cairn before the snow line. The stone underneath is warm to the hand even in March.'},
+ {tag:'FIELD NOTE / 02',text:'Anvil Tooth, 2,206 m — a split summit with a permanent sliver of ice on its north face. Rope fixed in 1961, removed in 1974, never replaced.'},
+ {tag:'FIELD NOTE / 03',text:'Quiet Sister, 1,702 m — no birds call from this ridge. Herds cross it without sound and leave the track unworn behind them.'},
+ {tag:'FIELD NOTE / 04',text:'High Tension, 2,488 m — the mast carries a single line across the valley. In fog the wire hums at a note the surveyors could never agree on.'},
+ {tag:'FIELD NOTE / 05',text:'Low Mercy, 1,455 m — a grazing track cut into the limestone. The shepherds leave one gate open in winter, though no fence has stood here for a century.'}
+];
+const pano=document.getElementById('pano'),cross=document.getElementById('cross'),bearing=document.getElementById('bearing'),groups=[...document.querySelectorAll('.peak')],buttons=[...document.querySelectorAll('.peaks button')],tag=document.getElementById('noteTag'),text=document.getElementById('noteText');
+const peaks=[190,420,650,885,1080];let locked=-1;
+function setActive(i){groups.forEach((g,k)=>{g.classList.toggle('active',k===i);const f=g.querySelector('.fill');f.setAttribute('fill',k===i?`url(#h${(k%3)+1}b)`:`url(#h${(k%3)+1})`)});buttons.forEach((b,k)=>b.classList.toggle('active',k===i));tag.textContent=data[i].tag;text.textContent=data[i].text}
+function measure(clientX){const r=pano.getBoundingClientRect(),p=Math.max(0,Math.min(1,(clientX-r.left)/r.width)),cx=p*1200;cross.style.left=(p*100)+'%';let near=0;peaks.forEach((v,i)=>{if(Math.abs(v-cx)<Math.abs(peaks[near]-cx))near=i});bearing.textContent='BRG '+String(Math.round(12+p*76)).padStart(3,'0')+' · '+(Math.abs(peaks[near]-cx)/120*4.2).toFixed(1)+' KM';if(locked<0)setActive(near)}
+pano.addEventListener('pointermove',e=>measure(e.clientX));
+pano.addEventListener('pointerleave',()=>{if(locked>=0)setActive(locked)});
+pano.addEventListener('click',e=>{const r=pano.getBoundingClientRect(),cx=(e.clientX-r.left)/r.width*1200;let near=0;peaks.forEach((v,i)=>{if(Math.abs(v-cx)<Math.abs(peaks[near]-cx))near=i});locked=near;setActive(near)});
+buttons.forEach((b,i)=>b.addEventListener('click',()=>{locked=i;setActive(i);const r=pano.getBoundingClientRect();measure(r.left+peaks[i]/1200*r.width)}));
+setActive(0);
+</script>
+</body>
+</html>

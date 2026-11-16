@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuning Fork Garden — Flowers That Open at a Frequency</title>
+<style>
+:root{--sage:#B9CBA8;--cream:#F2ECD9;--ochre:#B88A42;--soil:#7B8D6E}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sage);color:var(--soil);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px;overflow-x:hidden}
+h1{font:400 clamp(21px,2.8vw,34px)/1 Georgia,serif;margin:0;color:var(--soil)}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.sign{position:absolute;right:28px;top:26px;font:italic 13px Georgia,serif;max-width:24ch;text-align:right}
+.garden{margin-top:28px;border-top:2px solid var(--soil);border-bottom:2px solid var(--soil);position:relative;transition:background .4s;background:#B9CBA8}
+.garden.chord{background:var(--cream)}
+.forks{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:28px 10px 6px}
+.fork{background:transparent;border:0;cursor:pointer;outline:none;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--soil)}
+.fork svg{width:52px;height:96px;overflow:visible}
+.fork path{stroke:var(--ochre);stroke-width:6;fill:none;stroke-linecap:round}
+.fork line{stroke:var(--ochre);stroke-width:5;stroke-linecap:round}
+.fork:hover svg,.fork:focus-visible svg{animation:ring .6s cubic-bezier(.2,1.2,.3,1)}
+@keyframes ring{50%{transform:translateX(3px)}}
+.fork:focus-visible{outline:2px solid var(--ochre);outline-offset:4px}
+.note{font:10px ui-monospace,Menlo,monospace;letter-spacing:.14em}
+.flowers{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:0 10px 26px}
+.flower{width:100%;height:170px;display:block;overflow:visible}
+.petal{fill:var(--cream);stroke:var(--soil);stroke-width:1;transform-origin:100px 110px;transform:scaleY(.18) rotate(var(--a));transition:transform .85s cubic-bezier(.2,1.15,.25,1);transition-delay:calc(var(--p)*.11s)}
+.open .petal{transform:scaleY(1) rotate(var(--a))}
+.seed{fill:var(--ochre);opacity:0;transition:opacity .4s .8s}
+.open .seed{opacity:1}
+.stem{stroke:var(--soil);stroke-width:2;fill:none}
+.ring{position:absolute;left:50%;top:52%;width:20px;height:20px;border:2px solid var(--ochre);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;animation:wave 1.6s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes wave{to{width:1200px;height:1200px;opacity:0}}
+.silence{background:transparent;border:1px solid var(--soil);color:var(--soil);padding:9px 12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;cursor:pointer;margin-top:18px}
+.silence:hover{background:var(--soil);color:var(--cream)}
+@media(max-width:650px){body{padding:14px}.sign{display:none}.fork svg{width:34px;height:70px}.flower{height:120px}.forks,.flowers{gap:2px;padding-left:2px;padding-right:2px}.note{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>Tuning Fork Garden</h1><div class="sub">SIX FORKS · SIX FLOWERS · PLEASE PLAY QUIETLY</div><div class="sign">The garden is listening.</div>
+<div class="garden" id="garden"><div class="forks" id="forks"></div><div class="flowers" id="flowers"></div></div>
+<button class="silence" id="silence" type="button">SILENCE THE GARDEN</button>
+<script>
+const notes=[['C',261.63],['E',329.63],['G',392],['B♭',466.16],['D',293.66],['F',349.23]],garden=document.getElementById('garden'),forks=document.getElementById('forks'),flowers=document.getElementById('flowers'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let active=new Set(),ctx=null;
+notes.forEach((n,i)=>{
+ const b=document.createElement('button');b.type='button';b.className='fork';b.setAttribute('aria-label','Play note '+n[0]);b.innerHTML=`<svg viewBox="0 0 60 100"><path d="M22 76 V22 q0-14 8-14 t8 14 v54"/><line x1="30" y1="76" x2="30" y2="94"/></svg><span class="note">${n[0]}</span>`;b.addEventListener('click',()=>play(i));forks.appendChild(b);
+ const f=document.createElementNS('http://www.w3.org/2000/svg','svg');f.setAttribute('class','flower');f.setAttribute('viewBox','0 0 200 190');let petals='';for(let p=0;p<6;p++){petals+=`<ellipse class="petal" style="--p:${p};--a:${p*60}deg" cx="100" cy="66" rx="19" ry="42"/>`}f.innerHTML=`<path class="stem" d="M100 178 V112 M100 150 q-30-24-44-12 M100 140 q30-24 44-12"/>${petals}<circle class="seed" cx="100" cy="106" r="9"/>`;flowers.appendChild(f);
+});
+function tone(freq){if(reduce)return;ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.12,ctx.currentTime+.04);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+1.6);o.connect(g).connect(ctx.destination);o.start();o.stop(ctx.currentTime+1.65)}
+function play(i){tone(notes[i][1]);active.add(i);if(!reduce){const r=document.createElement('div');r.className='ring';garden.appendChild(r);setTimeout(()=>r.remove(),1700)}
+ const c1=[0,1,2],c2=[3,4,5],chord=c1.includes(i)?c1:c2;const all=chord.every(k=>active.has(k));const targets=all?chord:[i];
+ if(all)garden.classList.add('chord');
+ targets.forEach((k,n)=>setTimeout(()=>flowers.children[k].classList.add('open'),reduce?0:n*280));
+ if(!all)setTimeout(()=>flowers.children[i].classList.remove('open'),2600);
+ if(all)setTimeout(()=>{garden.classList.remove('chord');targets.forEach(k=>flowers.children[k].classList.remove('open'));active.clear()},4200);
+ else setTimeout(()=>active.delete(i),2600);
+}
+document.getElementById('silence').addEventListener('click',()=>{[...flowers.children].forEach(f=>f.classList.remove('open'));garden.classList.remove('chord');active.clear()});
+</script>
+</body>
+</html>

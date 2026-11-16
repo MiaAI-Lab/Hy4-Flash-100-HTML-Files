@@ -1,0 +1,14 @@
+TITLE
+Under Glass — A Perfume in a Box That Opens Slowly
+
+PROMPT
+A blush #E8CFC9 and cream #F6F0E6 packaging study for an invented scent called UNDER GLASS, printed in gold #B99455. A rectangular box stands in three dimensions beside a short, heavy glass bottle. Dragging the scene turns the parcel; the side panel reveals the note list in small caps. Clicking the bottle's gold cap lifts it and lets three scent notes — COLD PEAR, WET STONE, ORANGE LEAVES — rise as suspended typography and hang in the air. On load the box turns once to show its front before settling at three-quarter view. Signature moment: the cap lifting and the words drifting out like vapour without disappearing. No emoji, no product photo, no purple.
+
+DESCRIPTION
+A 3D perfume package whose cap lifts to release three suspended scent notes.
+
+VISUAL TECHNIQUES
+CSS 3D transforms and six-face box, drawn glass bottle, pointer-drag rotation, staged cap animation, drifting typographic notes.
+
+INTERACTION MODEL
+Drag the scene to rotate; click the cap to open or close. Keyboard: arrow keys rotate, Enter on the cap toggles it. Reduced motion opens instantly.

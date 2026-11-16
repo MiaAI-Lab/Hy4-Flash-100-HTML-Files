@@ -1,0 +1,14 @@
+TITLE
+The Kite Barometer — A Weather Instrument on a String
+
+PROMPT
+A pale sky #8FB6C2, dark string #3F4A4A and paper #F2E8D4 kite diagram. A diamond kite flies at the end of a long drawn string, with a tail of small paper bows. On load it climbs from the horizon and the tail straightens in the first three seconds. Clicking anywhere in the sky sets the wind direction and strength from the click's bearing and distance; the kite banks, the bows ripple faster and an altitude readout climbs or falls. No emoji, no kite photograph, no purple.
+
+DESCRIPTION
+A paper kite that climbs and banks according to where you click in the sky.
+
+VISUAL TECHNIQUES
+SVG kite and segmented tail, pointer-bearing wind model, rAF motion smoothing, streaming wind lines, altitude gauge.
+
+INTERACTION MODEL
+Click or drag in the sky to set wind; arrow keys nudge direction, +/- change strength. Reduced motion holds a moderate wind.

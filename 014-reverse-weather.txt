@@ -1,0 +1,14 @@
+TITLE
+Reverse Weather — The Department of Consequence
+
+PROMPT
+A data poster with the logic inverted: instead of forecast for a city, it reports the weather a city is making. Palette: borax yellow #E8FF3B, electric cobalt #1A2BE6, vermilion #FF4A1C and paper white #F7F5EE — flat, no gradients. At the top left, a heavy sans-serif headline “WEATHER CAUSED BY PLACES” in two lines with a small vermilion rule. Below, a dense list of eight invented city districts, each row showing a place name, a cause, a measured effect and a number with units. The selected row inverts to cobalt with white type. On the right, a large circular cause-wheel made from a conic-gradient with eight hard-edged segments; a vermilion pointer rotates to the selected segment. In the centre of the wheel, a huge two-digit number: the local excess in hundredths of a degree. Entrance: the list rows slide in from alternating sides with a mechanical snap; the wheel draws clockwise one segment at a time. Interaction: click or keyboard-focus a row. On selection the pointer sweeps with a damped overshoot, the centre number counts up from zero, and a short cause-statement appears beneath the wheel in a single sentence. Signature moment: the wheel's outer tick ring rotates half a segment while the inner ring stays still, like a mechanical instrument engaging. Content examples: “Vesper Quay — freight idling — +0.62°C night minimum”; “Cinder Row — chimney reversal — 14 soot days/year”. No weather icons, no emoji, no glass panels. Reduced motion sets values instantly.
+
+DESCRIPTION
+An inverted meteorological bulletin. selecting a district turns a mechanical cause-wheel and reveals the specific weather that district produces, measured in unusual but precise units.
+
+VISUAL TECHNIQUES
+Hard-edged conic-gradient wheel with independently rotating tick ring, CSS overshoot easing, tabular numeral count animation via requestAnimationFrame, alternating-direction row entrance, aria-live cause statement.
+
+INTERACTION MODEL
+Click or Tab through district rows; Enter and Space select. Wheel pointer and numeric readout respond to each selection.

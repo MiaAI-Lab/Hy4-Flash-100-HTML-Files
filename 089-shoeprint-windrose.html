@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where the Wind Walked — A Shoeprint Windrose</title>
+<style>
+:root{--sand:#D8C4A0;--charcoal:#30322F;--chalk:#F5EEE0}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sand);color:var(--charcoal);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:repeating-linear-gradient(45deg,rgba(48,50,47,.025) 0 1px,transparent 1px 7px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(48,50,47,.5);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.floor{position:relative;height:calc(100vh - 100px);min-height:470px}
+svg{width:100%;height:100%;display:block}
+.rose{fill:none;stroke:rgba(48,50,47,.28);stroke-width:1.5}
+.rose.thick{stroke-width:3;stroke:rgba(48,50,47,.5)}
+.dir{cursor:pointer;font:11px ui-monospace,Menlo,monospace;letter-spacing:.18em;fill:var(--charcoal)}
+.dir:hover,.dir:focus-visible{fill:#8A5A35;outline:none}
+.trail{transition:opacity 1.2s}
+.trail.faded{opacity:.22}
+.print{opacity:0;transform:scale(1.35);transform-origin:center;transition:opacity .25s,transform .35s cubic-bezier(.2,1.3,.3,1)}
+.print.landed{opacity:1;transform:scale(1)}
+.print .sole{fill:var(--chalk);stroke:var(--charcoal);stroke-width:1.5}
+.print .toe{fill:var(--chalk);stroke:var(--charcoal);stroke-width:1.2}
+.dust{fill:var(--chalk);opacity:0;animation:puff .9s ease-out forwards}
+@keyframes puff{0%{opacity:.85;transform:scale(.3)}100%{opacity:0;transform:scale(2.4)}}
+.readout{position:absolute;left:8px;bottom:12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+.readout b{color:#8A5A35;font-weight:400}
+.note{position:absolute;right:10px;bottom:12px;font:italic 12px Georgia,serif;color:rgba(48,50,47,.7)}
+@media(max-width:600px){body{padding:12px}.meta{font-size:7px}.readout{font-size:7px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Where the Wind Walked</h1><span class="meta">WEATHER FLOOR 089 · DIRECTION RECORDED IN DUST</span></header>
+<div class="floor">
+ <svg viewBox="0 0 900 560" aria-hidden="true">
+  <g id="rose"></g>
+  <g id="trails"></g>
+  <g id="dust"></g>
+  <g id="labels"></g>
+ </svg>
+ <div class="readout">LAST WIND <b id="last">—</b> · TRAILS <b id="count">00</b></div>
+ <div class="note">The wind leaves shoes instead of arrows.</div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',rose=document.getElementById('rose'),trails=document.getElementById('trails'),labels=document.getElementById('labels'),dust=document.getElementById('dust'),last=document.getElementById('last'),count=document.getElementById('count'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const dirs=[['N',0],['NE',45],['E',90],['SE',135],['S',180],['SW',225],['W',270],['NW',315]],cx=450,cy=280,r=210;
+dirs.forEach(([name,deg],i)=>{const a=deg*Math.PI/180,ex=cx+Math.cos(a-Math.PI/2)*r,ey=cy+Math.sin(a-Math.PI/2)*r;rose.insertAdjacentHTML('beforeend','<circle class="rose" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/><line class="rose '+(i%2?'':'thick')+'" x1="'+cx+'" y1="'+cy+'" x2="'+ex+'" y2="'+ey+'"/>');const t=document.createElementNS(NS,'text');t.setAttribute('x',cx+Math.cos(a-Math.PI/2)*(r+32));t.setAttribute('y',cy+Math.sin(a-Math.PI/2)*(r+32)+4);t.setAttribute('text-anchor','middle');t.setAttribute('class','dir');t.setAttribute('tabindex','0');t.setAttribute('data-i',i);t.textContent=name;labels.appendChild(t)});
+function puff(x,y){if(reduce)return;for(let i=0;i<4;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',x+Math.random()*24-12);c.setAttribute('cy',y+Math.random()*24-12);c.setAttribute('r',3+Math.random()*5);c.setAttribute('class','dust');c.style.transformOrigin=x+'px '+y+'px';dust.appendChild(c);setTimeout(()=>c.remove(),950)}}
+function print(x,y,angle,side){const g=document.createElementNS(NS,'g');g.setAttribute('class','print');g.setAttribute('transform','translate('+x+','+y+') rotate('+angle+')');g.innerHTML='<ellipse class="sole" cx="0" cy="12" rx="10" ry="21"/><ellipse class="toe" cx="'+(side*2)+'" cy="-15" rx="11" ry="8"/><circle class="toe" cx="-4" cy="-25" r="2.4"/><circle class="toe" cx="2" cy="-27" r="2.4"/><circle class="toe" cx="8" cy="-25" r="2.4"/>';return g}
+function lay(i,initial){if(i<0||i>7)return;const[name,deg]=dirs[i],a=deg*Math.PI/180,dx=Math.sin(a),dy=-Math.cos(a),px=-dy,py=dx,g=document.createElementNS(NS,'g');g.setAttribute('class','trail');trails.appendChild(g);
+ [...trails.children].forEach(t=>t.classList.add('faded'));g.classList.remove('faded');
+ for(let k=0;k<7;k++){const d=58+k*31,side=k%2?1:-1,x=cx+dx*d+px*side*10,y=cy+dy*d+py*side*10,p=print(x,y,deg,side);g.appendChild(p);const delay=initial?260+k*260:k*145;if(reduce)p.classList.add('landed');else setTimeout(()=>{p.classList.add('landed');puff(x,y)},delay)}
+ last.textContent=name;count.textContent=String(trails.children.length).padStart(2,'0')}
+labels.addEventListener('click',e=>{if(e.target.dataset.i!==undefined)lay(+e.target.dataset.i)});
+labels.addEventListener('keydown',e=>{if(e.target.dataset.i===undefined)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();lay(+e.target.dataset.i)}});
+document.addEventListener('keydown',e=>{const map={ArrowUp:0,ArrowRight:2,ArrowDown:4,ArrowLeft:6};if(e.key in map)lay(map[e.key]);else if(/^[1-8]$/.test(e.key))lay(+e.key-1)});
+lay(0,true);
+</script>
+</body>
+</html>

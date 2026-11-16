@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typographic Orchard — Six Trees, No Fruit</title>
+<style>
+:root{--green:#557150;--cream:#EDE6D2;--red:#B53A2F}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--green);color:var(--cream);font-family:Georgia,serif;overflow:hidden}
+#orchard{position:absolute;left:0;top:0;width:74%;height:100%}
+svg{width:100%;height:100%;display:block}
+.tree{cursor:pointer;outline:none}
+.tree text{fill:var(--cream);font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:1px}
+.tree .trunk{font-size:22px}
+.tree .leaf{font-size:10px;font-style:italic;opacity:.65}
+.tree.shake{animation:shake .55s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-7px) rotate(-1.2deg)}45%{transform:translateX(6px) rotate(1deg)}70%{transform:translateX(-3px)}}
+.tree:focus-visible{outline:none;filter:drop-shadow(0 0 8px var(--cream))}
+.fruit{fill:var(--red);stroke:var(--cream);stroke-width:1.5}
+.fruit-t{font:9px ui-monospace,Menlo,monospace;fill:var(--cream);text-anchor:middle;dominant-baseline:middle}
+aside{position:absolute;right:0;top:0;bottom:0;width:26%;border-left:1px solid var(--cream);padding:80px 22px 22px;display:flex;flex-direction:column;gap:16px}
+h1{position:absolute;left:26px;top:20px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0}
+.k{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;opacity:.7}
+.poem{font:italic 22px/1.35 Georgia,serif;margin:0;min-height:120px}
+button{background:transparent;border:1px solid var(--cream);color:var(--cream);padding:10px 12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;cursor:pointer}
+button:hover{background:var(--cream);color:var(--green)}
+.falling{position:absolute;z-index:6;width:34px;height:34px;border-radius:50%;background:var(--red);border:1px solid var(--cream);color:var(--cream);font:8px ui-monospace,Menlo,monospace;display:grid;place-items:center;cursor:pointer;transform:translate(-50%,-50%)}
+.echo{position:absolute;font:8px ui-monospace,Menlo,monospace;color:var(--cream);opacity:.5;pointer-events:none;transform:translate(-50%,-50%)}
+.basket{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(52%,470px);height:74px;border:2px solid var(--cream);border-top:0;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);z-index:1}
+.basket:after{content:'BASKET · COLLECTED WORDS';position:absolute;left:0;right:0;bottom:6px;text-align:center;font:8px ui-monospace,Menlo,monospace;letter-spacing:.16em;opacity:.6}
+@media(max-width:700px){#orchard{width:100%;height:76%}aside{top:auto;bottom:0;width:100%;height:24%;padding:12px 20px}.poem{font-size:15px;min-height:0}.basket{bottom:calc(24% + 6px)}h1{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.tree.shake{animation:none}}
+</style>
+</head>
+<body>
+<div id="orchard"><svg id="grove" viewBox="0 0 900 600" aria-label="Six trees made of letters"></svg><div class="basket"></div></div>
+<aside><div class="k">THE ORCHARD / 37</div><p class="poem" id="poem">“Nothing here is ripe.<br>Everything here is waiting.”</p><button id="all" type="button">SHAKE ALL TREES</button></aside>
+<h1>NOTHING HERE IS RIPE<br>EVERYTHING HERE IS WAITING</h1>
+<script>
+const NS='http://www.w3.org/2000/svg',grove=document.getElementById('grove'),orchard=document.getElementById('orchard'),poem=document.getElementById('poem');
+const words=['WAIT','RIPEN','RETURN','QUIET','AGAIN','SOON','TODAY','GONE','HEARD','NEAR','YET','HOME'];
+const poems={WAIT:'Waiting is the only fruit that grows heavier the longer you ignore it.',RIPEN:'The sun did not hurry. Neither did the pear. Both were right.',RETURN:'I came back for the word I dropped. It had made itself at home.',QUIET:'A quiet orchard still makes a sound when a word lets go.',AGAIN:'The second falling is not the same as the first, though it lands in the same place.',SOON:'Soon is a fruit with no seeds. It cannot be planted, only awaited.',TODAY:'Today is the only fruit that bruises if you look away.',GONE:'Gone is the word the basket keeps without making room for.',HEARD:'I heard the tree say my name. It was only the wind reading aloud.',NEAR:'Near is not close. Near is close enough to be responsible.',YET:'Yet hangs from a branch that has never existed anywhere else.',HOME:'Home is the basket that does not ask what you were before you fell.'};
+const trunks=['l<br>l<br>l<br>l<br>l','l<br>l<br>l<br>l','l<br>l<br>l<br>l<br>l<br>l','l<br>l<br>l','l<br>l<br>l<br>l<br>l','l<br>l<br>l<br>l'];
+let fruits=[];
+for(let i=0;i<6;i++){
+ const x=115+i*135,base=480,top=190+(i%3)*22;
+ const g=document.createElementNS(NS,'g');g.setAttribute('class','tree');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label','Tree '+(i+1)+', shake');
+ const trunk=document.createElementNS(NS,'text');trunk.setAttribute('x',x);trunk.setAttribute('y',base-16);trunk.setAttribute('class','trunk');trunk.setAttribute('text-anchor','middle');trunk.textContent='l\nl\nl\nl\nl';trunk.setAttribute('xml:space','preserve');g.appendChild(trunk);
+ const br=document.createElementNS(NS,'text');br.setAttribute('x',x);br.setAttribute('y',top+34);br.setAttribute('text-anchor','middle');br.setAttribute('xml:space','preserve');br.textContent='/ \\  / \\\n  / \\ /';g.appendChild(br);
+ const leaf=document.createElementNS(NS,'text');leaf.setAttribute('x',x);leaf.setAttribute('y',top+8);leaf.setAttribute('class','leaf');leaf.setAttribute('text-anchor','middle');leaf.textContent=['still','almost','after','maybe','often','before'][i];g.appendChild(leaf);
+ for(let k=0;k<2;k++){const idx=i*2+k,c=document.createElementNS(NS,'circle');c.setAttribute('class','fruit');c.setAttribute('cx',x+(k?32:-32));c.setAttribute('cy',top+70+k*18);c.setAttribute('r',17);g.appendChild(c);const t=document.createElementNS(NS,'text');t.setAttribute('class','fruit-t');t.setAttribute('x',x+(k?32:-32));t.setAttribute('y',top+70+k*18);t.textContent=words[idx];g.appendChild(t);fruits.push({el:c,t,word:words[idx],tree:g,done:false})}
+ const shake=()=>{g.classList.remove('shake');void g.getBoundingClientRect();g.classList.add('shake');setTimeout(()=>dropFrom(g),260)};
+ g.addEventListener('click',shake);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();shake()}});
+ grove.appendChild(g);
+}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,falling=[];
+function dropFrom(g){fruits.filter(f=>f.tree===g&&!f.done).forEach((f,i)=>{f.done=true;f.el.style.opacity=0;f.t.style.opacity=0;const r=f.el.getBoundingClientRect(),o=orchard.getBoundingClientRect();const box=document.querySelector('.basket').getBoundingClientRect();const x=r.left+r.width/2-o.left,y=r.top+r.height/2-o.top,tx=box.left+box.width/2-o.left+(Math.random()-.5)*box.width*.5,ty=box.top+box.height*.45-o.top;const d=document.createElement('button');d.type='button';d.className='falling';d.textContent=f.word;d.style.left=x+'px';d.style.top=y+'px';orchard.appendChild(d);if(reduce){d.style.left=tx+'px';d.style.top=ty+'px';d.addEventListener('click',()=>poem.textContent=poems[f.word]);return}falling.push({el:d,x,y,vx:(tx-x)/55,vy:-1.2+(Math.random()-.5),tx,ty,t:0,word:f.word,echo:0})})}
+function loop(){for(let i=falling.length-1;i>=0;i--){const f=falling[i];f.t++;f.x+=f.vx;f.y+=f.vy;f.vy+=.32;if(f.t%4===0&&f.echo<5){f.echo++;const e=document.createElement('span');e.className='echo';e.textContent=f.word;e.style.left=f.x+'px';e.style.top=(f.y-14)+'px';orchard.appendChild(e);setTimeout(()=>e.remove(),450)}if(f.y>=f.ty||f.x>f.tx){f.x=f.tx;f.y=f.ty;f.el.style.left=f.x+'px';f.el.style.top=f.y+'px';f.el.addEventListener('click',()=>{poem.textContent=poems[f.word]});falling.splice(i,1)}else{f.el.style.left=f.x+'px';f.el.style.top=f.y+'px'}}requestAnimationFrame(loop)}
+document.getElementById('all').addEventListener('click',()=>{[...grove.querySelectorAll('.tree')].forEach((t,i)=>setTimeout(()=>{t.classList.remove('shake');void t.getBoundingClientRect();t.classList.add('shake');setTimeout(()=>dropFrom(t),260)},i*180))});
+loop();
+</script>
+</body>
+</html>

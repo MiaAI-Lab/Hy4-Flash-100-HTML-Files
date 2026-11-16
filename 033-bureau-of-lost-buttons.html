@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bureau of Lost Buttons — A Coat With a Memory</title>
+<style>
+:root{--desk:#2B2A27;--mustard:#D8A93C;--bone:#EEE7D6;--red:#B64A34}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--desk);color:var(--bone);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+h1{position:absolute;left:26px;top:22px;font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0;z-index:5}
+.count{position:absolute;right:26px;top:22px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--mustard);z-index:5}
+svg{width:100%;height:100%;display:block}
+.coat{fill:none;stroke:var(--bone);stroke-width:2;opacity:.7}
+.drawer{fill:var(--mustard)}
+.btn{cursor:pointer;outline:none;animation:fall .65s cubic-bezier(.2,.8,.3,1.1) both;animation-delay:calc(var(--i)*.025s)}
+@keyframes fall{from{opacity:0;transform:translateY(-70px) rotate(-25deg)}to{opacity:1;transform:none}}
+.btn:hover,.btn:focus-visible{filter:drop-shadow(0 0 5px var(--bone))}
+.btn:focus-visible circle:first-child{stroke:var(--bone);stroke-width:4}
+.used{opacity:0;pointer-events:none}
+.stitch{fill:none;stroke:var(--bone);stroke-width:1.4;stroke-dasharray:6 5;opacity:.75;stroke-dashoffset:500;animation:thread .55s ease-out forwards}
+@keyframes thread{to{stroke-dashoffset:0}}
+.sewn{animation:fly .6s cubic-bezier(.3,.8,.3,1.05) both}
+@keyframes fly{from{transform:translate(var(--dx),var(--dy)) rotate(-90deg) scale(.5);opacity:.2}to{transform:translate(0,0) rotate(var(--rot)) scale(1);opacity:1}}
+footer{position:absolute;left:26px;bottom:16px;right:26px;display:flex;justify-content:space-between;align-items:end;gap:20px;z-index:5}
+.cap{font:12px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;color:var(--bone);max-width:60ch}
+button{background:transparent;color:var(--mustard);border:1px solid var(--mustard);padding:9px 12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;cursor:pointer}
+@media(max-width:650px){h1{font-size:7px}.count{font-size:8px}.cap{font-size:9px}footer{bottom:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.stitch{stroke-dashoffset:0}.sewn{transform:none}}
+</style>
+</head>
+<body>
+<h1>BUREAU OF LOST BUTTONS / DESK 33</h1><div class="count">REUNITED <span id="num">00</span>/40</div>
+<svg id="scene" viewBox="0 0 1000 700" aria-label="A coat and forty lost buttons">
+  <path class="coat" d="M370 120 L450 105 L500 135 L550 105 L630 120 L690 210 L645 245 L620 215 L620 520 L380 520 L380 215 L355 245 L310 210Z"/>
+  <path class="coat" d="M450 105 L500 300 L550 105 M500 135 V520"/>
+  <rect class="drawer" x="110" y="555" width="780" height="120"/>
+  <text x="126" y="580" font-family="ui-monospace,monospace" font-size="10" fill="#2B2A27" letter-spacing="2">DRAWER 33 — UNCLAIMED</text>
+  <g id="stitches"></g><g id="sewnG"></g><g id="buttonG"></g>
+</svg>
+<footer><div class="cap" id="caption">Every button remembers the exact shape of the hole it left.</div><button id="reset" type="button">EMPTY THE COAT</button></footer>
+<script>
+const NS='http://www.w3.org/2000/svg',bg=document.getElementById('buttonG'),stitches=document.getElementById('stitches'),sewnG=document.getElementById('sewnG'),caption=document.getElementById('caption'),num=document.getElementById('num');
+const places=['OFFICE COAT, LEFT CUFF, 1987','SAILOR’S SHIRT, SECOND FROM TOP','A RAINCOAT THAT NEVER DRIED','GRANDMOTHER’S BEST SUNDAY DRESS','THE UNIFORM OF A SMALL HOTEL','A CHILD’S FIRST COAT, BLUE','WORK JACKET, POCKET LINING','THE COAT OF SOMEONE WHO LEFT EARLY','WINTER SCARF, ONE OF THREE','A SHIRT BOUGHT IN A PORT'];
+const colours=[['#EEE7D6','#2B2A27'],['#D8A93C','#2B2A27'],['#B64A34','#EEE7D6']],source=[],targets=[];
+function makeButton(x,y,r,col,holes){const g=document.createElementNS(NS,'g');const c=document.createElementNS(NS,'circle');c.setAttribute('r',r);c.setAttribute('fill',col[0]);c.setAttribute('stroke',col[1]);c.setAttribute('stroke-width',1.5);g.appendChild(c);if(holes===4){[[-3,-3],[3,-3],[-3,3],[3,3]].forEach(([a,b])=>{const h=document.createElementNS(NS,'circle');h.setAttribute('cx',a);h.setAttribute('cy',b);h.setAttribute('r',1.4);h.setAttribute('fill',col[1]);g.appendChild(h)})}else{[-4,4].forEach(a=>{const h=document.createElementNS(NS,'circle');h.setAttribute('cx',a);h.setAttribute('cy',0);h.setAttribute('r',1.6);h.setAttribute('fill',col[1]);g.appendChild(h)})}g.setAttribute('transform',`translate(${x},${y})`);return g}
+for(let i=0;i<40;i++){
+  const col=colours[i%3],x=145+(i%10)*78,y=605+Math.floor(i/10)*27,holes=i%3===0?4:2;
+  const g=makeButton(x,y,10,col,holes);g.setAttribute('class','btn');g.style.setProperty('--i',i);g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label','Sew button '+(i+1)+': '+places[i%10]);
+  const origin=places[i%10]+' / '+String(1900+(i*7)%100).slice(0,4);
+  const show=()=>caption.textContent=origin;
+  g.addEventListener('pointerenter',show);g.addEventListener('focus',show);g.addEventListener('click',()=>sew(i));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sew(i)}});
+  bg.appendChild(g);source.push({x,y,el:g,col,holes});
+  const tx=395+((i*97)%210),ty=170+((i*53)%320);targets.push({x:tx,y:ty});
+}
+let count=0;
+function sew(i){const s=source[i];if(s.el.classList.contains('used'))return;s.el.classList.add('used');const t=targets[i],rot=(i%7-3)*6;
+  const path=document.createElementNS(NS,'path');path.setAttribute('class','stitch');path.setAttribute('d',`M${s.x} ${s.y-8} Q${(s.x+t.x)/2} ${Math.min(s.y,t.y)-80} ${t.x} ${t.y}`);stitches.appendChild(path);
+  const b=makeButton(0,0,10,s.col,s.holes);b.setAttribute('class','sewn');b.style.setProperty('--dx',(s.x-t.x)+'px');b.style.setProperty('--dy',(s.y-t.y)+'px');b.style.setProperty('--rot',rot+'deg');b.setAttribute('transform',`translate(${t.x},${t.y})`);sewnG.appendChild(b);
+  count++;num.textContent=String(count).padStart(2,'0');caption.textContent='STITCHED: '+places[i%10]+' — thread pulled through four times.';
+}
+document.getElementById('reset').addEventListener('click',()=>{source.forEach(s=>s.el.classList.remove('used'));sewnG.innerHTML='';stitches.innerHTML='';count=0;num.textContent='00';caption.textContent='The coat is empty again. The buttons have gone back to waiting.'});
+</script>
+</body>
+</html>

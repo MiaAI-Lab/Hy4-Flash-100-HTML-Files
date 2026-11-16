@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slow Motion Fountain — Water at 1/20 Speed</title>
+<style>
+:root{--teal:#0F6B6B;--cream:#F2E7C9;--coral:#F26B4E}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--teal);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+h1{position:absolute;left:26px;top:22px;font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0}
+.tag{position:absolute;left:26px;top:70px;font:italic 14px/1.4 Georgia,serif;max-width:24ch;margin:0;opacity:.85}
+.hint{position:absolute;right:26px;top:24px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;text-align:right}
+.handle{position:absolute;width:22px;height:22px;border:2px solid var(--cream);background:var(--teal);transform:translate(-50%,-50%);cursor:ew-resize;outline:none;z-index:3}
+.handle:focus-visible{outline:3px solid var(--coral)}
+.handle.nozzle{border-radius:50%;background:var(--cream)}
+button{position:absolute;left:26px;bottom:24px;background:transparent;color:var(--cream);border:1px solid var(--cream);padding:11px 15px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;cursor:pointer;z-index:4}
+button:hover,button.on{background:var(--coral);border-color:var(--coral)}
+.measure{position:absolute;right:26px;bottom:24px;font:11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--coral);opacity:0;transition:opacity .3s;z-index:4}
+.measure.on{opacity:1}
+@media(max-width:600px){h1{font-size:8px}.tag{font-size:11px;top:58px}.hint{font-size:7px}.handle{width:30px;height:30px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1>SLOW MOTION FOUNTAIN / COURT 34</h1><p class="tag">A fountain is a machine for making the same shape forever.</p>
+<div class="hint">DRAG THE WHITE NOZZLE<br>DRAG THE RIGHT BASIN EDGE</div>
+<div class="handle nozzle" id="nozzle" tabindex="0" role="slider" aria-label="Nozzle angle" aria-valuemin="-70" aria-valuemax="70" aria-valuenow="0"></div>
+<div class="handle" id="edge" tabindex="0" role="slider" aria-label="Basin width" aria-valuemin="120" aria-valuemax="380" aria-valuenow="240"></div>
+<button id="hold" type="button">HOLD THE AIR</button><div class="measure" id="measure">APEX 00.00 UNITS<br>WATER SUSPENDED</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),nozzle=document.getElementById('nozzle'),edge=document.getElementById('edge'),hold=document.getElementById('hold'),measure=document.getElementById('measure');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1,baseY=0,nx=0,ny=0,angle=-32,width=240,held=false,holdUntil=0,particles=[],enter=0;
+function resize(){const r=c.getBoundingClientRect();dpr=devicePixelRatio||1;W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);baseY=H*.73;nx=W*.5;ny=baseY-52;placeHandles()}
+function placeHandles(){nozzle.style.left=nx+'px';nozzle.style.top=ny+'px';edge.style.left=(nx+width)+'px';edge.style.top=(baseY+28)+'px'}
+function spawn(){const a=angle*Math.PI/180,sp=9+Math.random()*1.6;particles.push({x:nx,y:ny,vx:Math.cos(a)*sp*6,vy:Math.sin(a)*sp*6,life:0,trail:[]})}
+function render(t){
+  ctx.clearRect(0,0,W,H);
+  if(!held&&t>holdUntil){if(!reduce)spawn();const dt=.16;particles.forEach(p=>{p.trail.push({x:p.x,y:p.y});if(p.trail.length>7)p.trail.shift();p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=.34*dt*6;p.life+=dt;if(p.y>baseY+8){p.y=baseY+8;p.vy*=-.18;p.vx*=.75}});particles=particles.filter(p=>p.life<15&&Math.abs(p.x-nx)<W)}
+  enter=Math.min(1,enter+.012);
+  ctx.strokeStyle='rgba(242,231,201,.12)';ctx.lineWidth=1;for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  ctx.fillStyle='#F2E7C9';ctx.beginPath();ctx.ellipse(nx,baseY,width,28,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#0F6B6B';ctx.beginPath();ctx.ellipse(nx,baseY-3,width-16,20,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#F2E7C9';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(nx,baseY);ctx.lineTo(nx,ny);ctx.stroke();
+  particles.forEach((p,i)=>{if(i>enter*particles.length)return;ctx.strokeStyle='rgba(242,231,201,.2)';ctx.lineWidth=1;ctx.beginPath();p.trail.forEach((q,k)=>k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));ctx.lineTo(p.x,p.y);ctx.stroke();ctx.strokeStyle='#F2E7C9';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.1,p.y-p.vy*.1);ctx.stroke();if(i%7===0){ctx.fillStyle='#F26B4E';ctx.fillRect(p.x-1,p.y-1,2,2)}});
+  if(held){const apex=Math.min(...particles.map(p=>p.y),baseY),ax=particles.find(p=>p.y===apex)?.x||nx;ctx.setLineDash([4,6]);ctx.strokeStyle='#F26B4E';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(nx,ny);ctx.quadraticCurveTo((nx+ax)/2,apex-60,ax,apex);ctx.stroke();ctx.beginPath();ctx.moveTo(nx-20,apex);ctx.lineTo(nx+width,apex);ctx.stroke();ctx.setLineDash([]);measure.textContent='APEX '+((baseY-apex)/10).toFixed(2)+' UNITS\nWATER SUSPENDED';}
+  requestAnimationFrame(render)
+}
+function drag(el,set){let active=false;el.addEventListener('pointerdown',e=>{active=true;el.setPointerCapture(e.pointerId)});el.addEventListener('pointermove',e=>{if(active)set(e.clientX)});el.addEventListener('pointerup',()=>active=false);el.addEventListener('pointercancel',()=>active=false)}
+drag(nozzle,x=>{angle=Math.max(-76,Math.min(76,(x-nx)/4));nozzle.setAttribute('aria-valuenow',Math.round(angle));placeHandles()});
+drag(edge,x=>{width=Math.max(120,Math.min(Math.min(W*.42,380),x-nx));edge.setAttribute('aria-valuenow',Math.round(width));placeHandles()});
+nozzle.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();angle=Math.max(-76,Math.min(76,angle+(e.key==='ArrowRight'?5:-5)));placeHandles()}});
+edge.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();width=Math.max(120,Math.min(380,width+(e.key==='ArrowRight'?12:-12)));placeHandles()}});
+hold.addEventListener('click',()=>{held=true;holdUntil=performance.now()+2000;measure.classList.add('on');hold.classList.add('on');setTimeout(()=>{held=false;measure.classList.remove('on');hold.classList.remove('on')},2000)});
+window.addEventListener('resize',resize);resize();if(reduce){angle=-32;held=true;holdUntil=Infinity;measure.classList.add('on')}requestAnimationFrame(render);
+</script>
+</body>
+</html>

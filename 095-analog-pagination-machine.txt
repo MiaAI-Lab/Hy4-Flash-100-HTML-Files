@@ -1,0 +1,14 @@
+TITLE
+The Folio Wheel — An Analog Pagination Machine
+
+PROMPT
+A paper #EFE9DA, black #232421 and orange #D55D32 machine for numbering pages. A large wheel at the left carries three number reels; a stack of paper sheets at the right folds one page over each time the wheel advances. On load the reels roll from 001 to 012 in the first three seconds and twelve thin sheets stack up with visible folded edges. Clicking the wheel advances one folio; dragging down reverses it. A small counter records the machine's total impressions. No emoji, no office photograph, no purple.
+
+DESCRIPTION
+A numbering machine whose wheel rolls the folio and folds another sheet of paper.
+
+VISUAL TECHNIQUES
+CSS digit reels, stacked page transforms, drag-to-reverse wheel, impression counter, mechanical audio.
+
+INTERACTION MODEL
+Click the wheel to advance, drag downward to reverse. Keyboard: arrow keys advance or reverse. Reduced motion jumps to folio 12.

@@ -1,0 +1,14 @@
+TITLE
+Moth & Miso — A Neon Noodle Shop After Midnight
+
+PROMPT
+A storefront at 1:14 a.m.: black #110E0D, red #D82D2D neon, warm yellow #F2C13C sodium light. A hand-lettered sign reads “MOTH & MISO” in imperfect tube strokes that flicker once on load. Four bowls sit on a dark counter: TOKYO DRIZZLE (shoyu, chicken, charred scallion), RED HOUR (spicy miso, corn, chilli oil), MIDNIGHT MISO (white miso, egg, bamboo), and SALT & STATIC (clear broth, nori, squid). Clicking a bowl sends steam letters upward from it; the letters curl, rearrange, and settle into the dish's name above the counter while the order slips below. Signature moment: the steam literally writes the menu. No emoji, no glass cards, no purple. Reduced motion writes the name instantly.
+
+DESCRIPTION
+A tiny neon ramen bar where selecting a bowl makes its name rise as steam and assemble letter by letter.
+
+VISUAL TECHNIQUES
+SVG neon filters and duplicate strokes, CSS flicker choreography, hand-drawn bowl SVGs, Web Animations API for steam typography, warm glow on black.
+
+INTERACTION MODEL
+Click or focus a bowl to order; hover warms its neon outline. Keyboard: bowl buttons are tabbable and Enter activates them.

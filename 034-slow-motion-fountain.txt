@@ -1,0 +1,14 @@
+TITLE
+Slow Motion Fountain — Water at 1/20 Speed
+
+PROMPT
+A courtyard fountain rendered in flat teal #0F6B6B and cream #F2E7C9, with water in one coral #F26B4E accent. The basin is a wide ellipse drawn in cream; a slim nozzle at its centre throws a continuous arc of water that behaves like a slow-motion photograph. Each droplet is a small cream line, not a circle, and follows a ballistic path with a faint coral trail. Dragging the nozzle left or right changes the launch angle; dragging the basin edge changes its width and therefore where droplets land. A HOLD THE AIR button freezes the simulation for two seconds while a dotted measurement arc appears and labels the highest droplet with its height in imaginary units. Text at upper left: “A fountain is a machine for making the same shape forever.” Title “SLOW MOTION FOUNTAIN / COURT 34”. Entrance: the first arc draws itself from nozzle to basin, then the rest of the water follows. Signature moment: when held, the droplets hang perfectly still and the arc becomes a measured diagram. No emoji, no glass, no purple. Reduced motion draws a static arc and freezes by default.
+
+DESCRIPTION
+A physics fountain in twenty-times slow motion. Drag the nozzle or basin to change the water's shape, then hold the air to see the arc as a measured drawing.
+
+VISUAL TECHNIQUES
+Canvas ballistic particles with variable gravity and launch angle, drag handles, freeze state with measurement overlay, custom easing on entrance arc, keyboard-adjustable nozzle.
+
+INTERACTION MODEL
+Drag the nozzle or basin edge; press HOLD THE AIR to freeze for two seconds. Arrow keys adjust nozzle angle when focused.

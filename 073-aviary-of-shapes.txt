@@ -1,0 +1,14 @@
+TITLE
+Aviary of Shapes — Sixty Birds, One Decision
+
+PROMPT
+A cream #F5EEDF field with sixty geometric birds drawn as turquoise #2E9C9A and coral #DC715D chevrons. They drift in a loose, noisy flock; hovering over them makes nearby birds tilt away from the pointer. A small printed command reading FORMATION / SCATTER sits in the corner. Press FORMATION and the birds lock into one precise arrowhead, arriving in staggered waves, wings briefly holding still before the flock resumes breathing. Signature moment: sixty independent shapes resolving into a single direction without colliding. No emoji, no feather illustrations, no gradient sky.
+
+DESCRIPTION
+A flock of geometric birds that can be scattered by the pointer or commanded into one precise arrowhead formation.
+
+VISUAL TECHNIQUES
+SVG chevron birds with inner wing flap, steering simulation, pointer avoidance, staggered formation targets, two-colour flock distribution.
+
+INTERACTION MODEL
+Move the pointer through the flock to disturb it; press FORMATION to assemble, SCATTER to release. Keyboard: the command is a button. Reduced motion snaps between states.

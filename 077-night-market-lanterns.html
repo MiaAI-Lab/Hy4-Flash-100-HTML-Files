@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern Street — Nine Stalls After the Rain</title>
+<style>
+:root{--red:#4B101A;--gold:#E7B44B;--black:#130C0D}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--gold);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+.street{position:relative;width:100vw;height:100vh;background:radial-gradient(ellipse at 50% 62%,#6B1A22 0%,var(--red) 36%,var(--black) 82%);overflow:hidden}
+.street:before{content:'';position:absolute;left:34%;right:34%;top:24%;bottom:0;background:#1A0E10;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);border-left:1px solid rgba(231,180,75,.15);border-right:1px solid rgba(231,180,75,.15)}
+.street:after{content:'';position:absolute;left:0;right:0;bottom:0;height:34%;background:repeating-linear-gradient(0deg,rgba(231,180,75,.045) 0 2px,transparent 2px 14px);transform:perspective(200px) rotateX(58deg);transform-origin:bottom;opacity:.7}
+h1{position:absolute;left:34px;top:28px;font:400 clamp(20px,2.7vw,34px)/1 Georgia,serif;margin:0;z-index:8}
+.sub{position:absolute;left:36px;top:76px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(231,180,75,.7);z-index:8}
+.lantern{position:absolute;left:var(--x);top:var(--y);width:calc(58px * var(--s));height:calc(150px * var(--s));transform:translateX(-50%) scale(var(--s));transform-origin:top center;background:none;border:0;padding:0;cursor:pointer;z-index:5;outline:none}
+.string{position:absolute;left:50%;top:0;width:1px;height:calc(74px * var(--s));background:rgba(231,180,75,.55);transform-origin:top}
+.body{position:absolute;left:50%;top:calc(70px * var(--s));width:calc(46px * var(--s));height:calc(62px * var(--s));margin-left:calc(-23px * var(--s));border-radius:45% 45% 40% 40%/22% 22% 26% 26%;background:repeating-linear-gradient(90deg,#E7B44B 0 4px,#C8913E 4px 6px,#F0C86A 6px 10px);box-shadow:0 0 24px rgba(231,180,75,.45),inset -8px 0 12px rgba(75,16,26,.35);animation:sway 6.5s ease-in-out infinite;animation-delay:calc(var(--i)*-.6s);transform-origin:top center}
+.body:before,.body:after{content:'';position:absolute;left:12%;right:12%;height:5px;background:#2A1214}
+.body:before{top:-2px}.body:after{bottom:-2px}
+.tassel{position:absolute;left:50%;top:calc(130px * var(--s));width:2px;height:calc(18px * var(--s));background:var(--gold);margin-left:-1px}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.lantern:hover .body,.lantern:focus-visible .body{animation:swingHard 1.5s cubic-bezier(.3,.1,.3,1) infinite}
+@keyframes swingHard{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+.lantern:focus-visible .body{outline:2px solid #FFF3D2;outline-offset:4px}
+.pool{position:absolute;left:50%;top:calc(128px * var(--s));width:calc(260px * var(--s));height:calc(150px * var(--s));margin-left:calc(-130px * var(--s));border-radius:50%;background:radial-gradient(ellipse,rgba(231,180,75,.34),rgba(231,180,75,.1) 55%,transparent 72%);opacity:.28;transform:scale(.6);transition:opacity .6s,transform .8s cubic-bezier(.2,1,.3,1);pointer-events:none}
+.lantern:hover .pool,.lantern:focus-visible .pool{opacity:1;transform:scale(1.15)}
+.reveal{position:absolute;left:var(--rx);top:var(--ry);width:calc(110px * var(--s));text-align:center;opacity:0;transform:translateY(6px);transition:opacity .55s .12s,transform .55s .12s;pointer-events:none;z-index:6;color:#FFF0C8}
+.lantern:hover + .reveal,.lantern:focus-visible + .reveal{opacity:1;transform:none}
+.reveal svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 8px rgba(231,180,75,.5))}
+.reveal span{display:block;font:8px ui-monospace,Menlo,monospace;letter-spacing:.16em;margin-top:4px}
+.hint{position:absolute;right:34px;bottom:26px;font:italic 13px Georgia,serif;color:rgba(231,180,75,.65);z-index:8}
+@media(max-width:700px){h1{left:16px;top:16px}.sub{left:18px;top:60px;font-size:7px}.hint{right:16px;bottom:14px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.body,.lantern:hover .body,.lantern:focus-visible .body{animation:none;transform:none}}
+</style>
+</head>
+<body>
+<div class="street"><h1>Lantern Street</h1><div class="sub">NINE STALLS AFTER THE RAIN · 21:40</div><div id="scene"></div><div class="hint">Choose a lantern. The street will answer.</div></div>
+<script>
+const scene=document.getElementById('scene'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const stalls=[
+ {x:12,y:9,s:.62,n:'TEA & SALT',art:'<rect x="6" y="18" width="34" height="32" fill="#7A3A2E" stroke="#E7B44B"/><rect x="13" y="8" width="20" height="12" fill="#C8913E" stroke="#E7B44B"/><path d="M12 40h22" stroke="#E7B44B"/>'},
+ {x:86,y:8,s:.6,n:'MENDING',art:'<path d="M6 42 Q23 8 42 42Z" fill="#6B2B25" stroke="#E7B44B"/><path d="M14 34l18-14M16 22l16 16" stroke="#E7B44B"/>'},
+ {x:27,y:19,s:.78,n:'SWEET RICE',art:'<ellipse cx="23" cy="42" rx="16" ry="7" fill="#C8913E" stroke="#E7B44B"/><path d="M10 34h26l-4 8H14Z" fill="#F0D9A8" stroke="#E7B44B"/><circle cx="23" cy="26" r="7" fill="#F0D9A8" stroke="#E7B44B"/>'},
+ {x:72,y:18,s:.8,n:'UMBRELLA LOANS',art:'<path d="M8 30q15-24 30 0Z" fill="#6B2B25" stroke="#E7B44B"/><path d="M23 30v20" stroke="#E7B44B"/><path d="M23 50q5-4 8 0" fill="none" stroke="#E7B44B"/>'},
+ {x:43,y:27,s:1,n:'INK & PAPER',art:'<rect x="8" y="24" width="30" height="24" fill="#2A1214" stroke="#E7B44B"/><path d="M15 18h18v8H15Z" fill="#E7B44B"/><path d="M13 36h20M13 42h14" stroke="#E7B44B"/>'},
+ {x:58,y:29,s:1.02,n:'WARM TEA',art:'<path d="M10 24h24l-4 24H14Z" fill="#7A3A2E" stroke="#E7B44B"/><ellipse cx="22" cy="24" rx="12" ry="4" fill="#E7B44B"/><path d="M34 30q8 2 0 10" fill="none" stroke="#E7B44B"/>'},
+ {x:35,y:37,s:1.22,n:'BRASS REPAIR',art:'<circle cx="16" cy="36" r="10" fill="#C8913E" stroke="#E7B44B"/><circle cx="32" cy="42" r="6" fill="#7A3A2E" stroke="#E7B44B"/><path d="M20 28l10 8" stroke="#FFF0C8"/>'},
+ {x:66,y:38,s:1.26,n:'NIGHT FRUIT',art:'<circle cx="16" cy="38" r="9" fill="#8F2E2C" stroke="#E7B44B"/><circle cx="32" cy="34" r="7" fill="#C8913E" stroke="#E7B44B"/><path d="M16 29v-6M32 27v-5" stroke="#E7B44B"/>'},
+ {x:50,y:45,s:1.5,n:'THE LAST STALL',art:'<path d="M6 34 Q23 10 40 34Z" fill="#4B101A" stroke="#E7B44B"/><path d="M10 34v18h26V34" fill="#2A1214" stroke="#E7B44B"/><rect x="18" y="40" width="10" height="12" fill="#E7B44B"/>'}
+];
+stalls.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='lantern';b.style.setProperty('--x',s.x+'%');b.style.setProperty('--y',s.y+'%');b.style.setProperty('--s',s.s);b.style.setProperty('--i',i);b.setAttribute('aria-label','Light the stall: '+s.n);b.innerHTML='<span class="string"></span><span class="body"></span><span class="tassel"></span><span class="pool"></span>';b.style.transform='translateX(-50%) scale('+s.s+')';const r=document.createElement('div');r.className='reveal';r.style.setProperty('--rx',(s.x-5)+'%');r.style.setProperty('--ry',(s.y+26)+'%');r.style.setProperty('--s',Math.min(1.3,s.s));r.innerHTML='<svg viewBox="0 0 48 52">'+s.art+'</svg><span>'+s.n+'</span>';scene.appendChild(b);scene.appendChild(r)});
+</script>
+</body>
+</html>

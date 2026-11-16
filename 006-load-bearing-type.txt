@@ -1,0 +1,14 @@
+TITLE
+Load Bearing — A Typographic Stress Test
+
+PROMPT
+A brutalist typographic experiment in which oversized letters are structural columns holding up concrete slabs. Palette: charcoal #24231F background, safety yellow #F2C500 letters, pale concrete #B9B5AC slabs, with thin black construction lines. Full-screen, asymmetric grid. The left edge displays a small construction-office masthead and a warning in tiny Courier; the centre is dominated by three enormous Georgia serif capitals — A, T, E — each acting as a spring-loaded column. A heavy slab rests across them at load. The viewer can drag the slab upward and drop it; a simple gravity simulation makes it fall, collide with the letters and bounce with damping. On impact the struck letters squash vertically and lean, then spring back with a custom elastic curve; a stress readout in the margin changes from 0.2 to 1.4 kilonewtons based on drop height. Add subtle construction grid, rivets and handwritten measurement ticks drawn in CSS/SVG. Typography: monumental serif capitals, tiny monospaced engineering labels, no decorative sans. Entrance: the three letters rise from the floor in sequence with a heavy cubic-bezier overshoot, the slab drops once from just above them, and the dust puff appears. Interaction: drag any slab vertically, release to drop; press R to reset; keyboard focus the slab and use ArrowUp/ArrowDown to lift or release. Signature moment: a high drop visibly buckles the A first, then the T and E in sequence, while the slab bounces twice and the stress number flashes red. Copy: invented engineering notes such as “SPAN 4.2 M / TOLERANCE: OPTIMISTIC”, no generic game language.
+
+DESCRIPTION
+A playful structural-engineering fantasy where typography carries real weight. Dropping a concrete slab onto letter-columns creates a readable chain of compression, buckling and rebound, with live stress telemetry.
+
+VISUAL TECHNIQUES
+Small custom gravity-and-damping simulation, CSS elastic transforms, pointer dragging with capture, SVG construction grid, dust-puff particles, keyboard control, high-contrast brutalist palette.
+
+INTERACTION MODEL
+Drag the slab up and release it, or focus it and use arrow keys. R resets the apparatus. Watch the letters deform and the stress gauge respond; all states are visible without sound.

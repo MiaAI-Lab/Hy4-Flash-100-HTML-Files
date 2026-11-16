@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map of Small Sorrows — A City Measured in Tiny Losses</title>
+<style>
+:root{--blue:#7A91A3;--cream:#F0E9DA;--coral:#C96F61}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--blue);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+h1{font:400 clamp(22px,3vw,36px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.map{position:relative;margin-top:20px;border:2px solid var(--cream);background:#8199A9;overflow:hidden;max-width:1200px}
+svg{display:block;width:100%;height:auto}
+.street{fill:none;stroke:rgba(240,233,218,.5);stroke-width:1.2;stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 1.3s ease-out forwards;animation-delay:calc(var(--s)*.06s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+.river{fill:none;stroke:rgba(240,233,218,.28);stroke-width:12;stroke-dasharray:1800;stroke-dashoffset:1800;animation:draw 2s .2s ease-out forwards}
+.pin{position:absolute;width:18px;height:18px;border:0;border-radius:50% 50% 50% 0;background:var(--coral);transform:translate(-50%,-100%) rotate(-45deg);cursor:pointer;outline:none;z-index:3;box-shadow:0 3px 0 rgba(31,45,55,.3);animation:drop .5s cubic-bezier(.2,1.5,.3,1) both;animation-delay:calc(.9s + var(--i)*.1s)}
+@keyframes drop{from{opacity:0;transform:translate(-50%,-220%) rotate(-45deg)}to{opacity:1}}
+.pin:focus-visible,.pin:hover{outline:3px solid var(--cream);outline-offset:3px}
+.note{position:absolute;left:var(--x);top:var(--y);width:220px;background:var(--cream);color:#31434E;padding:14px 16px;font:12px/1.5 Georgia,serif;clip-path:polygon(0 3%,8% 0,16% 3%,25% 0,34% 3%,43% 0,52% 3%,61% 0,70% 3%,79% 0,88% 3%,100% 0,100% 96%,90% 100%,80% 96%,70% 100%,60% 96%,50% 100%,40% 96%,30% 100%,20% 96%,10% 100%,0 96%);transform:translate(-8%,8%) scale(.86) rotate(-4deg);opacity:0;transform-origin:top left;pointer-events:none;transition:opacity .28s,transform .45s cubic-bezier(.18,1.2,.3,1);z-index:4}
+.pin:hover + .note,.pin:focus + .note,.note.open{opacity:1;transform:translate(0,0) scale(1) rotate(-1deg)}
+.note b{display:block;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--coral);margin-bottom:8px}
+.scale{margin-top:14px;border-top:1px solid var(--cream);padding-top:10px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;display:flex;justify-content:space-between}
+@media(max-width:650px){body{padding:14px}.note{width:180px;font-size:10px}.scale{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.street,.river{stroke-dashoffset:0}.note{transform:none}}
+</style>
+</head>
+<body>
+<h1>Map of Small Sorrows</h1><div class="sub">ATLAS 061 · THE CITY AS IT WAS FELT, NOT AS IT WAS BUILT</div>
+<div class="map" id="map"><svg viewBox="0 0 1200 620"><g id="streets"></g><path class="river" d="M0 400 C180 340 260 470 440 420 C620 370 700 500 880 440 C1040 386 1120 440 1200 400"/></svg><div id="pins"></div></div>
+<div class="scale"><span>1 CM = ONE THING YOU DID NOT SAY</span><span>SEVEN RECORDED LOSSES</span></div>
+<script>
+const sorrows=[
+ [18,24,'TRAM NO. 6','A left glove was left on the rear seat in March. It was returned in June, cleaned, and placed in a drawer where it stayed for years.'],
+ [33,62,'CIRCULATING LIBRARY','A book was returned eleven days late with a note of apology tucked inside. The apology was removed; the book was borrowed again.'],
+ [48,35,'THE GREEN BENCH','Two friends stopped speaking here over nothing that either could later name. Both continued to take the same path, at different hours.'],
+ [61,75,'DRAIN, EAST SIDE','A key went down the grating on a wet evening. The lock was changed the following week, though nobody said why.'],
+ [75,28,'ROOM 14','A birthday candle was lit and never blown out. It burned down to the wax, and the day was remembered as ordinary.'],
+ [86,58,'POSTING BOX','A letter was posted without an address. It was delivered back to the sender in nine days, still unopened.'],
+ [92,18,'LANDING WINDOW','A lamp was switched off for the last time at half past ten. The bulb was left in place, as if it might still be needed.']
+];
+const map=document.getElementById('map'),streets=document.getElementById('streets'),pins=document.getElementById('pins'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+for(let i=0;i<12;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','path'),y=50+i*48;p.setAttribute('class','street');p.setAttribute('d',`M0 ${y} C300 ${y-20} 600 ${y+30} 900 ${y} S1150 ${y-10} 1200 ${y}`);p.style.setProperty('--s',i);streets.appendChild(p)}
+for(let i=0;i<9;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','path'),x=80+i*135;p.setAttribute('class','street');p.setAttribute('d',`M${x} 0 C${x+30} 180 ${x-30} 400 ${x} 620`);p.style.setProperty('--s',i+4);streets.appendChild(p)}
+sorrows.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='pin';b.style.left=s[0]+'%';b.style.top=s[1]+'%';b.style.setProperty('--i',i);b.setAttribute('aria-label',s[2]);const n=document.createElement('div');n.className='note';n.style.setProperty('--x',Math.min(s[0]+3,68)+'%');n.style.setProperty('--y',Math.min(s[1]+4,68)+'%');n.innerHTML='<b>'+s[2]+'</b>'+s[3];pins.appendChild(b);pins.appendChild(n);b.addEventListener('click',()=>{document.querySelectorAll('.note').forEach(x=>x.classList.remove('open'));if(!b.matches(':hover'))n.classList.toggle('open')})});
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Kite Barometer — A Weather Instrument on a String</title>
+<style>
+:root{--sky:#8FB6C2;--string:#3F4A4A;--paper:#F2E8D4}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sky);color:var(--string);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:linear-gradient(180deg,rgba(242,232,212,.18),transparent 60%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(63,74,74,.5);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.sky{position:relative;height:calc(100vh - 100px);min-height:470px;margin-top:8px;cursor:crosshair;touch-action:none;outline:0}
+svg{width:100%;height:100%;display:block}
+.windline{stroke:rgba(63,74,74,.22);stroke-width:1;fill:none;stroke-linecap:round}
+.kite{fill:var(--paper);stroke:var(--string);stroke-width:2}
+.kite-fold{stroke:rgba(63,74,74,.45);stroke-width:1;fill:none}
+.string{fill:none;stroke:var(--string);stroke-width:1.5;stroke-dasharray:3 3}
+.bow{fill:none;stroke:var(--string);stroke-width:2}
+.hud{position:absolute;left:8px;top:10px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;line-height:1.9;pointer-events:none}
+.hud b{font-weight:400;color:#8A4B38}
+.note{position:absolute;right:10px;bottom:12px;font:italic 13px Georgia,serif;color:rgba(63,74,74,.75);pointer-events:none}
+@media(max-width:600px){body{padding:12px}.hud{font-size:7px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Kite Barometer</h1><span class="meta">AERIAL STATION 094 · WIND RECORDED ON A STRING</span></header>
+<div class="sky" id="sky" tabindex="0" aria-label="Click to set the wind direction and strength">
+ <svg viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true"><g id="windlines"></g><path class="string" id="string" d=""/><g id="kiteGroup"><polygon class="kite" points="0,-46 34,0 0,58 -34,0"/><path class="kite-fold" d="M0 -46 V58 M-34 0 H34"/></g><g id="tail"></g></svg>
+ <div class="hud">ALTITUDE <b id="alt">000</b> M<br>WIND <b id="wind">000°</b> · <b id="knots">00</b> KT<br>BEARING <b id="bearing">N</b></div>
+ <div class="note">Click the sky. The kite reads the wind you make.</div>
+</div>
+<script>
+const sky=document.getElementById('sky'),windlines=document.getElementById('windlines'),kiteGroup=document.getElementById('kiteGroup'),string=document.getElementById('string'),tailG=document.getElementById('tail'),alt=document.getElementById('alt'),windEl=document.getElementById('wind'),knots=document.getElementById('knots'),bearing=document.getElementById('bearing'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+for(let i=0;i<14;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','windline');p.setAttribute('d','M-80 '+(40+i*34)+' h120');windlines.appendChild(p)}
+for(let i=0;i<8;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','bow');p.setAttribute('d','M-10 -5 Q0 5 10 -5 M-10 5 Q0 -5 10 5');tailG.appendChild(p)}
+let tx=700,ty=150,dir=0,strength=.6,smoothX=700,smoothY=400,smoothDir=0,smoothStrength=.1,t=0,dragging=false;
+function setWind(e){const r=sky.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;dir=Math.atan2(y-.5,x-.5)*180/Math.PI+90;strength=Math.min(1,Math.hypot(x-.5,y-.5)*2.2);target()}
+function target(){tx=500+Math.sin((dir-90)*Math.PI/180)*250*strength;ty=100+Math.max(0,.8-strength)*280;windEl.textContent=String(Math.round((dir+360)%360)).padStart(3,'0')+'°';knots.textContent=String(Math.round(strength*28)).padStart(2,'0');bearing.textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(((dir+360)%360)/45)%8]}
+function frame(now){t++;smoothX+=(tx-smoothX)*.035;smoothY+=(ty-smoothY)*.035;smoothDir+=(dir-smoothDir)*.05;smoothStrength+=(strength-smoothStrength)*.04;const bank=Math.sin(smoothDir*Math.PI/180)*18*smoothStrength;
+ kiteGroup.setAttribute('transform','translate('+smoothX+','+smoothY+') rotate('+bank+')');
+ let d='M500 510 Q'+(500+bank*.8)+' '+(430-smoothY*.15)+' '+smoothX+' '+(smoothY+50);string.setAttribute('d',d);
+ [...tailG.children].forEach((b,i)=>{const k=i+1,phase=Math.sin(t*.08-i*.7)*(6+smoothStrength*13),x=smoothX+bank*.02*k+phase,y=smoothY+58+k*25;b.setAttribute('transform','translate('+x+','+y+') rotate('+(phase*1.8)+') scale('+(1-i*.04)+')')});
+ [...windlines.children].forEach((l,i)=>{const off=((t*(1+smoothStrength*4)+i*90)%1200)-100;l.setAttribute('transform','translate('+off+',0)')});
+ alt.textContent=String(Math.round((510-smoothY)*3.2)).padStart(3,'0');if(!reduce)requestAnimationFrame(frame)}
+sky.addEventListener('pointerdown',e=>{dragging=true;sky.setPointerCapture(e.pointerId);setWind(e)});
+sky.addEventListener('pointermove',e=>{if(dragging)setWind(e)});
+sky.addEventListener('pointerup',()=>dragging=false);
+sky.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')dir-=15;else if(e.key==='ArrowRight')dir+=15;else if(e.key.toLowerCase()==='+'||e.key==='=')strength=Math.min(1,strength+.1);else if(e.key==='-')strength=Math.max(.1,strength-.1);else return;e.preventDefault();target()});
+if(reduce){dir=50;strength=.6;tx=700;ty=150;smoothX=tx;smoothY=ty;smoothDir=dir;smoothStrength=strength;target();frame(0)}else{const start=performance.now();function opening(now){const k=Math.min(1,(now-start)/2600);smoothY=400-(400-150)*(1-Math.pow(1-k,3));smoothX=700-100*k;smoothStrength=.1+.5*k;if(k<1)requestAnimationFrame(opening);else{ty=150;tx=700;strength=.6;target()}}target();requestAnimationFrame(frame);requestAnimationFrame(opening)}
+</script>
+</body>
+</html>

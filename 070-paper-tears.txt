@@ -1,0 +1,14 @@
+TITLE
+Paper Tears — A Sentence in Five Pieces
+
+PROMPT
+A cream #F1E8D7 collage table with five torn strips of red #B43C36 and blue #3A6386 paper scattered across it. Each strip carries a few cream words; faint dashed ghosts on the backing show where the strips belong. Drag the scraps into the ghosts. They turn, resist slightly, then click into a single torn line that reads: “WE WERE NEVER LATE. THE CLOCK WAS SIMPLY GOING OUR WAY.” When the last strip lands, a red thread stitches across the joins and the small attribution appears beneath. Signature moment: the sentence becoming legible only after the pieces agree on their positions. No emoji, no generic puzzle UI, no gradients.
+
+DESCRIPTION
+A torn-paper drag collage that resolves into a single sentence when five scraps are aligned with their ghosts.
+
+VISUAL TECHNIQUES
+CSS clip-path torn edges, pointer dragging with rotation release, snap easing, dashed target outlines, drawn stitch thread.
+
+INTERACTION MODEL
+Drag scraps onto their ghosts. Keyboard: focus a scrap, use arrow keys to move it, press Enter to snap it home. Use RESET to scatter again.

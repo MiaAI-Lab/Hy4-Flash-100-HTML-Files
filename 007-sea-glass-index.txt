@@ -1,0 +1,14 @@
+TITLE
+Sea Glass Index — Cabinet of Found Translucency
+
+PROMPT
+A museum-style catalog of six pieces of sea glass, each with a precise beach location, year and invented collector’s note. Light background: seafoam #D7E7DF, deep green #274A45 text, amber #C08B4A accents. Avoid generic glass cards: instead build a long wall-mounted museum vitrine with a single horizontal oak shelf and six objects standing freely on it, each pinned by a small brass label beneath. The left third is a quiet title panel with a hairline rule, a tiny accession code and a paragraph in refined Georgia. The right two-thirds is occupied by the shelf. Each specimen is drawn entirely in CSS/SVG: irregular polygon shapes with translucent gradients, frosted highlights, small chips and a soft cast shadow. On hover or focus, the object rotates in 3D by six degrees and a narrow spectral band appears on its label, as if light has passed through it. Clicking a specimen turns it over to show its reverse side and a new collector note. Entrance: shelf line draws from left to right over 900ms; objects arrive one by one with a small bounce from above; labels fade in after them. Typography: Georgia italic for object names, Courier for catalogue numbers, generous letterspacing on headings. Signature moment: hovering the amber specimen throws a longer spectrum than the others and briefly brightens the whole vitrine. Copy: precise invented locations such as “Pebblewick, north beach, after the March gale”, with weights in grams and Mohs-style notes. No external images.
+
+DESCRIPTION
+A hushed exhibit of found glass that turns a simple hover into an optical event. The vitrine is spare and typographic; the objects feel handled, chipped and specific, and their labels respond to light.
+
+VISUAL TECHNIQUES
+CSS 3D transforms, irregular clip-path specimen shapes, layered translucent gradients, SVG shelf fittings, generated spectral-gradient labels, staggered bounce entrance, focusable objects, reduced-motion still state.
+
+INTERACTION MODEL
+Hover or focus a specimen to rotate it and reveal its spectrum; click or press Enter to turn it over and read the reverse note. All six objects work with touch and keyboard.

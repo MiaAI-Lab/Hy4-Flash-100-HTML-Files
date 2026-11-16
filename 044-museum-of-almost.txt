@@ -1,0 +1,14 @@
+TITLE
+Museum of Almost — A Gallery of Things That Nearly Happened
+
+PROMPT
+A warm off-white #F4EFE6 gallery wall with charcoal #1D1B19 type and one vermilion #D3482B accession dot. Three empty vitrines sit on thin pedestals, each labelled with an invented catalogue number and an “almost” object: 044.1 THE CALL YOU ALMOST ANSWERED, 044.2 THE TRAIN YOU ALMOST CAUGHT, 044.3 THE SENTENCE YOU ALMOST SENT. The vitrines are genuinely empty at first — just a fine charcoal outline and a soft paper shadow. Clicking one draws the absent object in a single continuous vermilion line, as if an etcher were working it into the glass; the placard then changes from a short factual label to a specific, quietly devastating story about that near-event. A thin progress rule shows 01 / 03. Entrance: the vitrine outlines draw themselves one after another, then the wall text fades in. Signature moment: the line drawing animates stroke by stroke and the story text types in only after the drawing completes. No emoji, no gradients, no cards with rounded corners. Reduced motion shows the finished line and text at once.
+
+DESCRIPTION
+A museum where the exhibits are the things that nearly happened. Three empty vitrines fill with red line-drawings and small, precise stories.
+
+VISUAL TECHNIQUES
+SVG stroke-dashoffset drawing, single-line illustrations, paper shadow, typographic label hierarchy, staggered vitrine entrance.
+
+INTERACTION MODEL
+Click a vitrine or its label. Arrow keys move between vitrines. A RESET SEUM control returns all vitrines to empty.

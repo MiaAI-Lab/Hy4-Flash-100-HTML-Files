@@ -1,0 +1,14 @@
+TITLE
+A Loom for Sentences — Warp, Weft, Words
+
+PROMPT
+A tabletop loom on indigo #2B3E60, built from linen #E8DCC4 warp threads and one vermilion #C4513A shuttle. The loom fills the viewport: twenty horizontal warp threads stretched between two dark beams. At the top, a styled input holds the phrase “I KEEP MY PROMISES IN A DRAWER”. Pressing WEAVE sends the shuttle across: each character is carried across a row, alternating over and under the warp, so the finished cloth reads as a physical sentence rather than text on fabric. The shuttle's path is a smooth accelerating sweep with a small snap at each edge. A tension slider changes how tightly the threads pull, making the letters compress or spread. Copy at bottom: “A sentence woven twice cannot be unread.” Entrance: warp threads tighten one by one from the left, then the shuttle drops into place. Signature moment: each character briefly disappears beneath a thread before emerging on the other side — an over-under reveal that happens letter by letter. No emoji, no glass, no gradients on type. Reduced motion shows the woven result immediately.
+
+DESCRIPTION
+A loom that weaves phrases instead of cloth. The shuttle carries each letter across alternating threads, hiding it briefly beneath the warp.
+
+VISUAL TECHNIQUES
+DOM/SVG thread grid, per-character z-index alternation, animated shuttle with staggered letter reveal, tension control, live woven output.
+
+INTERACTION MODEL
+Edit the phrase and press WEAVE. Drag the tension slider to compress or spread the weave. Keyboard: input and slider are labelled; pressing Enter in the input weaves.

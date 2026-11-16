@@ -1,0 +1,14 @@
+TITLE
+The Long Platform — Departure Board 23:59
+
+PROMPT
+A split-flap departure board for a fictional terminal that serves places which may not exist. Palette: midnight green #10231E, ivory #EFE7CF, amber #E3A23B, with oxblood for cancellations. Full-screen, no scrolling on desktop: a restrained masthead with station name and live clock, then a large mechanical board of six departure rows. Each row has destination (ten characters), scheduled time, platform number and a status word. Every character is its own flap cell with a visible horizontal seam and subtle bevel; the entrance flips every cell from a dash to its final character in a left-to-right, top-to-bottom wave with a custom cubic-bezier and 18ms stagger. Clicking a row advances the whole board to a new set of departures; all cells flip in a cascading wave, a few stuck flaps settle a beat late, and the status column briefly reads “RELAYING”. Hovering a row lights its amber edge and reveals a tiny annotation in the masthead. Keyboard: rows are buttons; Enter or Space changes the board; arrow keys move focus. Typography: Courier throughout, with one enormous Georgia title in the masthead. Copy: invented stations such as MOSS JUNCTION, SALT VIADUCT, LAST LIGHT, with specific times and platform notes. Signature moment: the first cascade on load—the soundless mechanical ripple across 200 flaps ending with the clock cell locking into the current local time. No sound, no external assets, reduced-motion mode shows final state immediately.
+
+DESCRIPTION
+A tactile railway departures display whose entire personality lives in its mechanical cascade. The board is dense, legible and slightly melancholy, like the last announcement in a station that closes at midnight.
+
+VISUAL TECHNIQUES
+CSS 3D flap rotation with two faces, JavaScript stagger scheduler, live clock, hover annotations, generated row cells, high-contrast monospaced typography, reduced-motion static state.
+
+INTERACTION MODEL
+Click or press Enter on any departure row to advance the board; arrow keys move between rows. Hover/focus reveals a short station annotation in the masthead.

@@ -1,0 +1,14 @@
+TITLE
+Typographic Kaleidoscope — Eight Mirrors, One Word
+
+PROMPT
+An oxblood #6B1F2E field holding a circular kaleidoscope made entirely of cream #F2E7D2 type and one gold #D6A84C centre. Eight identical wedges radiate from the centre, each containing a curved line of text set along an arc; together they form a mandala of letters with no drawn ornament. The current phrase is “NOTHING IS EVER ONLY ONE THING”. Moving the pointer rotates the whole figure with a slow, weighted follow; dragging holds it still. Clicking cycles through four other phrases: “A SMALL FURNACE OF YES”, “THE WORLD IS A VERB”, “WE MET IN THE MARGIN”, “COUNT THE QUIET PARTS”. A gold counter in the centre shows the phrase number. Entrance: the eight wedges arrive one at a time from outside the circle and click into the centre. Signature moment: at rest, the repeated letters accidentally form new words across wedge boundaries; rotating reveals different accidental readings. No emoji, no glass, no gradients on type. Reduced motion allows rotation by click only.
+
+DESCRIPTION
+A kaleidoscope built from sentences. Eight mirrored wedges turn with the pointer, and each rotation produces accidental new readings at the seams.
+
+VISUAL TECHNIQUES
+SVG textPath arcs, eightfold rotational symmetry, inertia-driven pointer rotation, phrase cycling, staggered wedge entrance.
+
+INTERACTION MODEL
+Move pointer to rotate; drag to hold a position. Click to cycle phrases. Keyboard: arrow keys rotate, Enter cycles.

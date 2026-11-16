@@ -1,0 +1,14 @@
+TITLE
+Museum of Overheard Sentences — Gallery of Unintended Poetry
+
+PROMPT
+An exhibition room built entirely in type. Background #D9D3C8 warm stone; walls marked with faint acoustic-panel grid lines. Nine sentences, each overheard in an invented public place, are mounted at different sizes and depths on a single perspectival wall: some enormous and close, some tiny and far. Palette is stone, charcoal #252522 and one burnt-orange #C45A2A access colour. The title “MUSEUM OF OVERHEARD SENTENCES” sits small at upper left like a gallery label; beneath it, a room number and a note that all quotes were collected between two named tram stops. Each sentence is a button with its own transcription details hidden until hover or focus: location, time, and whether the speaker was certain. Entrance: the room assembles from depth — far quotes resolve first, nearest last — with a slight vertical settle, like a gallery installing itself overnight. Interaction: moving the pointer tilts the whole wall by a few degrees in 3D via perspective transform; the closest quote under the pointer becomes burnt orange and its transcription appears in a fixed lower-left label. Clicking pins a quote: the room stops tilting, a soft echo ring expands once from that sentence, and the pinned text is set in a new, larger scale. Signature moment: the echo ring is drawn as three staggered outlines with decreasing opacity, not a generic ripple. Copy examples: “I said the blue one, but I was holding the green one.” · “We can put the chair in the chair.” · “It's not a ladder if nobody climbs it.” No emoji, no cards, no image placeholders. Reduced motion shows all quotes at rest without tilt.
+
+DESCRIPTION
+A typographic exhibition of accidental poetry. The room responds to attention: looking closer changes the perspective, and pinning a sentence makes it the centrepiece.
+
+VISUAL TECHNIQUES
+CSS perspective and rotateX/rotateY driven by pointer position, depth-based entrance timing, typographic scale hierarchy, staggered SVG/CSS echo rings, aria-live transcription label, fine acoustic grid via repeating-linear-gradient.
+
+INTERACTION MODEL
+Move pointer to tilt and inspect; hover or Tab to reveal transcription; click to pin and enlarge a sentence; press Escape to unpin.

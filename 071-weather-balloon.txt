@@ -1,0 +1,14 @@
+TITLE
+Weather Balloon 07 — A Paper Observatory Ascending
+
+PROMPT
+A pale sky #ACD0DF tracking chart on cream #F2EAD8 paper. A red #C04B3C weather balloon carries a tiny folded paper observatory upward; its dotted ascent path is plotted against altitude from 0 to 32 km. Scrubbing the altitude ruler redraws the flight so far, unfolds wind vectors at the current layer and moves the balloon to its recorded drift position. Log entries at five altitudes report real-looking readings: 0 km launch, 5 km cumulus deck, 12 km jet stream, 19 km radiosonde silence, 27 km black sky, 32 km burst. On load the chart draws itself upward in one confident sweep. Signature moment: wind arrows unrolling sideways as the balloon rises through each layer. No emoji, no generic dashboard, no glass.
+
+DESCRIPTION
+A balloon tracking chart whose altitude scrub redraws the flight path and unfolds the wind at each layer.
+
+VISUAL TECHNIQUES
+Canvas ascent plot, layered wind vectors with staggered reveal, custom altitude ruler, drawn balloon and paper instrument, ascent log typography.
+
+INTERACTION MODEL
+Drag the altitude ruler to scrub the flight. Click a log row to jump to that altitude. Keyboard: the slider is a native range input with custom styling.

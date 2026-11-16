@@ -1,0 +1,14 @@
+TITLE
+Long-Duration Wallpaper — Habitat Linen, Lot 06
+
+PROMPT
+A printed wallpaper sample for a spacecraft crew who will see the same wall for 1,100 days. Mint #CDE6DA, pink #E9BFC2 and cream #F7F2E8 form a woven repeat of orbit arcs, seed capsules, four-point stars and fine warp lines. The panel unrolls on load with a soft mechanical settle. Six small woven motif tiles sit along the bottom edge; clicking any one recolors the entire pattern through six considered palettes — ORBIT MINT, DUSK PEACH, SIGNAL RED, ALGAE, LUNAR BLUE, HULL GREY — with a visible wipe travelling across the cloth. Signature moment: the whole room changing mood from one tiny embroidered star. No emoji, no generic color-picker UI, no gradients.
+
+DESCRIPTION
+A spacecraft wallpaper sample whose woven motif tiles recolor the entire repeating pattern through six palettes.
+
+VISUAL TECHNIQUES
+SVG pattern with CSS custom properties, unroll clip-path entrance, colour transition sweep, woven line texture, motif swatch buttons.
+
+INTERACTION MODEL
+Click a woven motif tile to change palette. Keyboard: tiles are buttons with palette names. Reduced motion changes colour instantly.

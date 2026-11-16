@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unseen Orchestra — Absence for Eighteen Chairs</title>
+<style>
+:root{--black:#121110;--gold:#C7A35A;--cream:#E9DFC8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+body{padding:26px 30px}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid rgba(199,163,90,.4);padding-bottom:12px}
+h1{font:400 clamp(22px,3vw,36px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--gold);text-align:right;line-height:1.7}
+.hall{display:block;width:100%;max-width:1050px;margin:10px auto 0}
+.chair{cursor:pointer;outline:none;animation:rise .8s cubic-bezier(.2,1.15,.3,1) both;animation-delay:calc(var(--i)*.065s)}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+.chair path,.chair line,.chair circle{stroke:var(--gold);fill:none;stroke-width:1.6;transition:stroke .25s,filter .25s}
+.chair text{font:8px ui-monospace,Menlo,monospace;letter-spacing:.12em;fill:var(--gold);opacity:.55;text-anchor:middle;transition:fill .25s,opacity .25s}
+.chair:hover path,.chair:hover line,.chair:focus-visible path,.chair:focus-visible line,.chair.active path,.chair.active line{stroke:var(--cream);filter:drop-shadow(0 0 7px var(--gold))}
+.chair:hover text,.chair.active text{fill:var(--cream);opacity:1}
+.score{display:block;width:100%;max-width:1050px;margin:4px auto 0;height:110px}
+.staff line{stroke:rgba(199,163,90,.32);stroke-width:1}
+.staff line.tremble{animation:tremble 2.6s ease-in-out infinite}
+@keyframes tremble{0%,100%{transform:translateY(0)}50%{transform:translateY(1.4px)}}
+.note{fill:var(--cream);stroke:var(--gold);stroke-width:1;filter:drop-shadow(0 0 8px var(--gold));animation:noteIn .6s cubic-bezier(.2,1.4,.3,1) both}
+.note.stem{stroke:var(--cream);stroke-width:1.6;fill:none}
+@keyframes noteIn{from{opacity:0;transform:translateY(-20px) scale(.4)}}
+.readout{text-align:center;font:11px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--gold);min-height:24px}
+.readout b{color:var(--cream);font-weight:400}
+.programme{max-width:700px;margin:14px auto 0;font:italic 13px/1.7 Georgia,serif;color:rgba(233,223,200,.55);text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Absence for Eighteen Chairs</h1><div class="meta">CONCERT 066 · NO PERFORMERS TONIGHT<br>PLEASE CHOOSE A SEAT</div></header>
+<svg class="hall" id="hall" viewBox="0 0 1000 350" aria-label="Empty orchestra chairs"></svg>
+<svg class="score" id="score" viewBox="0 0 1000 110" aria-hidden="true"><g class="staff" id="staff"></g><g id="notes"></g></svg>
+<div class="readout" id="readout">THE ROOM IS TUNING ITSELF</div>
+<div class="programme">Each chair belongs to an instrument and a pitch. The players have not arrived; the music is cooperative.</div>
+<script>
+const instruments=[['VIOLIN',440,'sine'],['VIOLA',349.23,'triangle'],['CELLO',196,'sawtooth'],['BASS',98.00,'sine'],['FLUTE',880,'sine'],['OBOE',440,'square'],['CLARINET',587.33,'triangle'],['BASSOON',233.08,'sawtooth'],['HORN',233.08,'sine'],['TRUMPET',523.25,'square'],['TROMBONE',155.56,'sawtooth'],['TUBA',82.41,'sine'],['HARP',659.25,'triangle'],['TIMPANI',73.42,'sine'],['GLOCKENSPIEL',1567.98,'sine'],['SECOND VIOLIN',493.88,'sine'],['SECOND CELLO',220,'sawtooth'],['PICCOLO',1174.66,'triangle']];
+const hall=document.getElementById('hall'),score=document.getElementById('score'),staff=document.getElementById('staff'),notes=document.getElementById('notes'),readout=document.getElementById('readout'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+for(let i=0;i<5;i++){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',30);l.setAttribute('x2',970);l.setAttribute('y1',25+i*15);l.setAttribute('y2',25+i*15);if(i===2)l.setAttribute('class','tremble');staff.appendChild(l)}
+const rows=[{n:7,y:90,r:250},{n:6,y:180,r:200},{n:5,y:270,r:150}];let idx=0;
+rows.forEach((row,ri)=>{for(let k=0;k<row.n;k++){const i=idx++,angle=Math.PI+(k+1)/(row.n+1)*Math.PI,x=500+Math.cos(angle)*row.r,y=row.y+Math.sin(angle)*22;const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','chair');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label','Seat '+(i+1)+', empty '+instruments[i][0]);g.style.setProperty('--i',i);g.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+')');g.innerHTML='<path d="M-13 -18 q13 -9 26 0 v24 h-26Z"/><path d="M-11 6 h22 l-3 12 h-16Z"/><line x1="-9" y1="18" x2="-11" y2="26"/><line x1="9" y1="18" x2="11" y2="26"/><text y="42">'+String(i+1).padStart(2,'0')+'</text>';const play=()=>sound(i,g);g.addEventListener('click',play);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();play()}});hall.appendChild(g)}});
+let ac=null,noteCount=0;
+function sound(i,g){const [name,freq,type]=instruments[i];ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),f=ac.createBiquadFilter(),gain=ac.createGain(),t=ac.currentTime;o.type=type;o.frequency.value=freq;f.type='lowpass';f.frequency.setValueAtTime(Math.min(freq*6,5000),t);f.frequency.exponentialRampToValueAtTime(Math.max(freq*1.5,200),t+1.4);gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.14,t+.06);gain.gain.exponentialRampToValueAtTime(.0001,t+1.7);o.connect(f);f.connect(gain);gain.connect(ac.destination);o.start(t);o.stop(t+1.8);g.classList.add('active');setTimeout(()=>g.classList.remove('active'),700);readout.innerHTML='SEAT '+String(i+1).padStart(2,'0')+' — <b>'+name+'</b> · '+freq.toFixed(2)+' HZ · PLAYED BY NO ONE';const x=90+(noteCount%13)*66,y=25+((i*3)%5)*15,ns=document.createElementNS('http://www.w3.org/2000/svg','ellipse');ns.setAttribute('class','note');ns.setAttribute('cx',x);ns.setAttribute('cy',y);ns.setAttribute('rx',7);ns.setAttribute('ry',4.6);ns.setAttribute('transform','rotate(-18 '+x+' '+y+')');notes.appendChild(ns);const stem=document.createElementNS('http://www.w3.org/2000/svg','line');stem.setAttribute('class','note stem');stem.setAttribute('x1',x+6);stem.setAttribute('x2',x+6);stem.setAttribute('y1',y);stem.setAttribute('y2',y-32);notes.appendChild(stem);noteCount++;if(notes.children.length>26)notes.removeChild(notes.firstChild)}
+</script>
+</body>
+</html>

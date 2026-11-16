@@ -1,0 +1,14 @@
+TITLE
+Final Garden — One Hundred Petals Spell 100
+
+PROMPT
+A calm cream #F2EAD8, green #5F7B56 and terra #C06A4B garden. One hundred small petals lie in a seedbed. On load they rise, fold together to form the numeral 100, hold the shape during the third second, then drift back to the soil. Clicking the garden replays the assembly. No emoji, no flower photograph, no purple.
+
+DESCRIPTION
+A garden of one hundred petals that gather into the number 100 before settling again.
+
+VISUAL TECHNIQUES
+Canvas text sampling, DOM petals, timed choreography, SVG seedbed, Web Audio chime.
+
+INTERACTION MODEL
+Click anywhere to replay. Keyboard: Space replays. Reduced motion shows the formed numeral without movement.

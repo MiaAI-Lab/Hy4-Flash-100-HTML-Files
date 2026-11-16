@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shadow Theater — A Play Performed by Objects Offstage</title>
+<style>
+:root{--black:#0D0B0A;--floor:#F2E9D8;--red:#E24A2B}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--black);color:var(--floor);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+body{display:flex;flex-direction:column}
+.stage{position:relative;flex:1;min-height:0}
+svg{display:block;width:100%;height:100%;touch-action:none}
+.title{position:absolute;left:clamp(20px,4vw,64px);top:clamp(18px,3vw,44px);pointer-events:none;z-index:2}
+.title small{display:block;font:10px ui-monospace,Menlo,monospace;letter-spacing:.24em;color:#B7AFA0;margin-bottom:10px}
+.title h1{font:400 clamp(36px,5.4vw,82px)/.84 Georgia,serif;letter-spacing:-.045em;margin:0;text-transform:uppercase}
+.cast{position:absolute;left:clamp(20px,4vw,64px);top:clamp(160px,22vh,260px);display:grid;gap:5px;z-index:3}
+.cast button{background:none;border:0;border-left:2px solid transparent;padding:4px 10px;text-align:left;color:#B7AFA0;font:11px ui-monospace,Menlo,monospace;letter-spacing:.12em;cursor:pointer}
+.cast button:hover,.cast button.on,.cast button:focus-visible{border-left-color:var(--red);color:var(--floor);outline:none}
+.cast b{display:inline-block;width:18px;color:var(--red)}
+.shadow{fill:#15120F;opacity:.86;transition:opacity .4s}
+.ray{stroke:var(--red);stroke-width:1;stroke-dasharray:5 7;opacity:.4;pointer-events:none}
+.obj{fill:var(--black);cursor:pointer;transition:opacity .35s}
+.obj:hover{filter:drop-shadow(0 0 8px rgba(226,74,43,.7))}
+.seam{stroke:var(--red);stroke-width:4;opacity:0;transition:opacity .2s}
+#lightWrap{transform:translateY(-260px);transition:transform 1s cubic-bezier(.2,1.5,.35,1)}
+body.ready #lightWrap{transform:none}
+#lightHit{cursor:ew-resize;outline:none}
+#lightHit:focus-visible+circle{stroke-width:5}
+.drag{position:absolute;right:clamp(20px,4vw,64px);top:clamp(18px,3vw,44px);font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#B7AFA0;z-index:2}
+.footer{background:var(--floor);color:var(--black);padding:14px clamp(20px,4vw,64px);display:flex;align-items:baseline;gap:20px;min-height:74px}
+.footer span{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;white-space:nowrap;color:#8B3A25}
+.footer p{font:400 clamp(15px,1.6vw,21px)/1.3 Georgia,serif;margin:0}
+@media(max-width:700px){.cast{top:auto;bottom:12px;left:16px;grid-template-columns:1fr 1fr}.title h1{font-size:36px}.drag{display:none}.footer{flex-direction:column;gap:4px}}
+@media(prefers-reduced-motion:reduce){#lightWrap,*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="title"><small>Repertory for evening / programme 03</small><h1>Shadow<br>Theater</h1></div>
+  <div class="cast" id="cast">
+    <button class="on" data-i="0"><b>01</b> THE BOTTLE</button>
+    <button data-i="1"><b>02</b> THE CHAIR</button>
+    <button data-i="2"><b>03</b> THE BIRD</button>
+    <button data-i="3"><b>04</b> THE KEY</button>
+  </div>
+  <div class="drag">DRAG THE LIGHT · ARROWS WHEN FOCUSED</div>
+  <svg id="svg" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-label="Interactive shadow theatre stage">
+    <rect x="0" y="0" width="1200" height="340" fill="#0D0B0A"/>
+    <rect x="0" y="340" width="1200" height="360" fill="#F2E9D8"/>
+    <line x1="0" y1="340" x2="1200" y2="340" stroke="#0D0B0A" stroke-width="3"/>
+    <line x1="40" y1="110" x2="1160" y2="110" stroke="#4A453E" stroke-width="2"/>
+    <line x1="40" y1="119" x2="1160" y2="119" stroke="#2A2622" stroke-width="8"/>
+    <g id="rays"><line class="ray" id="ray0"/><line class="ray" id="ray1"/><line class="ray" id="ray2"/><line class="ray" id="ray3"/></g>
+    <g id="shadows"><polygon class="shadow" id="s0"/><polygon class="shadow" id="s1"/><polygon class="shadow" id="s2"/><polygon class="shadow" id="s3"/></g>
+    <g id="objects">
+      <g class="obj" data-i="0"><polygon points="292,340 308,340 306,304 312,290 312,264 306,256 294,256 288,264 288,290 294,304"/></g>
+      <g class="obj" data-i="1"><rect x="526" y="254" width="44" height="58"/><rect x="520" y="312" width="56" height="9"/><rect x="524" y="321" width="8" height="19"/><rect x="564" y="321" width="8" height="19"/></g>
+      <g class="obj" data-i="2"><polygon points="758,340 776,322 790,276 800,308 828,338 804,330 790,344 776,330"/></g>
+      <g class="obj" data-i="3"><circle cx="1040" cy="258" r="16" fill="none" stroke="#0D0B0A" stroke-width="9"/><rect x="1036" y="274" width="8" height="66"/><rect x="1044" y="322" width="17" height="7"/><rect x="1057" y="329" width="7" height="11"/></g>
+    </g>
+    <g id="seams"><line class="seam" id="seam0" x1="292" x2="308" y1="340" y2="340"/><line class="seam" id="seam1" x1="520" x2="576" y1="340" y2="340"/><line class="seam" id="seam2" x1="758" x2="828" y1="340" y2="340"/><line class="seam" id="seam3" x1="1036" x2="1064" y1="340" y2="340"/></g>
+    <g id="lightWrap">
+      <a id="lightHit" tabindex="0" role="slider" aria-label="Light position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><circle id="lightGlow" cx="600" cy="110" r="28" fill="rgba(226,74,43,.18)"/></a>
+      <circle id="lightCore" cx="600" cy="110" r="11" fill="#E24A2B" stroke="#F2E9D8" stroke-width="2"/>
+    </g>
+  </svg>
+</div>
+<div class="footer"><span id="cue">CUE 01 / THE BOTTLE</span><p id="line">The bottle refuses to be moved. Its shadow does not.</p></div>
+<script>
+const svg=document.getElementById('svg'),shadows=[0,1,2,3].map(i=>document.getElementById('s'+i)),rays=[0,1,2,3].map(i=>document.getElementById('ray'+i)),seams=[0,1,2,3].map(i=>document.getElementById('seam'+i)),objs=[...document.querySelectorAll('.obj')],cast=[...document.querySelectorAll('.cast button')],cue=document.getElementById('cue'),line=document.getElementById('line');
+const defs=[{x1:292,x2:308,xt:300,yt:256},{x1:520,x2:576,xt:548,yt:254},{x1:758,x2:828,xt:790,yt:276},{x1:1036,x2:1064,xt:1040,yt:258}];
+const lines=['The bottle refuses to be moved. Its shadow does not.','The chair faces the wall. Its shadow faces the audience.','The bird has been here since the second act. Nobody has seen it blink.','The key opens nothing in this theatre, which is why it was cast.'];
+let lx=600,drag=false,active=0;
+function render(){
+  ['lightGlow','lightCore'].forEach(id=>document.getElementById(id).setAttribute('cx',lx));
+  document.getElementById('lightHit').setAttribute('aria-valuenow',Math.round((lx-40)/1120*100));
+  defs.forEach((d,i)=>{
+    const off=lx-d.xt,depth=70+Math.min(290,Math.abs(off)*.62),tipX=d.xt+off*(.55+Math.min(1.1,Math.abs(off)/420));
+    shadows[i].setAttribute('points',`${d.x1},340 ${d.x2},340 ${tipX},${340+depth}`);
+    shadows[i].style.opacity=(i===active||active<0) ? 0.9 : 0.24;
+    rays[i].setAttribute('x1',lx);rays[i].setAttribute('y1',110);rays[i].setAttribute('x2',d.xt);rays[i].setAttribute('y2',d.yt);
+    seams[i].style.opacity=Math.abs(off)<13?1:0;
+    objs[i].style.opacity=i===active||active<0?1:.55;
+  });
+}
+function setX(v){lx=Math.max(40,Math.min(1160,v));render()}
+function toX(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const m=svg.getScreenCTM();return m?p.matrixTransform(m.inverse()).x:e.clientX}
+svg.addEventListener('pointerdown',e=>{if(toX(e)!==null&&e.clientY<svg.getBoundingClientRect().top+svg.getBoundingClientRect().height*.55){drag=true;svg.setPointerCapture(e.pointerId);setX(toX(e))}});
+svg.addEventListener('pointermove',e=>{if(drag)setX(toX(e))});
+svg.addEventListener('pointerup',()=>drag=false);
+svg.addEventListener('pointercancel',()=>drag=false);
+document.getElementById('lightHit').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();setX(lx+(e.key==='ArrowRight'?24:-24))}});
+function pick(i){active=i;cast.forEach((b,k)=>b.classList.toggle('on',k===i));cue.textContent='CUE 0'+(i+1)+' / '+['THE BOTTLE','THE CHAIR','THE BIRD','THE KEY'][i];line.textContent=lines[i];render()}
+cast.forEach((b,i)=>b.addEventListener('click',()=>pick(i)));
+objs.forEach((o,i)=>o.addEventListener('click',()=>pick(i)));
+render();requestAnimationFrame(()=>document.body.classList.add('ready'));
+</script>
+</body>
+</html>

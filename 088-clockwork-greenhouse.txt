@@ -1,0 +1,14 @@
+TITLE
+The Clockwork Greenhouse — A Machine for Letting In Light
+
+PROMPT
+A moss #557259, glass #BFD5C5 and brass #C6A052 greenhouse diagram. Inside a framed glasshouse, a brass gear is linked by a thin rod to a row of roof louvers. On load the gear turns through a quarter revolution, the louvers open, a pale sunbeam widens across the floor and a drawn plant unfurls two leaves. Clicking the gear rotates it again, opening or closing the louvers; each change moves the sunbeam and makes the plants lean toward the light. A small thermometer rises and falls with the aperture. No emoji, no greenhouse photograph, no purple.
+
+DESCRIPTION
+A brass gear opens greenhouse louvers, widening a sunbeam and growing the plants.
+
+VISUAL TECHNIQUES
+SVG greenhouse frame and plants, CSS gear with conic teeth, linked louver rotation, stroke-dash growth, thermometer readout, mechanical audio.
+
+INTERACTION MODEL
+Click the gear or press Space to change the aperture. Keyboard: arrow keys step the gear, Enter toggles. Reduced motion shows the house fully open.

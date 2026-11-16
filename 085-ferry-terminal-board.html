@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Last Ferry — A Split-Flap Terminal Board</title>
+<style>
+:root{--navy:#17324D;--orange:#E47C36;--paper:#EFE7D8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--navy);color:var(--paper);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 30px;background-image:repeating-linear-gradient(0deg,rgba(239,231,216,.02) 0 1px,transparent 1px 3px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--orange);padding-bottom:10px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--orange)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.board{margin-top:18px;border:2px solid var(--paper);background:#0F2439;padding:18px 20px 12px;box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
+.cols{display:grid;grid-template-columns:110px 1fr 90px 80px;gap:14px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(239,231,216,.55);padding:0 4px 8px}
+.row{display:grid;grid-template-columns:110px 1fr 90px 80px;gap:14px;align-items:center;padding:7px 4px;border-bottom:1px solid rgba(239,231,216,.12);cursor:pointer;outline:0}
+.row:hover,.row:focus-visible{background:rgba(228,124,54,.1)}
+.card{position:relative;height:38px;background:#081623;border:1px solid rgba(239,231,216,.18);border-radius:3px;overflow:hidden;font:17px/38px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-align:center;color:var(--paper)}
+.card:after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.75);z-index:3}
+.half{position:absolute;left:0;width:100%;height:50%;overflow:hidden;backface-visibility:hidden}
+.half.top{top:0;transform-origin:bottom}.half.bottom{bottom:0;transform-origin:top}
+.half span{position:absolute;left:0;width:100%;white-space:nowrap}
+.half.top span{bottom:0;line-height:38px;top:-19px}.half.bottom span{top:0;line-height:38px;margin-top:-19px}
+.dest .half span{font-size:14px}
+.card.flip .top{animation:flipTop .42s ease-in forwards}
+.card.flip .bottom{animation:flipBottom .42s ease-in forwards}
+@keyframes flipTop{50%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+@keyframes flipBottom{0%{transform:rotateX(90deg)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.wind{position:relative;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:var(--orange)}
+.arrow{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:16px solid var(--orange);transition:transform .6s cubic-bezier(.2,1,.3,1)}
+.strip{margin-top:14px;border-top:1px solid rgba(239,231,216,.25);overflow:hidden;white-space:nowrap;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--orange);padding-top:9px}
+.strip span{display:inline-block;animation:scroll 22s linear infinite}
+@keyframes scroll{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.foot{display:flex;justify-content:space-between;margin-top:12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:rgba(239,231,216,.55)}
+@media(max-width:640px){body{padding:12px}.board{padding:12px 10px;margin-top:12px}.cols,.row{grid-template-columns:72px 1fr 54px 50px;gap:5px}.card{font-size:12px;height:32px;line-height:32px}.half.top span{top:-16px;line-height:32px}.half.bottom span{margin-top:-16px;line-height:32px}.dest .half span{font-size:10px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Last Ferry</h1><span class="meta">HARBOUR TERMINAL · DEPARTURES · BOARD 085</span></header>
+<div class="board" id="board">
+  <div class="cols"><span>TIME</span><span>DESTINATION</span><span>GATE</span><span>WIND</span></div>
+  <div id="rows"></div>
+  <div class="strip"><span id="ticker">HARBOUR MASTER'S NOTE · FOG BANK HOLDING OUTSIDE THE EAST BREAKWATER · LAST SAILING MAY BE DELAYED BY TIDE · ALL PASSENGERS TO THE ORANGE DOOR ·&nbsp;</span></div>
+</div>
+<div class="foot"><span>CLICK A ROW TO REVISE THE TIMETABLE · ARROWS + ENTER</span><span id="clock">06:00:00</span></div>
+<script>
+const sails=[['06:10','SALT QUAY','A2',35],['06:40','MOTH ISLAND','B4',110],['07:15','NORTH LIGHT','C1',200],['07:55','OLD BREAKWATER','A7',290],['08:30','THE FAR SHORE','D3',65],['09:05','GLASS HARBOUR','B1',155],['09:45','CROW ROCK','C6',245],['10:20','SALT QUAY','A2',330]];
+const rowsEl=document.getElementById('rows'),clock=document.getElementById('clock'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches,rows=[];
+let ac=null,selected=0;
+function clack(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();o.type='square';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(90,t+.045);f.type='highpass';f.frequency.value=120;g.gain.setValueAtTime(.09,t);g.gain.exponentialRampToValueAtTime(.0001,t+.07);o.connect(f);f.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.08)}
+function card(cls,text){return '<div class="card '+cls+'"><div class="half top"><span>'+text+'</span></div><div class="half bottom"><span>'+text+'</span></div></div>'}
+function build(){for(let i=0;i<5;i++){const row=document.createElement('div');row.className='row';row.tabIndex=0;row.dataset.i=i;row.innerHTML=card('time','----')+card('dest','--------')+card('gate','--')+'<div class="wind"><span class="arrow"></span><b>--</b></div>';rowsEl.appendChild(row);rows.push(row)}}
+function setCard(c,text){const top=c.querySelector('.top span'),bottom=c.querySelector('.bottom span');if(reduce){top.textContent=text;bottom.textContent=text;return}top.textContent=text;bottom.textContent=text;c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');setTimeout(()=>c.classList.remove('flip'),440)}
+function render(i,animate){const r=rows[i],s=sails[(i+offset[i])%sails.length],cards=r.querySelectorAll('.card');setCard(cards[0],s[0]);setCard(cards[1],s[1]);setCard(cards[2],s[2]);const w=r.querySelector('.wind');w.querySelector('.arrow').style.transform='rotate('+(s[3]-90)+'deg)';w.querySelector('b').textContent=['N','NE','E','SE','S','SW','W','NW'][Math.round(s[3]/45)%8]}
+const offset=[0,1,2,3,4];
+build();rows.forEach((r,i)=>{r.addEventListener('click',()=>flip(i));r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip(i)}})});
+function flip(i){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();offset[i]++;clack();render(i,true)}
+document.getElementById('board').addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();selected=Math.max(0,Math.min(4,selected+(e.key==='ArrowDown'?1:-1)));rows[selected].focus()}});
+if(reduce){rows.forEach((r,i)=>render(i,false))}else{rows.forEach((r,i)=>setTimeout(()=>render(i,true),300+i*420))}
+let secs=0;setInterval(()=>{secs++;clock.textContent='06:'+String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0')},1000);
+</script>
+</body>
+</html>

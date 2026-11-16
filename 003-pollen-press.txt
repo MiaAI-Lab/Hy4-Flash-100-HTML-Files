@@ -1,0 +1,14 @@
+TITLE
+Pollen Press — Botanical Study No. 04
+
+PROMPT
+Design a two-color risograph botanical print for an imaginary press specializing in anonymous alpine flowers. Background warm cream #F4E9D0; inks vermilion #E4472F and teal #167D78, deliberately slightly misregistered. Left column carries enormous Georgia title “POLLEN / PRESS” with a thin red rule, issue data in tiny Courier, and a short factually invented species description. Right two-thirds holds a large SVG line drawing of a single six-petalled flower in teal, with vermilion stamens and a long stem. Petal outlines draw themselves over 1.8 seconds with staggered stroke-dashoffset; the title fades up in three pieces with different delays. Add a visible printed dot texture and paper grain using CSS gradients only. Interaction: each stamen is a hoverable/focusable target with a Latin label; clicking one releases a burst of pollen made of dozens of small vermilion and teal circles that float upward with a slight gravity swing and settle into a halftone halo around the flower. A small “PRESS AGAIN” control clears and repeats. Signature moment: the two ink layers of the pollen burst separate by two pixels, like a risograph registration error, then drift back together. Copy should sound like a museum label written by a slightly obsessive printer. No external images or fonts; system stacks only.
+
+DESCRIPTION
+A print-inspired botanical study that makes the viewer participate in the printing process. The flower is drawn in fine line, and pressing its stamens throws clouds of two-color pollen across the sheet with a convincing misregistered halo.
+
+VISUAL TECHNIQUES
+SVG stroke-drawing animation, CSS radial-gradient halftone texture, multiply blend mode, JavaScript-generated particles with bounded drift, staggered typographic entrance, reduced-motion fallback.
+
+INTERACTION MODEL
+Hover or focus stamens to read their names, click to release pollen, use the press-again control to clear the cloud. Keyboard focus is visible on every stamen and control.

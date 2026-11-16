@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Piano for Rain — Eight Keys, One Storm</title>
+<style>
+:root{--slate:#3E5B63;--cream:#EFE7D6;--brass:#E5B94C}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--slate);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+h1{position:absolute;left:26px;top:22px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0;z-index:3}
+.weather{position:absolute;right:26px;top:22px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--brass);z-index:3}
+.piano{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(92vw,980px);height:200px;z-index:3;display:flex;flex-direction:column}
+.top{height:46px;background:var(--cream);color:var(--slate);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.keys{flex:1;display:flex;background:var(--slate);border-top:3px solid var(--brass);padding:6px;gap:5px}
+.key{flex:1;background:var(--cream);color:var(--slate);border:0;border-bottom:12px solid #CFC4AF;cursor:pointer;font:9px ui-monospace,Menlo,monospace;letter-spacing:.1em;writing-mode:vertical-rl;transform-origin:top;animation:lower .6s cubic-bezier(.2,1.2,.3,1) both;animation-delay:calc(var(--k)*.07s);outline:none}
+@keyframes lower{from{transform:rotateX(-75deg);opacity:0}to{transform:none;opacity:1}}
+.key:hover,.key:focus-visible{background:#FFF9EA;outline:3px solid var(--brass);outline-offset:-3px}
+.key.played{transform:perspective(400px) rotateX(9deg);border-bottom-width:4px;background:var(--brass)}
+.controls{position:absolute;left:26px;bottom:220px;display:flex;gap:8px;z-index:4}
+button{background:transparent;color:var(--cream);border:1px solid var(--cream);padding:9px 12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;cursor:pointer}
+button.on{background:var(--brass);border-color:var(--brass);color:var(--slate)}
+@media(max-width:650px){h1{font-size:7px}.weather{font-size:8px}.piano{height:160px}.key{font-size:7px}.controls{bottom:180px;left:12px}button{padding:7px;font-size:7px}}
+@media(prefers-reduced-motion:reduce){.key{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1>PLAYED IN THE KEY OF LOW PRESSURE<br>A PIANO FOR RAIN / 39</h1><div class="weather" id="weather">WEATHER: UNSETTLED</div>
+<div class="controls"><button id="sustain" type="button" aria-pressed="false">HOLD SUSTAIN</button><button id="clear" type="button">CLEAR SKY</button></div>
+<div class="piano"><div class="top"><span>WEATHER INSTRUMENT · EIGHT STOPS</span><span>NO STORM IS REPEATED</span></div><div class="keys" id="keys"></div></div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),keys=document.getElementById('keys'),weather=document.getElementById('weather'),sustain=document.getElementById('sustain');
+const data=[['DRIZZLE',220,'fine'],['SHOWER',262,'medium'],['SLEET',294,'slant'],['HAZE',330,'slow'],['DOWNPOUR',392,'large'],['THAW',440,'slow'],['MIST',494,'fine'],['THUNDER',523,'flash']];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1,drops=[],splashes=[],held=false,played=new Set(),ac=null,flash=0;
+function resize(){const r=c.getBoundingClientRect();dpr=devicePixelRatio||1;W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+function tone(f,i){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type=i===7?'sawtooth':'sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.75,t+.7);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+1.1);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+1.2)}
+function emit(kind,n){if(reduce)return;for(let i=0;i<n;i++){const x=Math.random()*W;let v={x,y:-20,kind,speed:2+Math.random()*4,len:8+Math.random()*14,life:1};if(kind==='slant')v.vx=1.6+Math.random();if(kind==='large'){v.speed=7+Math.random()*4;v.len=18+Math.random()*14;v.x=x}if(kind==='slow'){v.speed=.8+Math.random()*.8;v.len=3}if(kind==='flash'){v.speed=12;v.len=30}drops.push(v)}if(kind==='flash')flash=1}
+function hit(i){const [name,f,kind]=data[i];tone(f,i);emit(kind,kind==='fine'?36:kind==='large'?22:kind==='flash'?4:26);weather.textContent='WEATHER: '+name;const btn=keys.children[i];btn.classList.add('played');setTimeout(()=>btn.classList.remove('played'),380);played.add(i);if(played.size===8)setTimeout(storm,450)}
+function storm(){weather.textContent='WEATHER: THE STORM IS PLAYING ITSELF';data.forEach((d,i)=>setTimeout(()=>{tone(d[1]*2,i);emit(d[2],d[2]==='large'?30:20);keys.children[i].classList.add('played');setTimeout(()=>keys.children[i].classList.remove('played'),300)},i*160))}
+data.forEach((d,i)=>{const b=document.createElement('button');b.type='button';b.className='key';b.style.setProperty('--k',i);b.textContent=d[0];b.setAttribute('aria-label','Play '+d[0]);b.addEventListener('click',()=>hit(i));b.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();hit(i)}});keys.appendChild(b)});
+function loop(){ctx.clearRect(0,0,W,H);if(flash>0){flash-=.05;ctx.fillStyle=`rgba(229,185,76,${flash*.35})`;ctx.fillRect(0,0,W,H)}
+ const floor=H-210;
+ drops=drops.filter(d=>{d.y+=d.speed;d.x+=(d.vx||0);if(d.y>=floor){if(splashes.length<80)splashes.push({x:d.x,y:floor,life:1});return false}ctx.strokeStyle=d.kind==='flash'?'#E5B94C':'rgba(239,231,214,.8)';ctx.lineWidth=d.kind==='large'?2:1;ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-(d.vx||0)*2,d.y-d.len);ctx.stroke();return true});
+ splashes=splashes.filter(s=>{s.life-=.035;ctx.strokeStyle=`rgba(239,231,214,${s.life*.5})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(s.x-7,s.y);ctx.lineTo(s.x+7,s.y);ctx.stroke();return s.life>0});
+ requestAnimationFrame(loop)}
+sustain.addEventListener('pointerdown',()=>{held=true;sustain.classList.add('on')});
+window.addEventListener('pointerup',()=>{held=false;sustain.classList.remove('on')});
+sustain.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();held=!held;sustain.classList.toggle('on',held)}});
+document.getElementById('clear').addEventListener('click',()=>{drops=[];splashes=[];played.clear();weather.textContent='WEATHER: CLEAR AND UNCERTAIN'});
+window.addEventListener('resize',resize);resize();setTimeout(()=>{if(!reduce)emit('fine',3)},600);loop();
+</script>
+</body>
+</html>

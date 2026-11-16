@@ -1,0 +1,14 @@
+TITLE
+Fault Line — A Seismograph That Answers Back
+
+PROMPT
+A survey sheet in paper #E8E6DE and ink #30353A, ruled with a fine square grid and a single red #B83A2F seismograph stylus. Clicking anywhere marks an epicentre: a shockwave rolls outward, visibly bending the survey grid as it passes, and the stylus writes a jagged trace across the lower margin. Older waves fade but their epicentres remain as small red crosses with timestamps. On load the grid draws itself and one tiny initial tremor crosses the paper. Signature moment: the grid deformation arriving at a distant intersection a beat after the click. No emoji, no generic data dashboard, no gradients.
+
+DESCRIPTION
+An interactive seismograph sheet where clicks create epicentres that warp the grid and write a jagged trace.
+
+VISUAL TECHNIQUES
+Canvas grid displacement field, expanding shockwave rings, scrolling waveform trace, persistent epicentre marks, ruled-paper typography.
+
+INTERACTION MODEL
+Click the sheet to create an epicentre. Keyboard: focus the sheet and press Enter to quake at the centre. Reduced motion draws a static red mark and trace.

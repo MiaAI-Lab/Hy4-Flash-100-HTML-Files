@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Fountain Under the Grid — A Hidden Water Map</title>
+<style>
+:root{--sage:#7C9C8B;--paper:#E8E2CE;--ink:#273A31}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:repeating-linear-gradient(0deg,rgba(39,58,49,.03) 0 1px,transparent 1px 6px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--ink)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.layout{position:relative;height:calc(100vh - 100px);min-height:480px}
+#mapWrap{width:100%;height:100%;outline:0}
+#mapWrap:focus-visible{outline:2px dashed var(--sage);outline-offset:-4px}
+svg{width:100%;height:100%;display:block}
+.cell{fill:transparent;stroke:rgba(39,58,49,.28);stroke-width:1;cursor:crosshair}
+.channel{fill:none;stroke:var(--sage);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:180;stroke-dashoffset:180;transition:stroke-dashoffset .85s ease,opacity .2s;opacity:.15}
+.cell.revealed .channel{stroke-dashoffset:0;opacity:.95;filter:drop-shadow(0 0 5px rgba(124,156,139,.7))}
+.dry{fill:none;stroke:rgba(39,58,49,.5);stroke-width:2;opacity:.8}
+.focus{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+.basin{fill:var(--paper);stroke:var(--sage);stroke-width:4;opacity:0;transition:opacity .5s}
+.fountain{opacity:0;transition:opacity .6s}
+.found .basin,.found .fountain{opacity:1}
+.fountain path{fill:none;stroke:var(--sage);stroke-width:3;stroke-linecap:round;animation:spout 1.6s ease-in-out infinite alternate}
+@keyframes spout{to{transform:translateY(-9px) scaleY(1.12)}}
+.compass{position:absolute;right:30px;top:22px;width:84px;height:84px;border:2px solid var(--ink);border-radius:50%;background:var(--paper);cursor:pointer;z-index:3;transition:transform .7s cubic-bezier(.2,1,.3,1)}
+.compass:before{content:'';position:absolute;left:50%;top:9px;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:26px solid var(--sage)}
+.compass:after{content:'';position:absolute;left:50%;bottom:9px;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:26px solid rgba(39,58,49,.5)}
+.compass span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:9px ui-monospace,Menlo,monospace;background:var(--paper);padding:2px;z-index:2}
+.compass:focus-visible{outline:2px dashed var(--sage);outline-offset:4px}
+.hud{position:absolute;left:6px;bottom:12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;display:flex;gap:24px;pointer-events:none}
+.hud b{color:var(--sage);font-weight:400}
+.note{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font:italic 13px Georgia,serif;color:rgba(39,58,49,.7);pointer-events:none}
+@media(max-width:600px){body{padding:12px}.compass{width:56px;height:56px;right:14px;top:12px}.compass:before{border-bottom-width:16px}.compass:after{border-top-width:16px}.hud{font-size:7px;gap:10px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.channel{stroke-dashoffset:0;opacity:.95}}
+</style>
+</head>
+<body>
+<header><h1>The Fountain Under the Grid</h1><span class="meta">SURVEY 084 · PARCEL G-12 · WATER RIGHTS UNKNOWN</span></header>
+<div class="layout">
+  <button class="compass" id="compass" type="button" aria-label="Rotate the map"><span>N</span></button>
+  <div id="mapWrap" tabindex="0" aria-label="Survey grid; arrow keys move, Enter digs"><svg viewBox="0 0 944 584" preserveAspectRatio="xMidYMid meet"><g id="grid"></g><rect class="focus" id="focusRect" x="40" y="256" width="72" height="72"/><circle class="basin" id="basin" cx="472" cy="292" r="25"/><g class="fountain" id="fountain"><path d="M472 286 Q460 250 472 232 Q484 250 472 286"/><path d="M472 286 Q452 262 446 246"/><path d="M472 286 Q492 262 498 246"/></g></svg></div>
+  <div class="hud"><span>CHANNEL <b id="found">00</b>/20</span><span>BEARING <b id="bearing">000</b>°</span><span>STATUS <b id="status">SURVEYING</b></span></div>
+  <div class="note" id="note">Click a square to dig. The water is patient.</div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',grid=document.getElementById('grid'),focusRect=document.getElementById('focusRect'),compass=document.getElementById('compass'),foundEl=document.getElementById('found'),bearingEl=document.getElementById('bearing'),statusEl=document.getElementById('status'),note=document.getElementById('note'),wrap=document.getElementById('mapWrap'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const segs={h:'M-36 0 L36 0',v:'M0 -36 L0 36',ne:'M-36 0 L0 0 L0 -36',nw:'M36 0 L0 0 L0 -36',se:'M-36 0 L0 0 L0 36',sw:'M36 0 L0 0 L0 36',cross:'M-36 0 L36 0 M0 -36 L0 36'};
+const net={'5,3':'cross','4,3':'h','3,3':'se','3,2':'v','3,1':'h','4,1':'sw','5,1':'h','6,1':'se','6,2':'v','6,3':'h','7,3':'ne','7,2':'v','7,1':'h','8,1':'sw','8,2':'v','8,3':'h','9,3':'se','9,4':'v','9,5':'h','10,5':'nw','10,4':'v'};
+const cells={};let found=0,angle=0,ac=null,fc=5,fr=3;
+function plink(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(620+Math.random()*300,t);o.frequency.exponentialRampToValueAtTime(280,t+.16);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+.2);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.22)}
+function build(){for(let r=0;r<7;r++)for(let c=0;c<12;c++){const g=document.createElementNS(NS,'g'),x=40+c*72,y=40+r*72;g.setAttribute('transform','translate('+(x+36)+','+(y+36)+')');const rect=document.createElementNS(NS,'rect');rect.setAttribute('x',-36);rect.setAttribute('y',-36);rect.setAttribute('width',72);rect.setAttribute('height',72);rect.setAttribute('class','cell');rect.dataset.c=c;rect.dataset.r=r;g.appendChild(rect);if(net[c+','+r]){const p=document.createElementNS(NS,'path');p.setAttribute('d',segs[net[c+','+r]]);p.setAttribute('class','channel');g.appendChild(p)}grid.appendChild(g);cells[c+','+r]=g}}
+function dig(c,r,auto){if(c<0||c>11||r<0||r>6)return;const g=cells[c+','+r],key=c+','+r;if(g.classList.contains('dug'))return;g.classList.add('dug');if(net[key]){g.classList.add('revealed');found++;foundEl.textContent=String(found).padStart(2,'0');if(!auto)plink();if(found>=12&&!document.querySelector('.layout').classList.contains('found')){document.querySelector('.layout').classList.add('found');statusEl.textContent='SPRING FOUND';note.textContent='The fountain is running. The compass knows the way.';compass.style.transform='rotate(135deg)';bearingEl.textContent='135'}}else{if(!auto){const x=document.createElementNS(NS,'path');x.setAttribute('d','M-9 -9 L9 9 M9 -9 L-9 9');x.setAttribute('class','dry');g.appendChild(x);note.textContent='Dry earth. Try another square.'}}}
+function moveFocus(c,r){fc=Math.max(0,Math.min(11,c));fr=Math.max(0,Math.min(6,r));focusRect.setAttribute('x',40+fc*72);focusRect.setAttribute('y',40+fr*72)}
+grid.addEventListener('click',e=>{if(e.target.dataset.c===undefined)return;if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();dig(+e.target.dataset.c,+e.target.dataset.r)});
+wrap.addEventListener('keydown',e=>{const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(d){e.preventDefault();moveFocus(fc+d[0],fr+d[1])}else if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();dig(fc,fr)}else if(e.key.toLowerCase()==='r'){rotate()}});
+function rotate(){angle=(angle+45)%360;grid.style.transform='rotate('+angle+' '+472+' '+292+')';bearingEl.textContent=String(angle).padStart(3,'0')}
+compass.addEventListener('click',rotate);
+build();
+const opening=['5,3','4,3','3,3','3,2','6,3','7,3'];
+if(reduce){Object.keys(net).forEach(k=>{const[c,r]=k.split(',').map(Number);dig(c,r,true)});note.textContent='The whole channel is visible. The fountain is running.'}else{opening.forEach((k,i)=>setTimeout(()=>{const[c,r]=k.split(',').map(Number);dig(c,r,true)},260+i*430))}
+</script>
+</body>
+</html>

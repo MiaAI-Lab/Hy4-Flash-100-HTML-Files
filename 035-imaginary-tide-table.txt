@@ -1,0 +1,14 @@
+TITLE
+Tide Table for an Imaginary Coast — Fourteen Days of Water
+
+PROMPT
+A printed tide table on cream #F4EDDB paper, set in deep ink #16383A and sea green #2F6E68, with one rust #B6553A spring-tide mark. Fourteen horizontal rows represent fourteen days in a made-up month called ORBIT. Each row shows the date, two tide heights, and a bar drawn from repeated tilde characters whose length follows the height. A heavy vertical marker can be dragged down the table; the selected row expands slightly, and a circular inset on the right shows the water level for that day as a flat band, with the time of high water printed inside. Copy at top: “The coast of Verr covers and uncovers the same six stones.” At the bottom: “Spring tide: the sea briefly agrees with itself.” Entrance: rows type themselves in from left to right; the marker drops from above and lands on day eight. Signature moment: on days 7 and 8, the circular inset's two water bands meet and form the sentence “THE STONES ARE VISIBLE” across the circle. No emoji, no gradients, no glass. Reduced motion shows the final state immediately.
+
+DESCRIPTION
+An imaginary tide table where each day's water can be inspected by dragging a marker. Spring tide turns the water level into a sentence about stones.
+
+VISUAL TECHNIQUES
+Typography-driven bars of repeated glyphs, draggable marker with snap-to-row, live SVG water circle, text reveal at threshold, staggered typing entrance.
+
+INTERACTION MODEL
+Drag the vertical marker or use arrow keys. Each row is also clickable and focusable.

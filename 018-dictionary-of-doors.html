@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Dictionary of Doors — Six Entrances to Small Rooms</title>
+<style>
+:root{--green:#17332B;--bone:#EFE7D8;--brass:#C79A4B;--red:#A63B2C}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--green);color:var(--bone);font-family:Georgia,'Times New Roman',serif}
+body{min-height:100vh;display:grid;grid-template-columns:minmax(280px,32vw) 1fr}
+aside{padding:clamp(24px,3vw,50px);border-right:1px solid rgba(239,231,216,.18);display:flex;flex-direction:column;gap:22px}
+h1{font:400 clamp(30px,3.2vw,48px)/1 Georgia,serif;letter-spacing:-.04em;margin:0}
+h1 em{display:block;font:italic 400 15px/1.5 Georgia,serif;color:var(--brass);margin-top:8px}
+.index{border-top:1px solid var(--brass);padding-top:12px;display:grid;gap:2px}
+.entry{background:none;border:0;border-left:3px solid transparent;text-align:left;padding:11px 10px;color:var(--bone);cursor:pointer;animation:in .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.09s)}
+@keyframes in{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+.entry:hover,.entry:focus-visible,.entry.on{border-left-color:var(--brass);background:rgba(199,154,75,.09);outline:none}
+.entry b{font:400 22px/1 Georgia,serif;letter-spacing:-.02em}
+.entry small{font:10px ui-monospace,Menlo,monospace;color:var(--brass);margin-left:7px;letter-spacing:.1em}
+.entry span{display:block;font:12px/1.45 Georgia,serif;color:#B9C6BA;margin-top:4px}
+.foot{font:9px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#8FA396;margin-top:auto;text-transform:uppercase}
+main{position:relative;display:grid;place-items:center;padding:clamp(24px,5vw,70px);perspective:1300px;overflow:hidden}
+.scene{position:relative;width:min(430px,80%);height:min(580px,72vh)}
+.frame{position:absolute;inset:0;background:#0D1F19;border:13px solid var(--bone);box-shadow:0 28px 60px rgba(0,0,0,.42),inset 0 0 0 1px var(--brass)}
+.inside{position:absolute;inset:0;background:var(--room,#9E7B5B);display:flex;flex-direction:column;justify-content:flex-end;padding:34px 28px;overflow:hidden}
+.inside:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 28%,rgba(255,245,220,.22),transparent 60%);pointer-events:none}
+.object{position:absolute;left:50%;top:34%;width:92px;height:92px;transform:translate(-50%,-50%);border:4px solid rgba(239,231,216,.82);opacity:.9}
+.obj-suitcase{border-radius:5px;height:60px;width:110px;box-shadow:inset 0 -14px 0 rgba(0,0,0,.12)}
+.obj-chair{width:74px;height:88px;border-width:0 0 5px 5px;border-radius:0 0 0 12px}
+.obj-glove{border-radius:48% 52% 35% 65%;transform:translate(-50%,-50%) rotate(-18deg)}
+.obj-page{width:78px;height:100px;border-width:2px;transform:translate(-50%,-50%) rotate(7deg);box-shadow:8px 8px 0 rgba(0,0,0,.1)}
+.obj-cup{border-radius:8px 8% 48% 48%;width:74px;height:84px}
+.obj-coat{width:92px;height:100px;border-radius:30% 30% 8% 8%;clip-path:polygon(30% 0,70% 0,100% 32%,78% 40%,78% 100%,22% 100%,22% 40%,0 32%)}
+.story{position:relative;font:400 clamp(16px,1.7vw,23px)/1.4 Georgia,serif;color:#FFF6E6;max-width:22ch;margin:0}
+.story b{display:block;font-weight:400;font-style:italic;color:#FFE2A4;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.story span{opacity:0;transition:opacity .55s .34s}
+.scene.open .story b,.scene.open .story span{opacity:1;transform:none}
+.leaf{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;backface-visibility:hidden;background:var(--bone);border:0;padding:0;cursor:pointer;box-shadow:inset -18px 0 30px rgba(23,51,43,.12);transition:transform .95s cubic-bezier(.18,.9,.2,1.1)}
+.scene.open .leaf{transform:rotateY(-112deg)}
+.leaf:before{content:"";position:absolute;inset:22px;border:2px solid rgba(23,51,43,.34)}
+.leaf:after{content:"";position:absolute;inset:38px;border:1px solid rgba(23,51,43,.16)}
+.plate{position:absolute;top:9%;left:50%;transform:translateX(-50%);background:var(--brass);color:var(--green);padding:6px 12px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;z-index:2}
+.knob{position:absolute;right:12%;top:50%;width:24px;height:24px;border-radius:50%;background:var(--brass);box-shadow:0 3px 0 #8B6A32,0 0 0 5px rgba(199,154,75,.22);z-index:2;animation:turn .8s cubic-bezier(.2,.8,.2,1) 1.1s both}
+@keyframes turn{0%{transform:rotate(0)}55%{transform:rotate(38deg)}100%{transform:rotate(0)}}
+.knob:after{content:"";position:absolute;left:50%;top:3px;width:3px;height:8px;background:#6C5326;transform:translateX(-50%);transform-origin:50% 9px}
+.leaf:focus-visible{outline:5px solid var(--brass);outline-offset:-5px}
+.spill{position:absolute;left:96%;top:17%;width:60%;height:78%;background:rgba(255,232,178,.15);clip-path:polygon(0 12%,100% 0,100% 100%,0 70%);opacity:0;transition:opacity .6s .3s;pointer-events:none}
+.scene.open .spill{opacity:1}
+.hint{position:absolute;right:clamp(20px,4vw,60px);bottom:clamp(20px,4vw,50px);font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#8FA396}
+@media(max-width:760px){body{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{border-right:0;border-bottom:1px solid rgba(239,231,216,.18)}.index{grid-template-columns:1fr 1fr}.foot{display:none}.scene{height:58vh;width:min(360px,80%)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside>
+  <h1>A Dictionary of Doors<em>Six entrances to small rooms. Choose a word; the door will agree.</em></h1>
+  <nav class="index" aria-label="Dictionary entries">
+    <button class="entry on" style="--i:0" data-word="Aft" data-pos="n." data-def="The room behind a room, kept for things that arrived late." data-story="A suitcase waits here. It was never packed, only addressed." data-room="#9E7B5B" data-obj="obj-suitcase"><b>Aft</b><small>n.</small><span>The room behind a room, kept for things that arrived late.</span></button>
+    <button class="entry" style="--i:1" data-word="Borrow" data-pos="v." data-def="To take a chair and return only its shadow." data-story="A chair faces the corner. Its shadow is already back in the hall." data-room="#6B8A8A" data-obj="obj-chair"><b>Borrow</b><small>v.</small><span>To take a chair and return only its shadow.</span></button>
+    <button class="entry" style="--i:2" data-word="Custody" data-pos="n." data-def="The hour a lost glove spends being looked after." data-story="A glove keeps its own company for one hour, then leaves by the window." data-room="#B58A6E" data-obj="obj-glove"><b>Custody</b><small>n.</small><span>The hour a lost glove spends being looked after.</span></button>
+    <button class="entry" style="--i:3" data-word="Draft" data-pos="n." data-def="A letter that never learned where to go." data-story="A page has been rewritten nine times. The ninth version says only hello." data-room="#7E8B9E" data-obj="obj-page"><b>Draft</b><small>n.</small><span>A letter that never learned where to go.</span></button>
+    <button class="entry" style="--i:4" data-word="Echo" data-pos="n." data-def="A second voice kept in a cupboard, for company." data-story="A cup holds the last word of a conversation that ended elsewhere." data-room="#A67C93" data-obj="obj-cup"><b>Echo</b><small>n.</small><span>A second voice kept in a cupboard, for company.</span></button>
+    <button class="entry" style="--i:5" data-word="Forfeit" data-pos="v." data-def="To leave a coat and take someone else's weather." data-story="A coat hangs here, still damp from a country none of us has visited." data-room="#8B7A4E" data-obj="obj-coat"><b>Forfeit</b><small>v.</small><span>To leave a coat and take someone else's weather.</span></button>
+  </nav>
+  <div class="foot">Compiled in the east corridor<br>Doors are never locked · Only worded</div>
+</aside>
+<main>
+  <div class="scene" id="scene">
+    <div class="frame">
+      <div class="inside" id="inside"><div class="object obj-suitcase" id="object"></div><p class="story"><b id="noun">A suitcase</b> <span id="rest">waits here. It was never packed, only addressed.</span></p></div>
+      <div class="spill"></div>
+      <button class="leaf" id="leaf" aria-label="Open the door"><span class="plate" id="plate">NO. 01 · AFT</span><span class="knob"></span></button>
+    </div>
+  </div>
+  <div class="hint">CLICK A WORD OR THE DOOR · ESC TO CLOSE</div>
+</main>
+<script>
+const entries=[...document.querySelectorAll('.entry')],scene=document.getElementById('scene'),inside=document.getElementById('inside'),object=document.getElementById('object'),noun=document.getElementById('noun'),rest=document.getElementById('rest'),plate=document.getElementById('plate'),leaf=document.getElementById('leaf');
+let current=0,open=false;
+function choose(b,i){
+  current=i;entries.forEach((e,k)=>e.classList.toggle('on',k===i));
+  inside.style.setProperty('--room',b.dataset.room);
+  object.className='object '+b.dataset.obj;
+  const story=b.dataset.story,cut=story.indexOf(' ',story.indexOf(' ')+1);
+  noun.textContent=story.slice(0,cut);rest.textContent=story.slice(cut+1);
+  plate.textContent='NO. 0'+(i+1)+' · '+b.dataset.word.toUpperCase();
+  leaf.setAttribute('aria-label','Open the door to '+b.dataset.word);
+  scene.classList.add('open');open=true;
+}
+function close(){scene.classList.remove('open');open=false;leaf.setAttribute('aria-label','Open the door')}
+entries.forEach((b,i)=>b.addEventListener('click',()=>choose(b,i)));
+leaf.addEventListener('click',()=>open?close():choose(entries[current],current));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+</script>
+</body>
+</html>

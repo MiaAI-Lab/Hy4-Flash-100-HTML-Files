@@ -1,0 +1,14 @@
+TITLE
+Deep-Sea Sonar — Contacts at the Edge of the Sweep
+
+PROMPT
+A working sonar console in black #07100E with phosphor green #6ED49B and pale #D5E7DD lettering. A circular scope fills most of the screen, crossed by fine range rings and a rotating green sweep whose trailing edge leaves a faint afterglow. Seven contacts drift slowly across the scope: two are marked FISH, one WRECK, one UNKNOWN, and three are unlabelled. Each contact flares briefly when the sweep passes it, then fades to a dim point. A rotary dial below the scope can be dragged left or right to change sweep speed from 4 to 24 revolutions per minute; a small readout prints “SWEEP 12 RPM / RANGE 800 M”. A log at right records the last four detections with timestamps: “03:14:22 — CONTACT 04 / WRECK / BEARING 217°”. Entrance: the sweep powers up from a single line and the scope rings appear one by one. Signature moment: the UNKNOWN contact changes bearing whenever the sweep has passed it three times, as if it is moving away. No emoji, no glass, no purple. Reduced motion renders a still scope.
+
+DESCRIPTION
+A phosphor sonar display with contacts that brighten as the sweep passes. One contact quietly changes its bearing each time the beam returns.
+
+VISUAL TECHNIQUES
+Canvas rotating sweep with afterglow trail, range rings, contact detection and flare, draggable speed dial, timestamped contact log.
+
+INTERACTION MODEL
+Drag the rotary dial or use left/right arrows. A FREEZE control pauses the sweep.

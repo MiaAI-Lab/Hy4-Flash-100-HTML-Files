@@ -1,0 +1,14 @@
+TITLE
+The Lady Who Kept the Rain — Lost Film, Reel One
+
+PROMPT
+A black #090909 projection room showing the opening intertitles of a silent film that no longer exists. White #F2F0E8 lettering sits inside a thin gray #888680 frame with sprocket marks and reel numbers. On load a projector shutter flickers twice and the first card strikes the screen; generated film grain crawls over everything. Clicking advances through five intertitles: a production credit, the title, a chapter heading, a line of narration, and END OF REEL ONE. Each card jitters for a few frames, then holds perfectly still like a projected print. Signature moment: the title card's deliberate misregistration — a gray ghost of each word offset by two pixels. No emoji, no UI buttons beyond a small CONTINUE cue.
+
+DESCRIPTION
+A flickering sequence of intertitles from a lost silent film, advanced by clicking through the reel.
+
+VISUAL TECHNIQUES
+Generated SVG turbulence grain, stepped projector flicker, misregistered type shadows, frame and sprocket detailing, staggered card entrance.
+
+INTERACTION MODEL
+Click anywhere to advance; arrow keys and Space also advance. The final card restarts the reel. Reduced motion removes flicker and jitter.

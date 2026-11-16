@@ -1,0 +1,14 @@
+TITLE
+The Cartographer’s Mistake — A Map That Resents Correction
+
+PROMPT
+A newsprint #E7E0CE chart table with a single hand-drawn coastline in ink #1C2A33 and one red #C43F2F correction pen. The map claims to show “THE COAST OF NORTH, SURVEYED 1886”. Along the bottom, a caption reads “The coastline has been wrong since Tuesday. Please correct it.” Dragging the red pen across the coast pushes the line away from the pointer with a soft spring; nearby contour lines follow, but slightly late. Each time the coast is corrected, one of five place names changes to a more honest invented name: HARBOUR OF ALMOST, CAPE NOON, THE SEA OF NEARLY, LOW TIDE MUSEUM, POINT OF NO RETURN TODAY. A counter records CORRECTIONS 00. Every fifth correction the map gives up and redraws the whole coast as a straight line, then slowly springs back into its wrong shape. Entrance: the chart unrolls from the top, the coastline draws itself in one gesture, and the pen drops into place. Signature moment: the coastline remembers every correction as a small ink scar that fades after a few seconds. No emoji, no glass, no purple. Reduced motion moves the coast instantly without scars.
+
+DESCRIPTION
+A map that resists accuracy. Correcting the coastline only makes it more elaborate, and the map keeps a temporary record of every edit.
+
+VISUAL TECHNIQUES
+Canvas spring chain coastline, pointer-driven displacement with delayed follower contours, live label substitutions, fading ink scars, unroll entrance.
+
+INTERACTION MODEL
+Drag the pen across the coast. The map records corrections when the coastline is displaced beyond a threshold. Keyboard: arrow keys move the pen.

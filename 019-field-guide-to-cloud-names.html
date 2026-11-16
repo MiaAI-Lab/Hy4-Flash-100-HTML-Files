@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Field Guide to Cloud Names — Eight Shapes That Have Not Been Named Before</title>
+<style>
+:root{--sky:#EAF0F2;--ink:#30424A;--sun:#F2C14E;--rain:#4E7F9E}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--sky);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.stage{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#EAF0F2 0%,#F3F5F1 100%)}
+.sun{position:absolute;right:9%;top:14%;width:110px;height:110px;border-radius:50%;background:var(--sun);opacity:.85;box-shadow:0 0 0 18px rgba(242,193,78,.12)}
+.head{position:absolute;left:clamp(20px,3vw,48px);top:clamp(20px,3vw,40px);z-index:5;pointer-events:none}
+.head small{font:10px ui-monospace,Menlo,monospace;letter-spacing:.22em;text-transform:uppercase;display:block;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.head b{display:block;font:400 12px/1.6 Georgia,serif;color:#5B6D75;font-weight:400;margin-top:9px}
+.cw{position:absolute;animation:arrive 1.15s cubic-bezier(.16,.82,.2,1) both;animation-delay:var(--d);transition:opacity .4s;will-change:transform}
+@keyframes arrive{from{opacity:0;transform:translateX(120px)}to{opacity:1;transform:none}}
+.cloud{position:relative;width:var(--w);height:calc(var(--w)*.38);border:0;padding:0;background:#FDFDF8;border-radius:50%;cursor:pointer;box-shadow:inset 0 -10px 0 -3px #C8D0D2,0 10px 18px rgba(48,66,74,.08);animation:breathe 5s ease-in-out infinite alternate;animation-delay:var(--b)}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#FDFDF8;border-radius:50%;box-shadow:inset 0 -8px 0 -2px #C8D0D2}
+.cloud:before{width:52%;height:115%;left:10%;top:-52%}
+.cloud:after{width:43%;height:92%;right:9%;top:-34%}
+@keyframes breathe{to{transform:translateY(-6px) scale(1.015)}}
+.cloud:hover,.cloud:focus-visible{outline:none;filter:drop-shadow(0 0 0 2px var(--rain)) drop-shadow(0 6px 10px rgba(78,127,158,.25))}
+.tag{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;font:9px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--rain);opacity:0;transition:opacity .25s;pointer-events:none}
+.cw:hover .tag,.cw:focus-within .tag,.cw.pin .tag{opacity:1}
+.stage.pinned .cw:not(.pin){opacity:.22}
+.note{position:absolute;left:clamp(20px,3vw,48px);bottom:clamp(18px,3vw,34px);z-index:6;max-width:min(600px,74vw);border-top:2px solid var(--rain);padding-top:10px;pointer-events:none;background:rgba(234,240,242,.86)}
+.note .id{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--rain)}
+.note h2{font:400 clamp(18px,2vw,28px)/1.1 Georgia,serif;margin:7px 0 5px}
+.note p{font:13px/1.4 Georgia,serif;margin:0;color:#4B616B;max-width:62ch}
+.hint{position:absolute;right:clamp(20px,3vw,48px);bottom:clamp(18px,3vw,34px);font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:#657C86;z-index:6}
+#rainLayer{position:absolute;inset:0;pointer-events:none;z-index:7}
+.comma{position:absolute;font:700 20px/1 Georgia,serif;color:var(--rain);animation:fall 1.5s cubic-bezier(.35,.05,.7,.98) forwards}
+@keyframes fall{0%{opacity:0;transform:translate(0,0) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx),210px) rotate(28deg)}}
+@media(max-width:700px){.sun{width:70px;height:70px}.note{max-width:88vw}.hint{display:none}.head b{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="sun"></div>
+  <div class="head"><small>Plate 19 · A field guide to cloud names</small><b>Eight shapes recorded over the east reservoir. None appears in any official atlas.</b></div>
+  <div class="cw" style="left:11%;top:19%;--w:190px;--d:.1s;--b:0s" data-depth=".34" data-id="PLATE 19A" data-name="Late Margery" data-note="1,180 m · A low, obstinate cloud. Arrives after the rain has finished and stays for the clearing."><button class="cloud" aria-label="Late Margery cloud"></button><span class="tag">LATE MARGERY</span></div>
+  <div class="cw" style="left:57%;top:13%;--w:250px;--d:.22s;--b:-1.4s" data-depth=".2" data-id="PLATE 19B" data-name="The Cartographer's Mistake" data-note="2,600 m · Drawn once in 1904 and copied ever since. The original was a smudge on a sleeve."><button class="cloud" aria-label="The Cartographer's Mistake cloud"></button><span class="tag">THE CARTOGRAPHER'S MISTAKE</span></div>
+  <div class="cw" style="left:34%;top:37%;--w:132px;--d:.34s;--b:-.7s" data-depth=".5" data-id="PLATE 19C" data-name="Nine Small Debts" data-note="940 m · Travels in a group of nine. One is always slightly behind and is never the one that breaks."><button class="cloud" aria-label="Nine Small Debts cloud"></button><span class="tag">NINE SMALL DEBTS</span></div>
+  <div class="cw" style="left:71%;top:43%;--w:174px;--d:.46s;--b:-2.1s" data-depth=".42" data-id="PLATE 19D" data-name="A Chair for Rain" data-note="760 m · Flat-topped and hollow underneath. Shepherds report sitting inside it during short showers."><button class="cloud" aria-label="A Chair for Rain cloud"></button><span class="tag">A CHAIR FOR RAIN</span></div>
+  <div class="cw" style="left:7%;top:56%;--w:214px;--d:.58s;--b:-1.9s" data-depth=".28" data-id="PLATE 19E" data-name="The Quiet Argument" data-note="1,520 m · Two halves that never agree on direction. The seam between them stays perfectly straight."><button class="cloud" aria-label="The Quiet Argument cloud"></button><span class="tag">THE QUIET ARGUMENT</span></div>
+  <div class="cw" style="left:45%;top:65%;--w:262px;--d:.7s;--b:-.4s" data-depth=".16" data-id="PLATE 19F" data-name="Second Breakfast" data-note="3,100 m · Broad, unhurried, and most visible between eight and nine. It has never produced rain."><button class="cloud" aria-label="Second Breakfast cloud"></button><span class="tag">SECOND BREAKFAST</span></div>
+  <div class="cw" style="left:79%;top:72%;--w:150px;--d:.82s;--b:-2.6s" data-depth=".62" data-id="PLATE 19G" data-name="Low Complaint" data-note="410 m · Sits just above the roofs. Makes a sound like a door being closed in another house."><button class="cloud" aria-label="Low Complaint cloud"></button><span class="tag">LOW COMPLAINT</span></div>
+  <div class="cw" style="left:23%;top:78%;--w:122px;--d:.94s;--b:-1.1s" data-depth=".74" data-id="PLATE 19H" data-name="Almost a Letter" data-note="620 m · A narrow cloud with one straight edge. It has the shape of an envelope that was never sealed."><button class="cloud" aria-label="Almost a Letter cloud"></button><span class="tag">ALMOST A LETTER</span></div>
+  <div id="rainLayer" aria-hidden="true"></div>
+  <div class="note" aria-live="polite"><div class="id" id="cid">PLATE 19 · FIELD NOTE</div><h2 id="cname">Move through the plate</h2><p id="cnote">Nearer clouds move further. Choose one to hold it still and see what it remembers.</p></div>
+  <div class="hint">MOVE TO SHIFT DEPTH · CLICK TO PIN &amp; RAIN</div>
+</div>
+<script>
+const stage=document.getElementById('stage'),wraps=[...document.querySelectorAll('.cw')],cid=document.getElementById('cid'),cname=document.getElementById('cname'),cnote=document.getElementById('cnote'),rain=document.getElementById('rainLayer'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let pinned=null;
+function show(w){cid.textContent=w.dataset.id;cname.textContent=w.dataset.name;cnote.textContent=w.dataset.note}
+function makeRain(w){if(reduce)return;const r=w.getBoundingClientRect(),s=stage.getBoundingClientRect(),x=r.left-s.left+r.width/2,y=r.top-s.top+r.height*.82;for(let i=0;i<15;i++){const c=document.createElement('span');c.className='comma';c.textContent=',';c.style.left=(x+(Math.random()-.5)*r.width*.7)+'px';c.style.top=y+'px';c.style.setProperty('--dx',((Math.random()-.5)*90)+'px');c.style.animationDelay=(i*.055)+'s';c.style.animationDuration=(1.1+Math.random()*.8)+'s';rain.appendChild(c);setTimeout(()=>c.remove(),2600)}}
+wraps.forEach(w=>{
+  const b=w.querySelector('.cloud');
+  b.addEventListener('pointerenter',()=>show(w));b.addEventListener('focus',()=>show(w));
+  b.addEventListener('click',()=>{
+    if(pinned===w){w.classList.remove('pin');stage.classList.remove('pinned');pinned=null;return}
+    if(pinned)pinned.classList.remove('pin');
+    pinned=w;w.classList.add('pin');stage.classList.add('pinned');show(w);makeRain(w);
+  });
+});
+stage.addEventListener('pointermove',e=>{if(pinned||reduce)return;const r=stage.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width-.5,my=(e.clientY-r.top)/r.height-.5;wraps.forEach(w=>{const d=+w.dataset.depth;w.style.transform=`translate(${(-mx*d*58).toFixed(1)}px,${(-my*d*28).toFixed(1)}px)`})});
+stage.addEventListener('pointerleave',()=>{if(!pinned)wraps.forEach(w=>w.style.transform='')});
+</script>
+</body>
+</html>

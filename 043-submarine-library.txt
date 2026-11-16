@@ -1,0 +1,14 @@
+TITLE
+The Submarine Library — Books Kept Under Pressure
+
+PROMPT
+An underwater reading room in deep indigo #253B68, lit by pale aqua #BBD9D3. Six shelves are bolted to the wall, each holding four books whose spines are drawn as flat rectangles with small brass bands and invented titles: THE WEIGHT OF WATER, A HISTORY OF HOLDING BREATH, LOW TIDE ALMANAC, THE QUIET PRESSURE, NOTES FROM THE SECOND DECK, etc. Books drift very slightly, as if in current. Clicking a book opens it: single words rise from its pages as bubbles in aqua, wobbling upward with varying speeds until they reach the surface line at the top, where they pop into a short sentence specific to that book. A pressure gauge at right reads DEPTH 040 M and shifts by a metre for each opened book. Copy upper left: “BOOKS KEPT UNDER PRESSURE READ MORE SLOWLY.” Entrance: the shelves sink into place and the books settle after them. Signature moment: the bubble sentence assembles word by word at the surface rather than appearing at once. No emoji, no glass, no purple. Reduced motion shows the sentence immediately.
+
+DESCRIPTION
+A library at the bottom of the sea. Opening a book releases its words as bubbles that rise and assemble into a sentence at the surface.
+
+VISUAL TECHNIQUES
+DOM shelf grid with drifting spines, bubble physics with wobble, surface pop animations, live pressure gauge, book-specific writing.
+
+INTERACTION MODEL
+Click a book spine. Keyboard: spines are buttons with aria-labels. A CLEAR SURFACE control resets the sentence.

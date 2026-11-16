@@ -1,0 +1,14 @@
+TITLE
+The House That Listened — A Floor Plan of Kept Sounds
+
+PROMPT
+A warm plaster #E7DCC8 page holding a precise floor plan drawn in deep teal #24474A; one mustard #D99A2B dot marks the listener’s position in the hall. Six rooms are labelled in small caps: KITCHEN, STAIRWELL, BACK BEDROOM, BATH, STUDY, ATTIC. Each room contains a thin illustration of the sound it keeps: three cup rings, a creaking stair tread, a radiator tick, a dripping tap, a typewriter key, a loose slate. Clicking a room sends mustard concentric ripples outward from its centre and prints the room’s remembered sound in a narrow caption strip at the bottom: “KITCHEN / 7:12 AM / THE KETTLE REACHED ITS BOILING POINT FOUR TIMES BEFORE ANYONE CAME.” Only one room sounds at a time; the previous ripples collapse into a single dot. Entrance: walls draw themselves room by room, then the mustard listener appears with a slow pulse. Signature moment: the ripple rings pass through doorways into adjacent rooms before fading, so the plan becomes a diagram of hearing. No emoji, no glass, no gradients. Reduced motion shows caption and a single ring.
+
+DESCRIPTION
+An architectural plan of a house that has kept every sound. Selecting a room replays what it heard, visualized as ripples travelling through doorways.
+
+VISUAL TECHNIQUES
+SVG floor plan with drawn walls, room-specific line icons, expanding ripple circles clipped to interior, staggered wall entrance, caption typography.
+
+INTERACTION MODEL
+Click a room. Keyboard: rooms focusable SVG groups; arrow keys move between them.

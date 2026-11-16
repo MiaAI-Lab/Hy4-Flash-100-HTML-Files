@@ -1,0 +1,14 @@
+TITLE
+The Cartographer’s Apology — A Map That Reconsiders
+
+PROMPT
+A parchment #F1E4C3 map in the style of a 1930s survey: ink #3F3A32 contour lines, a vermilion #B94A2B route, no gradients. The map shows the coast of a fictional country called Regret with three marked points: A ROAD NOT TAKEN, A WORD SAID TOO QUICKLY, AND THE HOUSE WHERE WE APOLOGISED. A small legend reads “SCALE: ONE REGRET = 400 PACES”. At first the red route connects the first two points in a straight, certain line. Clicking the second marker makes the line bow outward and reroute to the third point, while a typed apology appears in a boxed margin note: “I drew you as a place I could leave. I was wrong about the roads.” Clicking again straightens the line and erases the note. Entrance: the contour lines appear from left to right like a plotter drawing them, then the red route draws itself with a dry pen. Signature moment: the route physically bends away from the coast and finds the third point, with the pen pausing at a small border crossing before continuing. No emoji, no glass, no UI chrome. Reduced motion switches routes instantly.
+
+DESCRIPTION
+A survey map that redraws its own route when the cartographer admits a mistake. The shortest line gives way to the one that goes back.
+
+VISUAL TECHNIQUES
+SVG contour plotting with staggered dash offsets, animated path morphing between equal-length route commands, margin note typography, crosshair markers.
+
+INTERACTION MODEL
+Click the vermilion marker to toggle route and apology. Keyboard: the marker is a button; Space toggles.

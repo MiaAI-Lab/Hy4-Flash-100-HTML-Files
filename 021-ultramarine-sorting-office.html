@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultramarine Sorting Office — A Parcel That Knows Its Address</title>
+<style>
+:root{--blue:#1D35A6;--green:#C8F23B;--black:#111317;--white:#F6F4EA}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--blue);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+body{padding:clamp(18px,3vw,40px);min-height:100vh;display:flex;flex-direction:column;gap:16px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;border-bottom:3px solid var(--green);padding-bottom:12px}
+h1{font:900 clamp(28px,4.4vw,66px)/.88 Arial,sans-serif;letter-spacing:-.055em;text-transform:uppercase;margin:0}
+header .meta{font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-align:right;color:#C7D0FF;text-transform:uppercase}
+.field{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+label{font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--green)}
+input{background:var(--black);border:2px solid var(--green);color:var(--white);padding:10px 14px;width:min(340px,60vw);font:700 17px ui-monospace,Menlo,monospace;letter-spacing:.2em;outline:none}
+input:focus-visible{box-shadow:0 0 0 4px rgba(200,242,59,.3)}
+input::placeholder{color:#6F7ED0}
+.hint{font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:#C7D0FF}
+canvas{width:100%;height:auto;display:block;flex:1;min-height:260px;max-height:56vh;background:var(--blue)}
+.bins{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.bin{background:var(--black);color:var(--white);border:2px solid #4359C8;border-top:6px solid var(--green);padding:10px 4px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.12em;cursor:pointer}
+.bin:hover,.bin.on{background:var(--green);color:var(--black);border-color:var(--green)}
+.bin:focus-visible{outline:3px solid var(--white);outline-offset:2px}
+@media(max-width:650px){h1{font-size:28px}header .meta{display:none}.bins{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Sorting<br>Office</h1><div class="meta">District 04 / Parcels by initial<br>Shift 07:00–15:00 · no hand deliveries</div></header>
+<div class="field"><label for="dest">Destination</label><input id="dest" type="text" placeholder="TYPE A WORD…" autocomplete="off" spellcheck="false"><span class="hint">EACH KEY LAUNCHES ONE PARCEL · CLICK A BIN TO OVERRIDE</span></div>
+<canvas id="floor" width="1000" height="560" role="img" aria-label="Animated conveyor belt with parcels dropping into bins"></canvas>
+<div class="bins" id="bins" role="group" aria-label="Sorting bins">
+  <button class="bin" data-i="0">NORTH / A–D</button><button class="bin" data-i="1">EAST / E–I</button><button class="bin" data-i="2">SALT / J–N</button>
+  <button class="bin" data-i="3">MILL / O–R</button><button class="bin" data-i="4">HARBOUR / S–V</button><button class="bin" data-i="5">RETURN / W–Z</button>
+</div>
+<script>
+const c=document.getElementById('floor'),x=c.getContext('2d'),input=document.getElementById('dest'),binBtns=[...document.querySelectorAll('.bin')];
+const names=['NORTH','EAST','SALT','MILL','HARBOUR','RETURN'],bx=[75,230,385,540,695,850],reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let parcels=[],belt=0,override=-1,flash=[0,0,0,0,0,0],last=performance.now();
+const routeFor=ch=>{const n=ch.toUpperCase().charCodeAt(0)-65;return n>=0&&n<26?Math.min(5,Math.floor(n/5)):5};
+function launch(ch,demo=false){
+  const route=override>=0?override:routeFor(ch),p={ch:ch.toUpperCase(),route,x:demo?60+Math.random()*160:20,y:218,vy:0,state:0,rot:0,land:0,wait:demo?Math.random()*70:0};
+  if(override>=0){override=-1;binBtns.forEach(b=>b.classList.remove('on'))}
+  parcels.push(p);
+  if(reduce){p.state=2;p.x=bx[route]+52;p.y=470;p.land=1}
+}
+function draw(now){
+  const dt=Math.min(2.2,(now-last)/16.7);last=now;belt=(belt+(reduce?0:1.7*dt))%36;
+  x.fillStyle='#1D35A6';x.fillRect(0,0,1000,560);
+  x.fillStyle='#111317';x.fillRect(0,196,1000,64);
+  x.fillStyle='#4359C8';for(let i=-36;i<1036;i+=36)x.fillRect(i+belt,196,18,64);
+  x.fillStyle='#C8F23B';x.fillRect(0,190,1000,6);x.fillRect(0,260,1000,6);
+  x.font='10px ui-monospace,Menlo,monospace';x.textAlign='center';
+  bx.forEach((px,i)=>{
+    x.fillStyle='#111317';x.fillRect(px,264,104,18);
+    x.fillStyle=flash[i]>0?'#C8F23B':'#4359C8';x.fillRect(px+42,282,20,96);
+    x.fillStyle=flash[i]>0?'#C8F23B':'#6B7BD8';x.fillRect(px,380,104,90);
+    x.fillStyle=flash[i]>0?'#111317':'#C8F23B';x.fillText(names[i],px+52,432);
+    x.fillStyle='#9FAEF5';x.fillText('0'+(i+1),px+52,456);
+    if(flash[i]>0)flash[i]-=dt*.04;
+  });
+  parcels.forEach(p=>{
+    if(p.wait>0){p.wait-=dt;return}
+    if(p.state===0){
+      p.x+=2.4*dt;p.rot+=.055*dt;
+      const chute=bx[p.route]+52;
+      if(p.x>chute-18){p.state=1;p.vy=0;p.startX=p.x;p.targetX=chute;p.t=0}
+    }else if(p.state===1){
+      p.t=Math.min(1,p.t+.028*dt);const e=1-(1-p.t)**2;
+      p.x=p.startX+(p.targetX-p.startX)*e;p.y=218+330*p.t*p.t;p.rot+=.12*dt;
+      if(p.t>=1){p.state=2;p.y=548;p.land=1;flash[p.route]=1}
+    }else{
+      if(!reduce)p.land*=.9;
+    }
+    const sx=Math.cos(p.rot),w=Math.max(2,Math.abs(sx)*34);
+    x.save();x.translate(p.x,p.y-(p.state===2?p.land*14:0));
+    x.fillStyle=sx>0?'#C8F23B':'#F6F4EA';x.fillRect(-w/2,-17,w,34);
+    x.fillStyle=sx>0?'#111317':'#1D35A6';x.font='bold 18px ui-monospace,Menlo,monospace';x.textAlign='center';x.textBaseline='middle';
+    if(w>12)x.fillText(p.ch,0,1);x.restore();
+  });
+  if(!reduce)parcels=parcels.filter(p=>p.state!==2||p.land>.06);
+  x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle='#C7D0FF';x.font='10px ui-monospace,Menlo,monospace';x.fillText('BELT 01 · 42g STANDARD PARCEL · SORT BY INITIAL',20,32);
+  requestAnimationFrame(draw)
+}
+input.addEventListener('input',()=>{const ch=input.value[input.value.length-1];if(ch&&ch.trim())launch(ch)});
+binBtns.forEach((b,i)=>b.addEventListener('click',()=>{override=i;binBtns.forEach(q=>q.classList.toggle('on',q===b));input.focus()}));
+launch('A',true);launch('M',true);launch('S',true);
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

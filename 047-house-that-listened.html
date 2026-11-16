@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The House That Listened — A Floor Plan of Kept Sounds</title>
+<style>
+:root{--plaster:#E7DCC8;--teal:#24474A;--mustard:#D99A2B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--plaster);color:var(--teal);font-family:Arial,Helvetica,sans-serif}
+body{padding:26px 30px}
+h1{font:400 clamp(20px,2.5vw,31px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.stage{margin-top:18px;border-top:1px solid var(--teal);border-bottom:1px solid var(--teal)}
+svg{display:block;width:100%;height:auto}
+.wall{fill:none;stroke:var(--teal);stroke-width:2;stroke-dasharray:1800;stroke-dashoffset:1800;animation:build 1.2s cubic-bezier(.6,0,.2,1) forwards;animation-delay:calc(var(--r)*.16s)}
+@keyframes build{to{stroke-dashoffset:0}}
+.room{cursor:pointer;outline:none}
+.room rect{fill:transparent;transition:fill .3s}
+.room:hover rect,.room:focus-visible rect{fill:rgba(36,71,74,.055)}
+.room:focus-visible rect{stroke:var(--mustard);stroke-width:2}
+.name{font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;fill:var(--teal)}
+.icon{fill:none;stroke:var(--teal);stroke-width:1.2;opacity:.7}
+.ripple{fill:none;stroke:var(--mustard);stroke-width:1.6;opacity:0;animation:spread 2.4s cubic-bezier(.15,.6,.3,1) forwards}
+@keyframes spread{0%{r:2;opacity:.9}100%{r:190;opacity:0}}
+.listener{fill:var(--mustard);opacity:0;animation:appear 1s 1.5s forwards,pulse 2.4s 2.5s infinite}
+@keyframes appear{to{opacity:1}}@keyframes pulse{50%{r:9;opacity:.55}}
+.caption{display:grid;grid-template-columns:180px 1fr;gap:20px;padding:14px 0;font:italic clamp(14px,1.7vw,20px)/1.45 Georgia,serif;min-height:82px;align-items:center}
+.caption b{font:9px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.18em;font-weight:400;color:var(--mustard)}
+@media(max-width:650px){body{padding:16px}.caption{grid-template-columns:1fr;gap:6px;font-size:13px}.name{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.wall{stroke-dashoffset:0}.listener{opacity:1}}
+</style>
+</head>
+<body>
+<h1>The House That Listened</h1><div class="sub">FLOOR PLAN OF KEPT SOUNDS / 47 · LISTENER IN THE HALL</div>
+<div class="stage"><svg id="svg" viewBox="0 0 1000 560">
+  <defs><clipPath id="inside"><rect x="20" y="20" width="960" height="520"/></clipPath></defs>
+  <g class="wall" style="--r:0"><rect x="20" y="20" width="960" height="520"/><path d="M360 20 V190 M360 280 V540 M700 20 V220 M700 300 V540 M20 260 H360 M700 260 H980 M360 380 H700"/></g>
+  <g id="rooms">
+    <g class="room" data-room="kitchen" tabindex="0" role="button" aria-label="Kitchen: remember sound"><rect x="22" y="22" width="336" height="236"/><text class="name" x="42" y="52">KITCHEN</text><g class="icon"><circle cx="120" cy="150" r="18"/><circle cx="160" cy="170" r="18"/><circle cx="200" cy="145" r="18"/><path d="M250 130 q14-20 28 0 q14 20 28 0"/></g></g>
+    <g class="room" data-room="stair" tabindex="0" role="button" aria-label="Stairwell: remember sound"><rect x="362" y="22" width="336" height="236"/><text class="name" x="382" y="52">STAIRWELL</text><g class="icon"><path d="M410 200 h40 v-30 h40 v-30 h40 v-30 h40"/><path d="M450 200 v-30 M490 170 v-30 M530 140 v-30"/></g></g>
+    <g class="room" data-room="attic" tabindex="0" role="button" aria-label="Attic: remember sound"><rect x="702" y="22" width="276" height="236"/><text class="name" x="722" y="52">ATTIC</text><g class="icon"><path d="M740 170 l40-50 40 50 40-50 40 50"/><path d="M760 190 h120"/></g></g>
+    <g class="room" data-room="bedroom" tabindex="0" role="button" aria-label="Back bedroom: remember sound"><rect x="22" y="262" width="336" height="276"/><text class="name" x="42" y="292">BACK BEDROOM</text><g class="icon"><rect x="100" y="380" width="150" height="90"/><path d="M100 410 h150 M120 380 v-20 h110 v20"/><path d="M270 400 q20-15 40 0"/></g></g>
+    <g class="room" data-room="bath" tabindex="0" role="button" aria-label="Bath: remember sound"><rect x="362" y="282" width="336" height="256"/><text class="name" x="382" y="312">BATH</text><g class="icon"><rect x="430" y="380" width="140" height="80" rx="28"/><path d="M500 360 v-40 M495 320 q5-8 10 0"/><circle cx="620" cy="390" r="10"/></g></g>
+    <g class="room" data-room="study" tabindex="0" role="button" aria-label="Study: remember sound"><rect x="702" y="302" width="276" height="236"/><text class="name" x="722" y="332">STUDY</text><g class="icon"><rect x="770" y="400" width="70" height="50"/><path d="M780 410 h50 M780 425 h36"/><circle cx="875" cy="415" r="12"/></g></g>
+  </g>
+  <g clip-path="url(#inside)" id="ripples"></g>
+  <circle class="listener" cx="530" cy="270" r="6"/>
+</svg></div>
+<div class="caption"><b id="roomName">THE HOUSE / 00 SOUNDS REPLAYED</b><span id="caption">Every room is holding its breath. Choose one to let it speak.</span></div>
+<script>
+const NS='http://www.w3.org/2000/svg',ripples=document.getElementById('ripples'),roomName=document.getElementById('roomName'),caption=document.getElementById('caption'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sounds={kitchen:['KITCHEN / 7:12 AM','The kettle reached its boiling point four times before anyone came.'],stair:['STAIRWELL / 11:46 PM','The seventh tread complained, exactly as it had for thirty-one years.'],attic:['ATTIC / 3:05 PM','One slate shifted left. Nobody went up to put it back.'],bedroom:['BACK BEDROOM / 6:20 AM','A clock was wound in the dark, then deliberately not looked at.'],bath:['BATH / 2:18 AM','The tap counted seven drops, stopped, and began again.'],study:['STUDY / 4:44 PM','A single typewriter key struck the letter R and waited for the rest.']};
+const centres={kitchen:[190,140],stair:[530,140],attic:[840,140],bedroom:[190,400],bath:[530,400],study:[840,400]};
+let count=0;
+function sound(key,el){const s=sounds[key];roomName.textContent=s[0];caption.textContent=s[1];count++;document.querySelector('.caption b').textContent=s[0]+' / '+String(count).padStart(2,'0')+' REPLAYED';ripples.innerHTML='';const c=centres[key],n=reduce?1:4;for(let i=0;i<n;i++){const r=document.createElementNS(NS,'circle');r.setAttribute('class','ripple');r.setAttribute('cx',c[0]);r.setAttribute('cy',c[1]);r.style.animationDelay=(reduce?0:i*.32)+'s';ripples.appendChild(r)}if(reduce){const d=document.createElementNS(NS,'circle');d.setAttribute('cx',c[0]);d.setAttribute('cy',c[1]);d.setAttribute('r','4');d.setAttribute('fill','#D99A2B');ripples.appendChild(d)}}
+document.querySelectorAll('.room').forEach((r,i)=>{r.addEventListener('click',()=>sound(r.dataset.room,r));r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sound(r.dataset.room,r)}else if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();[...document.querySelectorAll('.room')][(i+1)%6].focus()}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();[...document.querySelectorAll('.room')][(i+5)%6].focus()}})});
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cartographer’s Apology — A Map That Reconsiders</title>
+<style>
+:root{--paper:#F1E4C3;--ink:#3F3A32;--red:#B94A2B}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px;background-image:repeating-linear-gradient(0deg,rgba(63,58,50,.025) 0 1px,transparent 1px 4px)}
+h1{font:400 clamp(20px,2.5vw,31px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:8px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:26px;margin-top:18px;align-items:start}
+.map{position:relative;border:1px solid var(--ink);background:rgba(255,255,255,.1)}
+svg{display:block;width:100%;height:auto}
+.contour{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.34;stroke-dasharray:1200;stroke-dashoffset:1200;animation:plot 1.4s ease-out forwards;animation-delay:calc(var(--c)*.09s)}
+@keyframes plot{to{stroke-dashoffset:0}}
+.coast{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-dasharray:1600;stroke-dashoffset:1600;animation:plot 2s ease-out .2s forwards}
+.route{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1300;stroke-dashoffset:1300;animation:plot 1.6s cubic-bezier(.6,0,.2,1) 1.3s forwards}
+.pt{fill:none;stroke:var(--ink);stroke-width:1.2}
+.pt.red{stroke:var(--red)}
+.pt text{stroke:none;fill:var(--ink);font:9px ui-monospace,Menlo,monospace;letter-spacing:.12em}
+#trigger{cursor:pointer;outline:none}
+#trigger circle{fill:var(--red);transition:r .3s cubic-bezier(.2,1.4,.3,1)}
+#trigger:hover circle,#trigger:focus-visible circle{r:12}
+#trigger:focus-visible{outline:2px dashed var(--red)}
+.margin{border-left:2px solid var(--red);padding:4px 0 4px 18px;min-height:230px}
+.margin .tag{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--red)}
+.margin p{font:italic 17px/1.5 Georgia,serif;margin:16px 0 0;max-width:28ch}
+.legend{margin-top:28px;border-top:1px solid var(--ink);padding-top:10px;font:9px/1.8 ui-monospace,Menlo,monospace;letter-spacing:.12em}
+.legend b{font-weight:400;color:var(--red)}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.margin{min-height:90px;border-left:0;border-top:2px solid var(--red);padding:14px 0 0}.margin p{font-size:14px}body{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.contour,.coast,.route{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<h1>The Cartographer’s Apology</h1><div class="sub">SURVEY OF REGRET · SHEET 046 · SCALE: ONE REGRET = 400 PACES</div>
+<div class="layout">
+  <div class="map"><svg id="svg" viewBox="0 0 900 620">
+    <g id="contours"></g>
+    <path class="coast" d="M18 92 C120 130 90 205 170 245 C240 280 210 350 285 390 C360 430 330 510 440 546 C540 578 640 530 700 470 C760 410 740 320 820 280 C880 248 860 150 880 92"/>
+    <polyline class="route" id="route" points=""/>
+    <g class="pt"><circle cx="120" cy="390" r="5"/><path d="M110 390 h20 M120 380 v20"/><text x="66" y="424">A ROAD NOT TAKEN</text></g>
+    <g class="pt red"><circle cx="360" cy="300" r="5"/><path d="M350 300 h20 M360 290 v20"/><text x="292" y="280">A WORD SAID TOO QUICKLY</text></g>
+    <g class="pt"><circle cx="600" cy="210" r="5"/><path d="M590 210 h20 M600 200 v20"/><text x="612" y="200">THE HOUSE WHERE WE APOLOGISED</text></g>
+    <g id="trigger" role="button" tabindex="0" aria-label="Toggle the cartographer's apology" aria-pressed="false"><circle cx="360" cy="300" r="16" fill="none" stroke="#B94A2B" stroke-width="1"/><circle cx="360" cy="300" r="4" fill="#B94A2B"/></g>
+  </svg></div>
+  <aside class="margin"><div class="tag">MARGIN NOTE / <span id="state">UNSENT</span></div><p id="note">The route is certain. The route is wrong. The cartographer has not yet admitted it.</p><div class="legend">CONVENTION<br><b>—</b> SHORTEST DISTANCE<br><b>⌁</b> DISTANCE WILLINGLY TAKEN<br><br>FIELD SEASON 1938–1941<br>SURVEYED BY H. VALE</div></aside>
+</div>
+<script>
+const SVGNS='http://www.w3.org/2000/svg',contours=document.getElementById('contours'),route=document.getElementById('route'),note=document.getElementById('note'),state=document.getElementById('state'),trigger=document.getElementById('trigger'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+for(let i=0;i<11;i++){const p=document.createElementNS(SVGNS,'path');let d='M0 '+(90+i*42);for(let k=1;k<=9;k++){const x=k*100,y=90+i*42+Math.sin(k*.9+i*.7)*26+Math.cos(k*.35+i)*12;d+=` L${x} ${y}`}p.setAttribute('d',d);p.setAttribute('class','contour');p.style.setProperty('--c',i);contours.appendChild(p)}
+const A=[[120,390],[160,375],[200,360],[240,345],[280,330],[320,315],[360,300]];
+const B=[[120,390],[160,420],[200,452],[240,462],[280,440],[320,380],[360,340]];
+const C=[[360,340],[400,306],[440,270],[480,250],[520,246],[560,230],[600,210]];
+function setPoints(arr){route.setAttribute('points',arr.map(p=>p.join(',')).join(' '))}
+setPoints(A);
+let mode=0;
+function toggle(){mode=1-mode;if(reduce){setPoints(mode?C:A);note.textContent=mode?'I drew you as a place I could leave. I was wrong about the roads.':'The route is certain. The route is wrong. The cartographer has not yet admitted it.';state.textContent=mode?'CORRECTED':'UNSENT';trigger.setAttribute('aria-pressed',String(!!mode));return}
+ const from=mode?[...A,...B,...C]:[...C,...B.slice().reverse(),...A.slice().reverse()],to=mode?[...B,...C]:[...B.slice().reverse(),...A.slice().reverse()],dur=1900,t0=performance.now();
+ route.style.strokeDashoffset='0';route.style.animation='none';
+ function step(t){const raw=Math.min(1,(t-t0)/dur),p=raw<.5?4*raw*raw*raw:1-Math.pow(-2*raw+2,3)/2;const pts=from.map((v,i)=>[v[0]+(to[i][0]-v[0])*p,v[1]+(to[i][1]-v[1])*p]);setPoints(pts.slice(0,7));if(raw<1)requestAnimationFrame(step);else setPoints(mode?C:A)}requestAnimationFrame(step);
+ note.textContent=mode?'I drew you as a place I could leave. I was wrong about the roads.':'The route is certain. The route is wrong. The cartographer has not yet admitted it.';state.textContent=mode?'CORRECTED':'UNSENT';trigger.setAttribute('aria-pressed',String(!!mode))}
+trigger.addEventListener('click',toggle);trigger.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
+</script>
+</body>
+</html>

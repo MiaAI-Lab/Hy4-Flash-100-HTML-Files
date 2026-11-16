@@ -1,0 +1,14 @@
+TITLE
+A Field Guide to Cloud Names — Eight Shapes That Have Not Been Named Before
+
+PROMPT
+A pale sky #EAF0F2 with a low sun disc #F2C14E, drawn as a field plate rather than a weather app. Eight hand-shaped clouds drift at different depths across the viewport; each is built from CSS circles with a soft grey underside #C8D0D2 and a warm white top #FDFDF8. Title “A FIELD GUIDE TO CLOUD NAMES” in small spaced capitals at upper left, with a rule and a plate number. Each cloud has an invented name that appears only when the cloud is near the pointer: Late Margery, The Cartographer's Mistake, Nine Small Debts, A Chair for Rain, The Quiet Argument, Second Breakfast, Low Complaint, Almost a Letter. Moving the pointer shifts nearer clouds more than distant ones, creating parallax. Hovering or focusing a cloud updates a lower-left field note with its name, altitude, shape description and one precise sentence of behaviour. Clicking pins that cloud: the others fade, and a short fall of tiny typographic commas drops from the pinned cloud — punctuation as rain. Entrance: clouds enter from the right at staggered intervals with slightly different easing. No emoji, no sun rays, no photo realism. Reduced motion stops drift and rain but keeps all information available.
+
+DESCRIPTION
+A quiet identification guide to clouds that do not exist. Depth, naming and weather are all invented, but the field notes are exact enough to feel observed.
+
+VISUAL TECHNIQUES
+CSS-composed cloud silhouettes with layered pseudo-elements, multi-depth pointer parallax, staggered entrance easing, aria-live field note, generated comma particles with staggered fall animation.
+
+INTERACTION MODEL
+Move to shift depth and read the nearest cloud; click or Tab+Enter to pin one and make it rain punctuation; click again to release.

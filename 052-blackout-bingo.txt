@@ -1,0 +1,14 @@
+TITLE
+Blackout Bingo — The Last Number Turns Out the Lights
+
+PROMPT
+A wartime listening-room bingo card in near-black #111110 with cream #E8DFC9 type and red #A9322B called-number stamps. A 5×5 card fills the centre; each square bears a number and a small object word: 12 LAMP, 27 CURFEW, 44 LETTER, etc. A caller strip at the top announces numbers every 1.8 seconds in a cream ticker. Clicking a square marks it with a red X; when the caller announces a number you have marked, it stamps automatically. Completing any row, column or diagonal drops the room to black except for one warm #F3C06B bulb hanging above the card, its light a narrow cone. The words “BLACKOUT — ONE LINE” appear in the bulb’s glow. A RESET CARD control restores the room. Entrance: the caller strip types its first number, then the card squares flip in one by one. Signature moment: the dimming is staged — first the corners, then the edges, then everything but the bulb — with a soft relay click at each stage. No emoji, no glass, no gradients in the type. Reduced motion marks instantly.
+
+DESCRIPTION
+A blackout-era bingo game where a completed line turns off the whole room except one hanging bulb. The last number is the one that matters.
+
+VISUAL TECHNIQUES
+5×5 grid with staggered flip entrance, timed caller ticker, relay-like staged lighting transitions, single-bulb spotlight, red stamp marks.
+
+INTERACTION MODEL
+Click squares to mark them. The caller stamps matching numbers automatically. RESET CARD starts over. Keyboard: grid is navigable with arrow keys, Space marks.

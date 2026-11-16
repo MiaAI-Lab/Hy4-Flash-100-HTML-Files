@@ -1,0 +1,14 @@
+TITLE
+Geiger Garden — What Grows From a Counting Sound
+
+PROMPT
+A black #0C0F0C field with a moving Geiger probe drawn as a thin gray #89918A crosshair. Random ticks brighten the probe; moving it near something planted increases the ticking. Each click plants a lime #A5D447 flower at that spot: a stem draws upward, petals unfold one after another, and a soft crackle sounds. The number of petals comes from the rhythm of the clicks — a long pause makes a many-petalled flower, a quick double-click makes a small one. A counter shows counts per minute and the last petal count. Signature moment: the garden growing because someone kept clicking a Geiger counter. No emoji, no generic particle garden, no purple.
+
+DESCRIPTION
+A Geiger-probe garden where the rhythm of clicks determines how many petals each glowing flower grows.
+
+VISUAL TECHNIQUES
+Canvas stems and unfolding petals, proximity-driven tick rate, Web Audio crackle synthesis, crosshair probe, live counts-per-minute readout.
+
+INTERACTION MODEL
+Move the pointer to sweep the probe; click to plant a flower and hear its crackle. Keyboard: arrow keys move the probe, Space plants. Reduced motion grows flowers instantly.

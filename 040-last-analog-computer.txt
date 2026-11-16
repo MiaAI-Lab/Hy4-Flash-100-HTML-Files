@@ -1,0 +1,14 @@
+TITLE
+The Last Analog Computer — A Machine That Only Knows One Sentence
+
+PROMPT
+A walnut #5B3B29 tabletop computer with brass #C6A15B rods and cream #EFE3C8 beads. Fourteen vertical rods hold four beads each; each bead carries a single letter, and two rods are left empty for spaces. The machine has no screen, only a brass output plate that reads one character at a time as beads are slid to the top stop. The sentence it knows is “WE ARE STILL HERE” — spaces are represented by empty gaps between groups. The title “THE LAST ANALOG COMPUTER” is burned into the upper rail; beside it: “BUILT 1974 / NEVER CONNECTED TO ANYTHING.” Dragging a bead to the top stop registers its letter; dragging it down clears it. A crank on the right shuffles all beads to random positions without changing the answer. When the full sentence is assembled, the rods clack in sequence, the output plate holds the sentence, and a small drawer beneath slides open to reveal a cream card reading “WE KNEW YOU WOULD ASK.” Entrance: beads drop onto their rods one by one, each with a small bounce. Signature moment: the drawer opens only when the sentence is exactly right; any extra bead on a rod keeps it shut. No emoji, no glass, no purple. Reduced motion moves beads without bounce.
+
+DESCRIPTION
+A wooden bead computer with one stored sentence. Assembling the sentence from its rods opens a drawer with a note, proving the machine had been waiting all along.
+
+VISUAL TECHNIQUES
+Draggable SVG beads with snapping stops, per-rod character mapping, output plate with live letters, CSS drawer reveal, clack choreography via staggered class changes.
+
+INTERACTION MODEL
+Drag beads to the top stop; drag down to clear. Press the crank to scramble. Keyboard: each bead is focusable and Space toggles it.

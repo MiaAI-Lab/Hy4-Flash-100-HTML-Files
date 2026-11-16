@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Clockwork Greenhouse — A Machine for Letting In Light</title>
+<style>
+:root{--moss:#557259;--glass:#BFD5C5;--brass:#C6A052}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--moss);color:var(--glass);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 28px;background-image:radial-gradient(circle at 30% 20%,rgba(191,213,197,.12),transparent 55%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(191,213,197,.5);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.workbench{display:flex;gap:30px;height:calc(100vh - 110px);min-height:470px;align-items:center;justify-content:center}
+.house{position:relative;width:min(720px,66vw);aspect-ratio:720/460;background:rgba(20,38,27,.35);border:1px solid rgba(191,213,197,.45)}
+svg{width:100%;height:100%;display:block}
+.beam{fill:var(--glass);opacity:.13;transition:opacity .8s,d .8s;pointer-events:none}
+.louver{stroke:var(--brass);stroke-width:5;stroke-linecap:round;transform-box:fill-box;transform-origin:center;transition:transform .7s cubic-bezier(.2,1,.3,1)}
+.plant path{fill:none;stroke:var(--glass);stroke-width:3;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1.4s ease,transform .8s;transform-origin:bottom center}
+.plant.grown path{stroke-dashoffset:0}
+.leaf{fill:rgba(191,213,197,.5);stroke:var(--glass);stroke-width:1.5;opacity:0;transition:opacity .8s .6s,transform .8s;transform-origin:center}
+.plant.grown .leaf{opacity:1}
+.controls{width:220px;flex:none;display:flex;flex-direction:column;align-items:center;gap:18px}
+.gear{position:relative;width:132px;height:132px;border-radius:50%;border:3px solid var(--brass);background:repeating-conic-gradient(var(--brass) 0 5deg,transparent 5deg 15deg),var(--moss);cursor:pointer;transition:transform .7s cubic-bezier(.2,1,.3,1);box-shadow:0 0 0 8px rgba(198,160,82,.12)}
+.gear:after{content:'';position:absolute;inset:26px;border-radius:50%;border:8px solid var(--brass);background:var(--moss)}
+.gear:hover{filter:brightness(1.12)}.gear:focus-visible{outline:2px dashed var(--glass);outline-offset:12px}
+.temp{font:400 44px/1 Georgia,serif;color:var(--brass)}
+.temp small{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--glass)}
+.readout{text-align:center;font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;line-height:2}
+.readout b{color:var(--brass);font-weight:400}
+.note{font:italic 12px/1.7 Georgia,serif;color:rgba(191,213,197,.7);text-align:center}
+@media(max-width:760px){body{padding:12px}.workbench{flex-direction:column;gap:14px}.house{width:94vw}.controls{flex-direction:row;flex-wrap:wrap;justify-content:center;width:auto}.gear{width:88px;height:88px}.gear:after{inset:18px;border-width:5px}.temp{font-size:30px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Clockwork Greenhouse</h1><span class="meta">HORTICULTURAL APPARATUS · No. 088 · WIND HAND</span></header>
+<div class="workbench">
+  <div class="house">
+    <svg viewBox="0 0 720 460" aria-hidden="true">
+      <path d="M40 400 L40 190 L360 50 L680 190 L680 400 Z" fill="rgba(191,213,197,.08)" stroke="rgba(191,213,197,.5)" stroke-width="2"/>
+      <path d="M40 190 H680 M160 130 V400 M280 88 V400 M440 88 V400 M560 130 V400 M40 300 H680" fill="none" stroke="rgba(191,213,197,.22)" stroke-width="1.5"/>
+      <path class="beam" id="beam" d="M190 150 L520 150 L640 400 L70 400 Z"/>
+      <g id="louvers"><line class="louver" x1="160" y1="126" x2="240" y2="86"/><line class="louver" x1="280" y1="86" x2="360" y2="46"/><line class="louver" x1="440" y1="86" x2="360" y2="46"/><line class="louver" x1="560" y1="126" x2="480" y2="86"/></g>
+      <path d="M120 400 H600" stroke="var(--brass)" stroke-width="4"/>
+      <g class="plant" id="p1"><path d="M180 398 Q170 330 202 286 Q230 250 214 210"/><ellipse class="leaf" cx="174" cy="320" rx="22" ry="9" transform="rotate(-28 174 320)"/><ellipse class="leaf" cx="226" cy="260" rx="20" ry="8" transform="rotate(24 226 260)"/></g>
+      <g class="plant" id="p2"><path d="M360 398 Q350 340 380 300 Q406 268 394 232"/><ellipse class="leaf" cx="352" cy="338" rx="20" ry="8" transform="rotate(-30 352 338)"/><ellipse class="leaf" cx="404" cy="278" rx="22" ry="9" transform="rotate(26 404 278)"/></g>
+      <g class="plant" id="p3"><path d="M540 398 Q550 340 520 304 Q494 272 508 240"/><ellipse class="leaf" cx="548" cy="340" rx="20" ry="8" transform="rotate(28 548 340)"/><ellipse class="leaf" cx="496" cy="280" rx="22" ry="9" transform="rotate(-24 496 280)"/></g>
+      <path d="M610 400 V220 M610 220 H650" fill="none" stroke="var(--brass)" stroke-width="2"/>
+    </svg>
+  </div>
+  <div class="controls">
+    <button class="gear" id="gear" type="button" aria-label="Turn the greenhouse gear"></button>
+    <div class="temp"><span id="temp">18</span>°<small>C</small></div>
+    <div class="readout">APERTURE <b id="aperture">00%</b><br>GEAR <b id="teeth">00</b> TEETH</div>
+    <div class="note">The brass hand opens the roof. The plants turn to follow.</div>
+  </div>
+</div>
+<script>
+const gear=document.getElementById('gear'),louvers=[...document.querySelectorAll('.louver')],plants=[...document.querySelectorAll('.plant')],beam=document.getElementById('beam'),temp=document.getElementById('temp'),aperture=document.getElementById('aperture'),teeth=document.getElementById('teeth'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let step=0,angle=0,ac=null;
+function render(){const openness=step/4;gear.style.transform='rotate('+angle+'deg)';louvers.forEach((l,i)=>l.style.transform='rotate('+((i===0||i===3)?-1:1)*openness*38+'deg)');beam.style.opacity=.13+openness*.42;beam.setAttribute('d','M'+(330-100-openness*80)+' 150 L'+(330+100+openness*80)+' 150 L'+(640+openness*20)+' 400 L'+(80-openness*20)+' 400 Z');plants.forEach((p,i)=>{p.classList.toggle('grown',openness>.15);p.style.transform='rotate('+((i-1)*openness*5)+'deg)'});temp.textContent=String(18+Math.round(openness*11));aperture.textContent=String(Math.round(openness*100)).padStart(2,'0')+'%';teeth.textContent=String(Math.round(angle)).padStart(2,'0')}
+function tick(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.setValueAtTime(240,t);o.frequency.exponentialRampToValueAtTime(120,t+.05);g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+.08);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.09)}
+function turn(dir){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();step=Math.max(0,Math.min(4,step+dir));angle+=dir*15;tick();render()}
+gear.addEventListener('click',()=>turn(step===4?-1:1));
+gear.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='Enter'||e.key===' '){e.preventDefault();turn(1)}if(e.key==='ArrowLeft'||e.key==='ArrowDown'){e.preventDefault();turn(-1)}});
+if(reduce){step=4;angle=60;render()}else{const start=performance.now();function opening(t){const k=Math.min(1,(t-start)/2400);step=Math.min(2,Math.floor(k*3));angle=k*30;render();if(k<1)requestAnimationFrame(opening);else{step=2;render()}}requestAnimationFrame(opening)}
+</script>
+</body>
+</html>

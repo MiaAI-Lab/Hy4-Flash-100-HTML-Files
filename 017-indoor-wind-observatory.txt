@@ -1,0 +1,14 @@
+TITLE
+Indoor Wind Observatory — Anemometer for Rooms That Pretend to Be Still
+
+PROMPT
+A calm instrument panel for wind that exists only because people move through rooms. Palette: powder-blue #DCE9F2 ground, deep petrol #1B3A4B type, one coral #E86B4C for moving air. A horizontal row of seven paper strips hangs from a brass rail near the top of the page, each a different length and width. Title “INDOOR WIND OBSERVATORY” in a narrow, widely spaced sans-serif at upper left, with a small subheading: “Recorded at the threshold of the east room, 11:04.” Moving the pointer creates a gust: nearby strips swing away with a spring-like delay, then overshoot and settle when the pointer stops. A live readout at lower left shows a value in “room-winds” from 0 to 9 and a one-word direction (“toward the kettle”, “from the door”). Clicking anywhere releases a short, sharper gust from that point; a thin coral arc briefly traces its path. Entrance: strips hang at rest, then a single unseen draft lifts the shortest one first and travels along the row. Signature moment: the strips settle independently at different rates, so the row continues moving after the pointer is still. No weather icons, no emoji, no glass. Reduced motion keeps strips vertical and updates the readout without swing.
+
+DESCRIPTION
+A physical-feeling spring simulation disguised as an instrument. Cursor motion becomes wind across a row of hanging paper strips, each with its own mass and damping.
+
+VISUAL TECHNIQUES
+requestAnimationFrame spring integration with per-strip stiffness, pointer velocity sampling, SVG arc for gust path, tabular numeric readout, custom cubic-bezier entrance, hairline instrument rules.
+
+INTERACTION MODEL
+Move the pointer to make wind; click for a sharper gust; keyboard users get a “release gust” button. Everything remains operable without motion.

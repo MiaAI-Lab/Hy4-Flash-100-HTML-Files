@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sea Glass Index — Cabinet of Found Translucency</title>
+<style>
+  :root{--sea:#D7E7DF;--deep:#274A45;--amber:#C08B4A;--cream:#F3F0E6}
+  *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--sea);color:var(--deep);font-family:"Courier New",Courier,monospace;overflow-x:hidden}
+  body{background-image:linear-gradient(90deg,rgba(39,74,69,.05) 1px,transparent 1px),radial-gradient(circle at 80% 10%,rgba(255,255,255,.5),transparent 35%);background-size:70px 100%,100% 100%;transition:background-color .6s ease}
+  body.amber-lit{background-color:#E3E5CF}
+  .shell{max-width:1600px;margin:auto;min-height:100vh;padding:clamp(18px,3vw,46px);display:grid;grid-template-columns:minmax(230px,30%) 1fr;gap:clamp(22px,4vw,64px);align-items:center}
+  .intro{border-right:1px solid rgba(39,74,69,.25);padding-right:clamp(16px,3vw,42px);animation:fade .9s cubic-bezier(.16,.85,.2,1) both}
+  @keyframes fade{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+  .code{font-size:9px;letter-spacing:.28em;text-transform:uppercase}
+  h1{font:400 clamp(42px,5.6vw,86px)/.88 Georgia,serif;letter-spacing:-.05em;margin:24px 0 18px}
+  h1 i{color:var(--amber)}
+  .intro p{font:400 clamp(14px,1.2vw,17px)/1.6 Georgia,serif;max-width:35ch}
+  .meta{margin-top:30px;font-size:10px;letter-spacing:.16em;line-height:1.9;color:#55706A}
+  .vitrine{position:relative;min-width:0;padding-top:30px}
+  .vitrine::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(#9C7443,#6F4E2D);box-shadow:0 12px 22px rgba(39,74,69,.14);transform:scaleX(0);transform-origin:left;animation:shelf .9s .15s cubic-bezier(.16,.85,.2,1) forwards}
+  @keyframes shelf{to{transform:scaleX(1)}}
+  .grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(6px,1vw,16px);padding-top:10px}
+  .item{margin:0;text-align:center;cursor:pointer;outline:none;position:relative}
+  .glassWrap{height:clamp(130px,22vh,230px);display:grid;place-items:end center;perspective:600px}
+  .glass{position:relative;width:76%;height:76%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.16,.9,.2,1);animation:drop .85s cubic-bezier(.2,1.3,.3,1) both;animation-delay:calc(.25s + var(--i)*.09s)}
+  @keyframes drop{from{opacity:0;transform:translateY(-70px) rotate(-8deg)}to{opacity:1;transform:none}}
+  .item:hover .glass,.item:focus .glass{transform:rotateY(-10deg) rotateZ(2deg) translateY(-4px)}
+  .item.flipped .glass{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid rgba(39,74,69,.4);box-shadow:inset 8px 10px 18px rgba(255,255,255,.45),inset -10px -12px 18px rgba(39,74,69,.18),0 14px 12px rgba(39,74,69,.13)}
+  .face::after{content:"";position:absolute;inset:8% 12%;border-top:2px solid rgba(255,255,255,.6);border-left:1px solid rgba(255,255,255,.35);transform:rotate(-14deg);border-radius:50%}
+  .back{transform:rotateY(180deg);display:grid;place-items:center;padding:10px;font:italic 10px/1.4 Georgia,serif;color:#E9F2EC;background:rgba(39,74,69,.82)}
+  .s1 .face{clip-path:polygon(18% 4%,72% 0,100% 28%,88% 88%,38% 100%,0 70%);background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(78,151,161,.55) 48%,rgba(39,74,69,.7))}
+  .s2 .face{clip-path:polygon(30% 0,88% 14%,100% 62%,68% 100%,12% 86%,0 30%);background:linear-gradient(130deg,rgba(255,255,255,.82),rgba(167,201,183,.58) 45%,rgba(71,123,105,.65))}
+  .s3 .face{clip-path:polygon(8% 22%,50% 0,96% 20%,84% 80%,40% 100%,0 76%);background:linear-gradient(160deg,rgba(255,255,255,.78),rgba(108,170,184,.5) 52%,rgba(42,92,105,.66))}
+  .s4 .face{clip-path:polygon(22% 2%,92% 12%,100% 56%,72% 100%,18% 88%,0 42%);background:linear-gradient(135deg,rgba(255,246,210,.88),rgba(192,139,74,.66) 50%,rgba(126,73,32,.7))}
+  .s5 .face{clip-path:polygon(12% 10%,66% 0,100% 42%,82% 92%,28% 100%,0 52%);background:linear-gradient(150deg,rgba(255,255,255,.77),rgba(150,183,169,.5) 46%,rgba(57,101,92,.7))}
+  .s6 .face{clip-path:polygon(20% 0,100% 18%,88% 70%,54% 100%,4% 82%,0 26%);background:linear-gradient(140deg,rgba(255,255,255,.82),rgba(207,177,151,.5) 48%,rgba(105,88,72,.66))}
+  .pin{width:6px;height:6px;border-radius:50%;background:var(--amber);position:absolute;left:50%;top:2px;transform:translateX(-50%);box-shadow:0 1px 2px rgba(0,0,0,.3);z-index:4}
+  figcaption{border-top:1px solid rgba(39,74,69,.4);padding-top:7px;margin-top:8px;position:relative}
+  figcaption b{display:block;font:italic 13px Georgia,serif;font-weight:400}
+  figcaption small{font-size:8px;letter-spacing:.14em;color:#55706A}
+  .spectrum{position:absolute;left:8%;right:8%;bottom:-8px;height:3px;opacity:0;transform:scaleX(.3);transition:opacity .35s ease,transform .5s cubic-bezier(.2,.85,.2,1);background:linear-gradient(90deg,#D84C3C,#E9A23B,#F2E36B,#62B581,#4E93C5,#8B6BB0)}
+  .item:hover .spectrum,.item:focus .spectrum{opacity:1;transform:scaleX(1)}
+  .item:nth-child(4) .spectrum{height:7px;bottom:-11px}
+  .item:focus-visible{outline:2px solid var(--amber);outline-offset:5px}
+  .caption{position:absolute;right:0;top:-24px;font-size:9px;letter-spacing:.22em;animation:fade 1s .8s both}
+  @media(max-width:900px){.shell{grid-template-columns:1fr;align-items:start}.intro{border-right:0;border-bottom:1px solid rgba(39,74,69,.25);padding:0 0 18px}h1{margin:14px 0}.intro p{max-width:60ch}.grid{grid-template-columns:repeat(3,1fr);row-gap:26px}}
+  @media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}.glassWrap{height:150px}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="intro">
+    <div class="code">Accession series 14 / Cabinet B</div>
+    <h1>SEA<br>GLASS<br><i>INDEX</i></h1>
+    <p>Six pieces of translucency recovered between tide marks. Each was tumbled, forgotten, and found again; none has been polished. The cabinet is arranged by the colour of light it remembers.</p>
+    <div class="meta">COLLECTOR: E. MARLOWE<br>RECORDED 1968–1974<br>WEIGHTS MEASURED DRY<br>NO SPECIMEN HAS BEEN CLEANED</div>
+  </section>
+  <section class="vitrine" aria-label="Six sea glass specimens">
+    <div class="caption">HOVER TO PASS LIGHT · CLICK TO TURN</div>
+    <div class="grid">
+      <figure class="item s1" style="--i:0" tabindex="0" data-note="Still warm from the foundry, they said."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>blue bottle shoulder</b><small>SG-01 · 18 G · 1968</small><div class="spectrum"></div></figcaption></figure>
+      <figure class="item s2" style="--i:1" tabindex="0" data-note="Found inside a crab shell, inexplicably."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>green medicine shard</b><small>SG-02 · 9 G · 1969</small><div class="spectrum"></div></figcaption></figure>
+      <figure class="item s3" style="--i:2" tabindex="0" data-note="A gull dropped it at my feet. I kept it."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>blue-green jar lip</b><small>SG-03 · 31 G · 1971</small><div class="spectrum"></div></figcaption></figure>
+      <figure class="item s4" style="--i:3" tabindex="0" data-note="From a lantern, or perhaps a bead."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>amber lantern piece</b><small>SG-04 · 22 G · 1972</small><div class="spectrum"></div></figcaption></figure>
+      <figure class="item s5" style="--i:4" tabindex="0" data-note="The chip on its edge is newer than the sea."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>clear window fragment</b><small>SG-05 · 14 G · 1973</small><div class="spectrum"></div></figcaption></figure>
+      <figure class="item s6" style="--i:5" tabindex="0" data-note="Said to have come from a railway signal."><span class="pin"></span><div class="glassWrap"><div class="glass"><div class="face"></div><div class="face back" data-back></div></div></div><figcaption><b>rose signal glass</b><small>SG-06 · 27 G · 1974</small><div class="spectrum"></div></figcaption></figure>
+    </div>
+  </section>
+</div>
+<script>
+(function(){
+  document.querySelectorAll('[data-back]').forEach(el=>{el.textContent=el.closest('.item').dataset.note;});
+  document.querySelectorAll('.item').forEach(item=>{
+    const flip=()=>item.classList.toggle('flipped');
+    item.addEventListener('click',flip);
+    item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}});
+    if(item.classList.contains('s4')){
+      item.addEventListener('pointerenter',()=>document.body.classList.add('amber-lit'));
+      item.addEventListener('pointerleave',()=>document.body.classList.remove('amber-lit'));
+      item.addEventListener('focus',()=>document.body.classList.add('amber-lit'));
+      item.addEventListener('blur',()=>document.body.classList.remove('amber-lit'));
+    }
+  });
+})();
+</script>
+</body>
+</html>

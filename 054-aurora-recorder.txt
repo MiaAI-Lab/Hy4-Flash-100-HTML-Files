@@ -1,0 +1,14 @@
+TITLE
+Aurora Recorder — A Magnetic Diary of Today
+
+PROMPT
+A near-black #0A1012 sky holding six slow ribbons of light in mint #79D8A5 and dusk pink #D98AB5. This is not a decorative aurora: the shape is seeded from today’s actual date — day, month, year, and the number of minutes since midnight — so it is different every visit. A thin cream coordinates strip along the bottom prints “LAT 68.9 / DATE 14.11.2026 / MINUTE 0431” and a draggable time scrub from 00:00 to 24:00. Dragging the scrub recomputes the sky for that minute; the ribbons twist and reorganise rather than fading out and back. A single line of data at left reads “Kp 5 — ACTIVE”. Entrance: ribbons draw from the left horizon like long-exposure film being pulled through a camera, then hold with a very slow breathing motion. Signature moment: the ribbons cross each other without blending; at crossings, the lower ribbon dims for one frame, like translucent tape. No emoji, no gradient-filled headlines, no glass. Reduced motion renders one still frame.
+
+DESCRIPTION
+A magnetic recorder that turns the current date and minute into a unique aurora. Drag the time strip and the ribbons rewrite themselves for that minute.
+
+VISUAL TECHNIQUES
+Canvas ribbon strips with layered alpha, date-seeded pseudo-random control points, scrub-driven interpolation, crossing-order shading, long-exposure entrance.
+
+INTERACTION MODEL
+Drag the time scrub or use arrow keys. A NOW button returns to the current minute.

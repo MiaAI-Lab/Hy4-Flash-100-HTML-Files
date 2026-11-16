@@ -1,0 +1,14 @@
+TITLE
+A Pharmacy of Rain — Dispensed by the Drop
+
+PROMPT
+A mineral-green #35594F apothecary cabinet with chalk #E6EDE5 labels and amber #E8B44A brass pulls. Eight small drawers form a strict grid; each is labelled with a specific rain: DRIZZLE FOR THE PATIENT, HARD RAIN FOR FORGETTING, RAIN BEFORE SNOW, SECOND-HAND RAIN, etc. Clicking a drawer slides it open and dispenses eleven amber drops into a hanging glass vial below, one at a time, with irregular beats. When the vial reaches the marked line, a printed prescription appears beside it: “Take three drops before answering a letter you have avoided.” A small sign at top reads “WE DO NOT SELL SUNSHINE.” Entrance: the drawers click shut in a quick staggered sequence from a slightly open position. Signature moment: the vial fills drop by drop and each drop briefly refracts the drawer’s label upside down. No emoji, no glassmorphism panels, no gradients on the cabinet. Reduced motion fills the vial instantly.
+
+DESCRIPTION
+An apothecary where the medicines are kinds of rain. Each drawer dispenses a measured dose into a vial, followed by a prescription for a small human difficulty.
+
+VISUAL TECHNIQUES
+CSS drawer slide with staggered entrance, animated drop trajectory, vial fill level with mask, refracted inverted label, engraved signage.
+
+INTERACTION MODEL
+Click drawers. Keyboard: drawers are buttons. A EMPTY VIAL control resets the dose and prescription.

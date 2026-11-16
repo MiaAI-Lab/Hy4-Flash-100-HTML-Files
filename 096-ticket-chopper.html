@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admit One — A Ticket Chopper That Makes Patterns</title>
+<style>
+:root{--ticket:#E7D9B8;--red:#B33A2B;--ink:#242321}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--ticket);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 28px;background-image:repeating-linear-gradient(90deg,rgba(231,217,184,.025) 0 1px,transparent 1px 6px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--red);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0;color:var(--ticket)}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.station{display:flex;gap:30px;height:calc(100vh - 110px);min-height:470px;align-items:center;justify-content:center}
+.bench{position:relative;width:min(720px,66vw);height:330px;background:#332F29;border:3px solid var(--red);box-shadow:inset 0 0 40px rgba(0,0,0,.5);overflow:hidden}
+.strip{position:absolute;left:0;top:96px;width:100%;height:132px;background:var(--ticket);border-top:2px dashed rgba(36,35,33,.4);border-bottom:2px dashed rgba(36,35,33,.4);display:flex;align-items:center;transition:transform .6s,opacity .4s;cursor:crosshair}
+.stub{flex:1;text-align:center;border-right:2px dashed rgba(36,35,33,.3);font:9px ui-monospace,Menlo,monospace;letter-spacing:.14em;color:var(--ink)}
+.stub b{display:block;font:400 22px Georgia,serif;margin-top:8px;color:var(--red)}
+.hole{position:absolute;top:38px;width:44px;height:44px;border-radius:50%;background:var(--ink);border:3px solid var(--red);transform:scale(0);transition:transform .22s cubic-bezier(.2,1.5,.3,1);pointer-events:none;box-shadow:inset 0 3px 6px rgba(0,0,0,.6)}
+.hole.show{transform:scale(1)}
+.chopper{position:absolute;left:50%;top:0;width:130px;height:96px;margin-left:-65px;transform-origin:50% 0;transition:transform .12s ease;cursor:pointer;z-index:4}
+.chopper.down{transform:translateY(48px)}
+.chopper:focus-visible{outline:2px dashed var(--ticket);outline-offset:4px}
+.blade{position:absolute;left:30px;top:0;width:70px;height:70px;background:var(--red);clip-path:polygon(0 0,100% 0,70% 100%,30% 100%);border-bottom:4px solid #7C2419}
+.handle{position:absolute;left:57px;top:-28px;width:16px;height:36px;background:var(--red);border-radius:8px}
+.panel{width:200px;flex:none;border:1px solid rgba(231,217,184,.35);padding:14px}
+.panel h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--red);margin:0 0 12px}
+.count{font:400 48px/1 Georgia,serif;color:var(--red)}
+.count small{font:9px ui-monospace,Menlo,monospace;color:var(--ticket)}
+.help{font:italic 12px/1.6 Georgia,serif;color:rgba(231,217,184,.65);margin-top:16px}
+@media(max-width:700px){body{padding:12px}.station{flex-direction:column}.bench{width:94vw;height:250px}.strip{top:70px;height:100px}.panel{width:auto}.count{font-size:30px}.meta{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Admit One</h1><span class="meta">CHOPPER No. 096 · ADMISSIONS DESK · NIGHT</span></header>
+<div class="station">
+ <div class="bench" id="bench"><div class="strip" id="strip"></div><div class="chopper" id="chopper" tabindex="0" role="button" aria-label="Punch the ticket"><div class="handle"></div><div class="blade"></div></div></div>
+ <div class="panel"><h2>ISSUED</h2><div class="count"><span id="count">001</span><small> TICKETS</small></div><div class="help">Click the strip to punch. Six holes and the next ticket feeds through.</div></div>
+</div>
+<script>
+const bench=document.getElementById('bench'),strip=document.getElementById('strip'),chopper=document.getElementById('chopper'),count=document.getElementById('count'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let issued=1,holes=[],ac=null;
+function fill(){strip.innerHTML='';for(let i=0;i<8;i++){const d=document.createElement('div');d.className='stub';d.innerHTML='ADMIT ONE<b>'+String(issued).padStart(3,'0')+'</b>';strip.appendChild(d)}}
+function snip(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();o.type='square';o.frequency.setValueAtTime(700,t);o.frequency.exponentialRampToValueAtTime(120,t+.04);f.type='highpass';f.frequency.value=200;g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.0001,t+.07);o.connect(f);f.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.08)}
+function toggle(){chopper.classList.add('down');setTimeout(()=>chopper.classList.remove('down'),120)}
+function punch(x){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();holes.push(x);snip();toggle();const h=document.createElement('div');h.className='hole';h.style.left=(x-22)+'px';strip.appendChild(h);if(!reduce)setTimeout(()=>h.classList.add('show'),40);else h.classList.add('show');if(holes.length>=6)setTimeout(next,650)}
+function next(){strip.style.transform='translateX(-110%)';strip.style.opacity='.2';setTimeout(()=>{issued++;count.textContent=String(issued).padStart(3,'0');holes=[];fill();strip.style.transition='none';strip.style.transform='translateX(110%)';void strip.offsetWidth;strip.style.transition='';strip.style.transform='translateX(0)';strip.style.opacity='1'},620)}
+strip.addEventListener('click',e=>{const r=strip.getBoundingClientRect();punch(Math.max(24,Math.min(r.width-24,e.clientX-r.left)))});
+chopper.addEventListener('click',e=>{e.stopPropagation();const r=bench.getBoundingClientRect();punch(r.width/2)});
+chopper.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();const r=bench.getBoundingClientRect();punch(r.width/2)}});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.body){e.preventDefault();const r=bench.getBoundingClientRect();punch(90+(holes.length%6)*(r.width-180)/5)}});
+fill();
+if(reduce){[.18,.36,.54].forEach(f=>punch(bench.clientWidth*f))}else{[.18,.36,.54].forEach((f,i)=>setTimeout(()=>punch(bench.clientWidth*f),450+i*760))}
+</script>
+</body>
+</html>

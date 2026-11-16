@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cartographer’s Mistake — A Map That Resents Correction</title>
+<style>
+:root{--paper:#E7E0CE;--ink:#1C2A33;--red:#C43F2F}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+#sheet{position:absolute;inset:0;background:var(--paper);clip-path:inset(0 0 100% 0);animation:unroll 1.15s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes unroll{to{clip-path:inset(0 0 0 0)}}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+h1{position:absolute;left:28px;top:22px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0;z-index:2}
+.count{position:absolute;right:26px;top:22px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.18em;z-index:2}
+footer{position:absolute;left:0;right:0;bottom:0;background:var(--paper);border-top:2px solid var(--ink);padding:14px 28px;display:flex;justify-content:space-between;gap:20px;align-items:center;font:italic 14px Georgia,serif;z-index:2}
+.pen{position:absolute;width:16px;height:16px;background:var(--red);border:2px solid var(--paper);border-radius:50% 50% 50% 0;transform:translate(-50%,-50%) rotate(-45deg);pointer-events:none;z-index:4;box-shadow:0 0 0 1px var(--red)}
+.hint{position:absolute;right:28px;bottom:58px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;z-index:2}
+@media(max-width:600px){h1{font-size:7px}.count{font-size:8px}footer{font-size:10px;padding:10px 14px}.hint{font-size:7px}}
+@media(prefers-reduced-motion:reduce){#sheet{clip-path:none;animation:none}}
+</style>
+</head>
+<body>
+<div id="sheet"><canvas id="c"></canvas><div class="pen" id="pen"></div></div>
+<h1>THE COAST OF NORTH<br>SURVEYED 1886 · CORRECTED CONTINUOUSLY</h1><div class="count">CORRECTIONS <span id="num">00</span></div>
+<div class="hint">DRAG THE RED PEN ALONG THE COAST</div>
+<footer><span>The coastline has been wrong since Tuesday. Please correct it.</span><span id="place">HARBOUR OF ALMOST</span></footer>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d'),pen=document.getElementById('pen'),num=document.getElementById('num'),place=document.getElementById('place'),sheet=document.getElementById('sheet');
+const names=['HARBOUR OF ALMOST','CAPE NOON','THE SEA OF NEARLY','LOW TIDE MUSEUM','POINT OF NO RETURN TODAY'];
+let W=0,H=0,dpr=1,pts=[],follow=[],scars=[],mx=.5,my=.5,down=false,corrections=0,straight=0,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){const r=c.getBoundingClientRect();dpr=devicePixelRatio||1;W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);if(!pts.length){for(let i=0;i<60;i++)pts.push({y:H*.12+i*(H*.76/59),x:(W*.46+Math.sin(i*.28)*44+Math.sin(i*.09)*70),v:0});follow=pts.map(p=>({x:p.x,v:0}))}placePen()}
+function placePen(){pen.style.left=mx*W+'px';pen.style.top=my*H+'px'}
+function loop(t){
+ ctx.clearRect(0,0,W,H);
+ ctx.strokeStyle='rgba(28,42,51,.16)';ctx.lineWidth=1;for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(W*.05+i*W*.14,0);ctx.lineTo(W*.05+i*W*.14,H);ctx.stroke();for(let j=0;j<9;j++){ctx.beginPath();ctx.moveTo(0,j*H/9);ctx.lineTo(W,j*H/9);ctx.stroke()}}
+ const px=mx*W,py=my*H;let maxMove=0;
+ pts.forEach((p,i)=>{const dy=p.y-py;const dist=Math.hypot(p.x-px,dy*.55);if(down&&dist<130){const f=(1-dist/130)*(p.x<px?-1:1)*7;p.v+=f;maxMove=Math.max(maxMove,Math.abs(f))}p.v+=(0-(p.x-(W*.46+Math.sin(i*.28)*44+Math.sin(i*.09)*70)))*-.008;p.v*=.78;p.x+=p.v;follow[i].v+=(p.x-follow[i].x)*.06;follow[i].v*=.82;follow[i].x+=follow[i].v});
+ if(straight>0){straight--;pts.forEach((p,i)=>p.x+=(W*.5-p.x)*.16)}
+ function stroke(arr,offset,alpha,width,color){ctx.strokeStyle=color;ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.beginPath();arr.forEach((p,i)=>{const x=p.x+offset+(p.y/H)*offset*.2;i?ctx.lineTo(x,p.y):ctx.moveTo(x,p.y)});ctx.stroke();ctx.globalAlpha=1}
+ stroke(follow,-46,.22,1,'#1C2A33');stroke(follow,-26,.32,1,'#1C2A33');stroke(pts,0,1,2.4,'#1C2A33');
+ scars=scars.filter(s=>s.life>0);scars.forEach(s=>{s.life-=.012;ctx.strokeStyle=`rgba(196,63,47,${s.life})`;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(s.x-10,s.y);ctx.lineTo(s.x+10,s.y+4);ctx.stroke()});
+ ctx.fillStyle='#1C2A33';ctx.font='10px ui-monospace,Menlo,monospace';ctx.globalAlpha=.7;ctx.fillText('THE WRONG SHORE',W*.12,H*.25);ctx.fillText('SOUNDINGS APPROXIMATE',W*.13,H*.68);ctx.globalAlpha=1;
+ window.__maxMove=maxMove;requestAnimationFrame(loop)
+}
+function correct(){corrections++;num.textContent=String(corrections).padStart(2,'0');place.textContent=names[(corrections-1)%names.length];scars.push({x:mx*W,y:my*H,life:1});if(corrections%5===0)straight=42}
+window.addEventListener('pointermove',e=>{mx=e.clientX/W;my=e.clientY/H;placePen()});
+window.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;down=true;mx=e.clientX/W;my=e.clientY/H;placePen()});
+window.addEventListener('pointerup',()=>{if(down&&(window.__maxMove||0)>1.5)correct();down=false});
+window.addEventListener('keydown',e=>{const step=e.shiftKey?.06:.02;if(e.key==='ArrowLeft')mx=Math.max(0,mx-step);else if(e.key==='ArrowRight')mx=Math.min(1,mx+step);else if(e.key==='ArrowUp')my=Math.max(0,my-step);else if(e.key==='ArrowDown')my=Math.min(1,my+step);else if(e.key==='Enter')correct();else return;e.preventDefault();placePen()});
+window.addEventListener('resize',resize);resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

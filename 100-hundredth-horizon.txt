@@ -1,0 +1,14 @@
+TITLE
+Hundredth Horizon — One Hundred Becomes a Sunrise
+
+PROMPT
+A closing card in cream #F7F0DF, black #1D1B19 and orange #E2642E. Large black numerals 100 stand on the page. On load the three numerals unfold into a long horizon line while an orange sun rises from behind it during the first three seconds. Clicking folds or unfolds the scene; dragging anywhere scrubs the transformation back and forth. No emoji, no landscape photograph, no purple.
+
+DESCRIPTION
+A closing card where the number 100 folds into a horizon and a rising sun.
+
+VISUAL TECHNIQUES
+SVG numeral strokes, morphing path geometry, scrub drag, CSS easing, Web Audio sun tone.
+
+INTERACTION MODEL
+Click to toggle, drag horizontally to scrub. Keyboard: Space toggles, arrows scrub. Reduced motion shows the finished sunrise.

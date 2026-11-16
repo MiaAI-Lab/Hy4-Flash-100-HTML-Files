@@ -1,0 +1,14 @@
+TITLE
+Ultramarine Sorting Office — A Parcel That Knows Its Address
+
+PROMPT
+A kinetic sorting floor in flat ultramarine #1D35A6, acid green #C8F23B and near-black #111317. No soft shadows, no glass: everything is a hard-edged graphic shape. At the top, a single input labelled “DESTINATION” accepts one word. Below, a conveyor belt carries parcels left to right; each parcel is a small acid-green square with a white letter. When a word is typed, a parcel is stamped with its first letter, travels along the belt, then drops from the correct chute into one of six labelled bins arranged along the bottom: NORTH, EAST, SALT, MILL, HARBOUR, RETURN. The chute flashes once and the parcel lands with a small mechanical bounce. Entrance: six empty bins snap into alignment and the belt starts moving before any input is given; three demo parcels with letters A, M and S are already in transit. Interaction: type any word; each keystroke launches one parcel; clicking a bin manually reroutes the next parcel to that bin. Signature moment: the parcel flips end-over-end as it leaves the belt, showing its address on both faces. Copy is specific and bureaucratic: “UNDELIVERABLE / RETURN TO SENDER / 42g”. Reduced motion moves parcels instantly to their bins.
+
+DESCRIPTION
+A small postal simulation where language becomes physical routing. Typing produces parcels; the sorting office decides where each one goes with satisfying mechanical certainty.
+
+VISUAL TECHNIQUES
+Canvas 2D agent loop with per-parcel state machine, high-contrast flat palette, DOM input and bin buttons, easing on flips and landing bounce, tabular label typography.
+
+INTERACTION MODEL
+Type to launch parcels; click a bin to override the next route. Keyboard focus stays usable throughout.

@@ -1,0 +1,14 @@
+TITLE
+Tachymeter 069 — An Instrument for the Speed of Attention
+
+PROMPT
+A black #16171A instrument page with one enormous steel #C7CBCD dial and a single orange #E17628 seconds hand. A tachymeter scale runs around the rim: 60, 120, 180, 240, 300. On load the needle performs a slow self-test sweep and settles at zero. Afterwards it tracks how fast the pointer moves across the page, easing toward each burst and leaving a fading orange trace behind its tip. The knurled bezel can be dragged clockwise or anticlockwise; it rotates the scale and shifts the reading by a small correction. Signature moment: a quick flick of the mouse makes the needle overshoot and the trace briefly loop like a skid mark. No emoji, no watch product photo, no glassmorphism.
+
+DESCRIPTION
+A watch dial that measures pointer speed, with a draggable bezel and a persistent orange trace from the needle tip.
+
+VISUAL TECHNIQUES
+SVG dial and generated tick scale, requestAnimationFrame needle physics, pointer velocity sampling, rotating bezel interaction, fading trace polyline.
+
+INTERACTION MODEL
+Move the pointer to drive the needle. Drag the outer bezel to rotate and correct the scale. Keyboard: arrow keys rotate the bezel. Reduced motion moves the needle directly without the trace.

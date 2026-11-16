@@ -1,0 +1,14 @@
+TITLE
+Emergency Band — A Radio Dial With Something Under the Static
+
+PROMPT
+An olive #56634B, cream #E6DDC8 and rust #B05C3B emergency radio dial. A long calibrated scale runs from 88 to 108 with a thin rust tuning needle and eleven numbered stations. On load the needle sweeps the whole band in the first three seconds and stops at 93.6, where a hidden Morse message begins to blink beneath the scale. Dragging the needle changes frequency; static hiss grows between stations and drops near them, while a small row of dots and dashes spells the call sign. Clicking a numbered station jumps there. No emoji, no speaker icon, no purple.
+
+DESCRIPTION
+A tuning dial that sweeps the band, then reveals a Morse call sign under the static.
+
+VISUAL TECHNIQUES
+Generated frequency ticks, draggable needle, Web Audio static and Morse oscillators, blinking dot-dash row, station lock indicator.
+
+INTERACTION MODEL
+Drag the dial or click a station number to tune. Keyboard: arrow keys step frequency, M toggles audio mute. Reduced motion starts locked at 93.6.

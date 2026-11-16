@@ -1,0 +1,14 @@
+TITLE
+Cardboard Cosmos — A Fold-Out Orrery
+
+PROMPT
+An imaginary mail-order paper orrery that arrives flat and folds itself into a model solar system. Palette: warm kraft #C99A63, ink #27323A, cream #F6EFE1 and a single coral #C65F45 for Mars. Design a tall editorial page with a fixed cardboard stage and a 240vh scroll track; scrolling is the folding mechanism. The top third carries a small stamped logo, the enormous Georgia title “CARDBOARD COSMOS”, a hand-numbered edition and a short product-copy paragraph written like a 1960s science catalogue. The stage shows a cream card plane with printed fold lines, die-cut tabs and seven paper planets mounted on curved kraft arms. As scroll progresses, each arm rotates from flat to upright with staggered timing, the central sun rises from a slot, and the whole assembly turns slightly in perspective. At 70% scroll the planets flatten back into a mailing carton, with a red “FRAGILE — OPEN ALONG THE SUN” stamp visible; at the end they spring open again. Typography: Georgia for display, Courier for catalogue data, no sans-serif. Motion must use a single scroll-driven parameter with custom easing, not a default scroll animation. Interaction: scroll or drag the vertical fold gauge on the right; hovering a planet shows a tiny spec label with diameter and postal surcharge. Signature moment: the final fold, where the sun tab slides through the slot and locks the assembled orrery with a satisfying 3D snap. Copy: invented planet facts, catalogue number 7-C, and precise assembly notes. No external images; all shapes built from CSS and inline SVG.
+
+DESCRIPTION
+A tactile paper-engineering fantasy in which the scroll bar becomes a pair of hands folding a cardboard solar system. The page begins as a flat printed sheet, assembles into a miniature orrery, collapses into a postable carton, then opens once more.
+
+VISUAL TECHNIQUES
+CSS 3D transforms driven by scroll progress, SVG die-cut planet artwork, kraft-paper texture from layered gradients, custom easing function in JavaScript, perspective and shadow craft, hover labels, reduced-motion state sequence.
+
+INTERACTION MODEL
+Scroll normally or drag the printed fold gauge; hover or focus a planet to inspect its label. Keyboard PageDown/PageUp and arrow keys work through the fold sequence. Reduced motion shows the fully assembled state with static labels.

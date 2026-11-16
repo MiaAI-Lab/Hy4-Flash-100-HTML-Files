@@ -1,0 +1,14 @@
+TITLE
+High-Tension Linework — A Surveyor's Panorama
+
+PROMPT
+A wide panoramic survey drawing, not a landscape photo. Ground is warm white #F4F2EB; ink is deep navy #142B3D with a single signal red #C7472B. Five overlapping mountain outlines occupy the middle of the page in flat vector shapes, each drawn with a different density of hatch marks (CSS repeating-linear-gradient or inline SVG patterns). At the top: small registration crosses, a scale bar, and the title “HIGH-TENSION LINEWORK” in spaced sans-serif capitals across one line. Beneath the ridges: five numbered peaks with exact invented names, elevations and one-sentence descriptions. Moving the pointer across the panorama moves a surveyor's vertical crosshair and updates a live readout of bearing and distance; the nearest peak's outline thickens and its hatch direction flips. Clicking a peak locks the readout and opens a short note at the bottom in a red-ruled margin. Signature moment: on load, the ridges draw themselves left to right with a single continuous pen stroke, then the hatch fills appear behind them. Copy must read like a field survey: “Kestrel Shoulder, 1,841 m — the last reliable cairn before the snow line”. No gradients on text, no cards, no icon fonts. Reduced motion shows the finished drawing.
+
+DESCRIPTION
+An interactive survey panorama in the language of old cartography. Pointer movement becomes a bearing measurement; peaks respond with changes to their drawn texture and supply precise, invented field notes.
+
+VISUAL TECHNIQUES
+Inline SVG polylines and pattern fills, SVG stroke-dasharray drawing animation, pointer-driven crosshair transform, nearest-point calculation, live aria-locked readout, exact two-colour plus red palette.
+
+INTERACTION MODEL
+Move across the drawing to measure; click a peak to lock a note; use peak buttons for keyboard access. All readouts update live.

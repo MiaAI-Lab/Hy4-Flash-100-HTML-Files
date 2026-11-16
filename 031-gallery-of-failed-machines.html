@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery of Failed Machines — A Museum of Almost</title>
+<style>
+:root{--wall:#6E2630;--brass:#C6A15B;--paper:#F1E7D2;--red:#B83B2E}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--wall);color:var(--paper);font-family:Arial,Helvetica,sans-serif;display:grid;grid-template-columns:minmax(220px,26vw) 1fr}
+aside{border-right:1px solid var(--brass);padding:clamp(22px,3vw,44px);display:flex;flex-direction:column;gap:18px}
+h1{font:400 clamp(22px,2.3vw,34px)/1.08 Georgia,serif;margin:0}
+.tag{font:italic 13px/1.5 Georgia,serif;margin:0;opacity:.75;max-width:26ch}
+.index{display:flex;flex-direction:column;gap:2px}
+button{background:transparent;color:var(--paper);border:0;border-bottom:1px solid rgba(241,231,210,.25);text-align:left;padding:10px 4px;font:10px/1.3 ui-monospace,Menlo,monospace;letter-spacing:.13em;cursor:pointer;opacity:0;animation:on .6s ease-out forwards;animation-delay:calc(var(--i)*.22s)}
+@keyframes on{to{opacity:1}}
+button:hover,button[aria-current=true]{color:var(--brass);border-bottom-color:var(--brass)}
+button:focus-visible{outline:2px solid var(--brass)}
+button span{opacity:.6;margin-left:8px}
+main{padding:clamp(18px,3vw,42px);display:grid;grid-template-rows:auto 1fr auto;gap:16px;min-width:0}
+.head{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--brass);padding-bottom:12px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em}
+.frame{position:relative;background:var(--paper);border:12px solid var(--brass);box-shadow:0 18px 40px rgba(0,0,0,.3);display:grid;place-items:center;min-height:0;overflow:hidden}
+.frame svg{width:100%;height:100%;max-height:58vh;display:block;stroke:var(--wall);fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.plaque{border-left:3px solid var(--brass);padding-left:16px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.plaque h2{font:400 clamp(20px,2.4vw,32px)/1.1 Georgia,serif;margin:0 0 6px}
+.plaque p{font:13px/1.5 Georgia,serif;margin:0;max-width:60ch;opacity:.85}
+.stamp{position:absolute;right:7%;bottom:8%;color:var(--red);border:4px double var(--red);padding:6px 12px;font:900 clamp(20px,3vw,42px)/1 Arial,sans-serif;letter-spacing:.15em;transform:rotate(-11deg) scale(1.5);opacity:0;pointer-events:none}
+.jammed .stamp{animation:stampIn .35s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes stampIn{to{opacity:.92;transform:rotate(-11deg) scale(1)}}
+.m-stair .stair{animation:climb 2s cubic-bezier(.3,.8,.3,1) forwards;transform-origin:320px 380px}
+@keyframes climb{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-54px) rotate(0)}100%{transform:translateY(-95px) rotate(19deg)}}
+.m-kettle .pour{animation:pour 2s ease-in forwards;transform-origin:390px 210px}
+@keyframes pour{0%,30%{transform:rotate(0)}100%{transform:rotate(72deg)}}
+.m-kettle .stream{stroke-dasharray:200;stroke-dashoffset:200;animation:stream .9s .7s linear forwards}
+@keyframes stream{to{stroke-dashoffset:0}}
+.m-pendulum .pend{animation:swing 2s cubic-bezier(.4,0,.6,1) forwards;transform-origin:400px 110px}
+@keyframes swing{0%{transform:rotate(-8deg)}30%{transform:rotate(34deg)}60%{transform:rotate(-46deg)}85%{transform:rotate(22deg)}100%{transform:rotate(0)}}
+.m-mirror .ghost{stroke-dasharray:260;stroke-dashoffset:260;animation:write 1.7s .2s steps(26) forwards}
+@keyframes write{to{stroke-dashoffset:0}}
+.m-ladder .ladder{animation:fold 2s cubic-bezier(.5,0,.4,1) forwards;transform-origin:400px 400px}
+@keyframes fold{0%{transform:rotate(0) scaleY(1)}55%{transform:rotate(22deg) scaleY(1)}100%{transform:rotate(92deg) scaleY(.28)}}
+@media(max-width:760px){body{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{border-right:0;border-bottom:1px solid var(--brass)}.index{flex-direction:row;flex-wrap:wrap}.head{font-size:7px}.plaque{grid-template-columns:1fr}.frame svg{max-height:45vh}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;opacity:1}.stamp{opacity:.9;transform:rotate(-11deg) scale(1)}}
+</style>
+</head>
+<body>
+<aside><h1>Gallery of<br>Failed Machines</h1><p class="tag">Five machines that worked perfectly right up to the part that mattered.</p><div class="index" id="index" role="tablist" aria-label="Exhibits"></div></aside>
+<main><div class="head"><span>MUSEUM OF ALMOST / 1894–1971</span><span id="year">EXHIBIT 01</span></div><div class="frame" id="frame"><div class="stamp">JAM</div></div><div class="plaque"><div><h2 id="title">The Self-Winding Stair</h2><p id="reason">Patent 1894. It climbed two steps using its own weight, then realised there was no third.</p></div><div class="head" style="border:0" id="no">01 / 05</div></div></main>
+<script>
+const index=document.getElementById('index'),frame=document.getElementById('frame'),title=document.getElementById('title'),reason=document.getElementById('reason'),year=document.getElementById('year'),no=document.getElementById('no');
+const items=[
+ {t:'The Self-Winding Stair',y:'1894',r:'It climbed two steps using its own weight, then realised there was no third.',c:'m-stair',s:`<g class="stair"><path d="M180 400 H280 V350 H360 V300 H450 V250 H540"/><path d="M180 400 L540 250"/><circle cx="280" cy="350" r="8"/><circle cx="450" cy="300" r="8"/><path d="M530 250 l-20 -4 m20 4 l-12 15"/><path d="M160 440 h420"/></g>`},
+ {t:'The Perpetual Kettle',y:'1907',r:'It boiled by pouring itself into the fire that boiled it. The fire agreed, once.',c:'m-kettle',s:`<g class="kettle"><path d="M260 250 h180 q30 0 30 30 v90 q0 30 -30 30 h-180 q-30 0 -30 -30 v-90 q0 -30 30 -30Z"/><path d="M320 250 q30 -60 80 0"/><path d="M470 300 q60 0 50 55"/><path class="pour" d="M470 300 q80 -20 90 40"/><path class="stream" d="M560 340 q10 60 -30 95"/><path d="M480 450 l20 -30 l20 30 l20 -30 l20 30"/><circle cx="500" cy="400" r="12"/></g>`},
+ {t:'The Ambitious Pendulum',y:'1931',r:'Asked to keep time, it tried to keep the whole afternoon instead.',c:'m-pendulum',s:`<g class="pendulum"><path d="M400 110 H540 M400 110 v30"/><g class="pend"><path d="M400 140 L400 390"/><circle cx="400" cy="410" r="34"/><path d="M400 410 m-24 0 a24 24 0 0 0 48 0" opacity=".4"/></g><path d="M280 390 H540"/><path d="M300 170 h40 m-20 -20 v40"/></g>`},
+ {t:'The Honest Mirror',y:'1958',r:'Reflected only what the viewer had actually said, which was nothing.',c:'m-mirror',s:`<g class="mirror"><rect x="260" y="120" width="280" height="300" rx="0"/><path d="M300 180 h200 M300 230 h150"/><path class="ghost" d="M300 320 q40 -40 80 0 t80 0 t80 0"/><path d="M400 440 v40 M330 480 h140"/><path d="M250 130 l-30 -30 m360 30 l30 -30"/></g>`},
+ {t:'The Ladder to Yesterday',y:'1971',r:'Folded neatly into a small object that could not be unfolded on a Tuesday.',c:'m-ladder',s:`<g class="ladder"><path d="M330 430 L420 110 M470 430 L530 110"/><path d="M350 370 h100 M366 310 h100 M382 250 h100 M398 190 h100"/><path d="M250 450 h350"/><path d="M540 120 l-18 -4 m18 4 l-12 14"/></g>`}
+];
+items.forEach((it,i)=>{const b=document.createElement('button');b.type='button';b.style.setProperty('--i',i);b.setAttribute('role','tab');b.innerHTML=String(i+1).padStart(2,'0')+' &nbsp;'+it.t.toUpperCase()+' <span>'+it.y+'</span>';b.addEventListener('click',()=>select(i));b.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();select((i+1)%5);index.children[(i+1)%5].focus()}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();select((i+4)%5);index.children[(i+4)%5].focus()}});index.appendChild(b)});
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function select(i){const it=items[i];[...index.children].forEach((b,k)=>b.setAttribute('aria-current',k===i));title.textContent=it.t;reason.textContent=it.r;year.textContent='EXHIBIT '+String(i+1).padStart(2,'0')+' · '+it.y;no.textContent=String(i+1).padStart(2,'0')+' / 05';frame.className='frame '+it.c;const old=frame.querySelector('svg');if(old)old.remove();const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 700 520');s.innerHTML=it.s;frame.insertBefore(s,frame.firstChild);if(reduce)frame.classList.add('jammed');else setTimeout(()=>{if(frame.classList.contains(it.c))frame.classList.add('jammed')},2100)}
+select(0);
+</script>
+</body>
+</html>

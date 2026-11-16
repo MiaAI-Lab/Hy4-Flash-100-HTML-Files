@@ -1,0 +1,14 @@
+TITLE
+Ticket to Nowhere — One Journey, Two Halves
+
+PROMPT
+A butter-yellow #F0D77A ticket printed in black #201E1A with red #BA312A cancellations. It is a full-width rail ticket reading “SINGLE / TO NOWHERE / NO RETURN”, with a perforated stub on the right. A small instruction, set in the ticket’s own typography, says: “TEAR HERE — THE OTHER HALF KEEPS GOING.” Dragging across the perforation tears the ticket with a fine jagged edge; the right half slides away a few centimetres, leaving the left half behind. The remaining stub shows a serial number that changes on every visit and a tiny printed line: “VALID UNTIL YOU STOP WONDERING.” Clicking the stub flips it over to reveal a handwritten note on the back: “I took this instead of the train. I have never regretted the platform.” Entrance: the ticket prints itself from left to right, then the red cancellation stamp lands with a hard offset. Signature moment: the tear follows the pointer with a paper-fibre edge rather than a straight cut, and the two halves separate at different speeds. No emoji, no glass, no gradients. Reduced motion tears instantly.
+
+DESCRIPTION
+A physical-feeling ticket you can tear in two. The half that stays behind has a different serial number each visit and a small note on the back.
+
+VISUAL TECHNIQUES
+CSS clip-path jagged tear, pointer-driven split, paper grain, offset rubber-stamp cancellation, flip card back face.
+
+INTERACTION MODEL
+Drag across the perforation to tear. Click the remaining stub to flip. A RESET control restores the ticket.

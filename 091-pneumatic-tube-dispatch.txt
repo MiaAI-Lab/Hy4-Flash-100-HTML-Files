@@ -1,0 +1,14 @@
+TITLE
+Pneumatic Dispatch — A Tube That Carries Paper
+
+PROMPT
+A copper #B86B4B, cream #F0E6D2 and ink #2D2A26 pneumatic dispatch diagram. Four brass stations are linked by a single looping glass tube drawn as a thin double line. On load a capsule whistles from the first station to the second in the opening three seconds, leaving a faint trail in the tube. Clicking another station sends the capsule there along the arc; a small dispatch log records the route and a paper slip appears at the receiving station. No emoji, no office photograph, no purple.
+
+DESCRIPTION
+A pneumatic tube network that sends a capsule between brass stations on click.
+
+VISUAL TECHNIQUES
+SVG path animation with getPointAtLength, double-line tube, capsule drag, dispatch log, Web Audio whistle.
+
+INTERACTION MODEL
+Click a station to send the capsule there. Keyboard: 1–4 select stations, Space resends. Reduced motion moves the capsule instantly.

@@ -1,0 +1,14 @@
+TITLE
+Railway Model — The Line That Chooses
+
+PROMPT
+A sage #8DA98D tabletop model railway seen from above, with cream #EFE9D8 ballast lines and a brick #A95643 single carriage. Two routes diverge at a working set of points: the ORCHARD LINE curves around a small painted orchard; the HARBOUR LINE runs toward a drawn quay with three cranes. One tiny lever beside the points can be clicked. The train travels continuously; when the lever is thrown, the switch blade swings across and the train takes the newly selected line without ever stopping — its nose follows the new rails while its tail is still on the old ones. A printed timetable at the lower left reads: “08:10 ORCHARD / 08:26 HARBOUR / 08:41 EITHER”. Entrance: rails draw from the station outward, then the carriage rolls in from the left edge. Signature moment: the carriage’s two bogies briefly follow different paths during the switch, so the whole train bends through the junction. No emoji, no glass, no gradients. Reduced motion switches at the next station stop.
+
+DESCRIPTION
+A tabletop railway with a working points lever. Throw the switch and the moving train bends through the junction onto a different line without breaking stride.
+
+VISUAL TECHNIQUES
+SVG paths with getPointAtLength, two-bogie train following offset positions, animated switch blade, railway timetable typography.
+
+INTERACTION MODEL
+Click the lever or use the left/right arrow keys. Space toggles routes. The button shows which line is selected.

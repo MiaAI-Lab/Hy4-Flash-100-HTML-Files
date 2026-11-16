@@ -1,0 +1,14 @@
+TITLE
+Moth Lamp — A Small Study in Bad Decisions
+
+PROMPT
+A warm dark #171512 field with cream #F1E4C8 type and brown #7B5A36 moths. The pointer is a lamp: a small ring with four measured tick marks, not a glow blob. On load thirty moths spiral in from the margins and begin orbiting the ring, wings opening and closing at slightly different rates. Move the pointer and they follow with a delayed, imperfect turn; occasionally two moths touch, and for half a second both wings flash gold with an eye-pattern that was invisible before. Tap to scatter them; they regroup. Signature moment: the secret gold pattern appearing only in the instant of collision. No emoji, no particle-network aesthetic, no purple.
+
+DESCRIPTION
+An ambient flock of moths that treats the pointer as a lamp, revealing hidden wing patterns when two moths meet.
+
+VISUAL TECHNIQUES
+Canvas steering simulation with delay and wander, sine-driven wing flapping, collision-triggered pattern flash, drawn lamp reticle.
+
+INTERACTION MODEL
+Move the pointer over the field to lead the moths; click or tap to scatter; use the SCATTER button for keyboard access. Reduced motion draws a still flock.

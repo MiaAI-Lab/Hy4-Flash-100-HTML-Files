@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cargo Bike Route — Seven Minutes Across the Shipping Quarter</title>
+<style>
+:root{--cream:#EFE9D9;--teal:#2E726D;--orange:#DD6A36}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:#244B48;font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+h1{font:400 clamp(22px,3vw,36px)/1 Georgia,serif;margin:0}
+.sub{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-top:9px}
+.map{margin-top:18px;border:1px solid #244B48;max-width:1100px;position:relative;background:#E9E1CE}
+svg{display:block;width:100%;height:auto;touch-action:none}
+.street{fill:none;stroke:rgba(36,75,72,.16);stroke-width:8}
+.thin{fill:none;stroke:rgba(36,75,72,.28);stroke-width:1}
+.route{fill:none;stroke:var(--teal);stroke-width:4;stroke-linecap:round;stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 2.4s cubic-bezier(.3,.1,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.travelled{fill:none;stroke:var(--orange);stroke-width:6;stroke-linecap:round}
+.rider{cursor:grab;outline:none}.rider:active{cursor:grabbing}.rider:focus-visible circle:first-child{stroke:var(--orange);stroke-width:4}
+.maplabel{font:9px ui-monospace,Menlo,monospace;letter-spacing:.14em;fill:#244B48;opacity:.55}
+.dash{position:absolute;top:14px;right:14px;background:var(--cream);border:1px solid #244B48;padding:10px 14px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.12em;min-width:190px}
+.dash b{font:400 24px Georgia,serif;color:var(--orange);letter-spacing:0}
+.dash span{display:block;color:#4F7773;margin-top:4px}
+.hint{margin-top:14px;font:italic 13px Georgia,serif;color:#5A7B76}
+@media(max-width:600px){body{padding:14px}.dash{font-size:8px;min-width:150px}.dash b{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.route{animation:none;stroke-dashoffset:0}*{transition:none!important}}
+</style>
+</head>
+<body>
+<h1>Seven Minutes Across the Shipping Quarter</h1><div class="sub">ROUTE 065 · COURIER NO. 12 · DEPARTURE 07:42</div>
+<div class="map" id="map"><svg id="svg" viewBox="0 0 1100 560" aria-label="Cargo bike delivery map"><g id="streets"></g><g class="maplabel" id="labels"></g><path class="route" id="route" d="M90 470 C190 470 210 410 280 400 S390 430 440 360 S500 260 590 272 S700 340 760 270 S850 160 940 180 S1020 210 1040 120"/><path class="travelled" id="travelled"/><g class="rider" id="rider" tabindex="0" role="slider" aria-label="Position along delivery route" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><circle r="22" fill="transparent"/><circle cx="-15" cy="10" r="9" fill="none" stroke="#244B48" stroke-width="2.4"/><circle cx="17" cy="10" r="9" fill="none" stroke="#244B48" stroke-width="2.4"/><path d="M-15 10 L-2 -9 L13 10 M-2 -9 L-11 -9 M13 10 L20 -4 L27 -4" fill="none" stroke="var(--orange)" stroke-width="3" stroke-linejoin="round"/><rect x="-14" y="-18" width="20" height="10" fill="var(--orange)"/><path d="M27 -4 l6 -13" stroke="#244B48" stroke-width="2"/></g></svg><div class="dash">ELAPSED <b id="clock">00</b> MIN<span id="street">FERRY LANE</span></div></div>
+<div class="hint">Drag the bicycle — or click the route — and the journey redraws behind it.</div>
+<script>
+const svg=document.getElementById('svg'),route=document.getElementById('route'),travelled=document.getElementById('travelled'),rider=document.getElementById('rider'),clock=document.getElementById('clock'),streetEl=document.getElementById('street'),streets=document.getElementById('streets'),labels=document.getElementById('labels'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const streetsData=[[0,120,1100,120],[0,250,1100,250],[0,470,1100,470],[160,0,160,560],[420,0,420,560],[700,0,700,560],[950,0,950,560]];
+streetsData.forEach(s=>{const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','street');p.setAttribute('d','M'+s[0]+' '+s[1]+' L'+s[2]+' '+s[3]);streets.appendChild(p)});
+[['FERRY RAMP',40,105],['MARKET ROW',190,235],['CANAL WALK',445,235],['COLD STORE',650,105],['LONG RISE',715,455],['DEPOT COURT',960,350]].forEach(l=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',l[1]);t.setAttribute('y',l[2]);t.textContent=l[0];labels.appendChild(t)});
+const segments=[[0,.17,'FERRY LANE'],[.17,.36,'MARKET ROW'],[.36,.56,'CANAL BRIDGE'],[.56,.76,'COLD STORE ROAD'],[.76,1,'DEPOT COURT']];
+let p=0,len=route.getTotalLength(),dragging=false;
+function draw(){const pt=route.getPointAtLength(p*len),pt2=route.getPointAtLength(Math.min(len,p*len+3)),ang=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;travelled.setAttribute('d',route.getAttribute('d'));travelled.style.strokeDasharray=(p*len)+' '+len;rider.setAttribute('transform','translate('+pt.x+' '+pt.y+') rotate('+ang+')');rider.setAttribute('aria-valuenow',Math.round(p*100));clock.textContent=String(Math.round(p*24)).padStart(2,'0');streetEl.textContent=(segments.find(s=>p>=s[0]&&p<=s[1])||segments[4])[2]}
+function nearest(clientX,clientY){const m=svg.getScreenCTM().inverse(),q=svg.createSVGPoint();q.x=clientX;q.y=clientY;const loc=q.matrixTransform(m);let best=0,bd=1e9;for(let i=0;i<=500;i++){const t=i/500,a=route.getPointAtLength(t*len),d=(a.x-loc.x)**2+(a.y-loc.y)**2;if(d<bd){bd=d;best=t}}return best}
+function setFromEvent(e){p=Math.max(0,Math.min(1,nearest(e.clientX,e.clientY)));draw()}
+svg.addEventListener('pointerdown',e=>{dragging=true;svg.setPointerCapture(e.pointerId);setFromEvent(e)});
+svg.addEventListener('pointermove',e=>{if(dragging)setFromEvent(e)});
+svg.addEventListener('pointerup',()=>dragging=false);
+rider.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowUp'){p=Math.min(1,p+.02);draw();e.preventDefault()}if(e.key==='ArrowLeft'||e.key==='ArrowDown'){p=Math.max(0,p-.02);draw();e.preventDefault()}});
+addEventListener('resize',()=>{len=route.getTotalLength();draw()});
+if(reduce){p=.37;draw()}else{const t0=performance.now();(function ride(t){const q=Math.min(1,(t-t0)/2400);p=.37*(1-Math.pow(1-q,3));draw();if(q<1)requestAnimationFrame(ride)})(t0)}
+</script>
+</body>
+</html>

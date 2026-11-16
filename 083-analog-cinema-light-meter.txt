@@ -1,0 +1,14 @@
+TITLE
+Exposure No. 083 — An Analog Cinema Light Meter
+
+PROMPT
+An amber #D98F36, near-black #181512 and cream #F1E3C8 cinema instrument. A large analog needle gauge sits above a six-blade mechanical iris. Moving the pointer across the gauge makes the needle twitch in proportion to speed and the exposure numbers change from f/2 to f/16. Clicking the iris snaps the shutter open or closed with a soft click; when open, a warm beam of light crosses the gauge. On load the needle sweeps the full arc once, then settles at f/5.6 while the iris breathes half-open. The page should feel like a handheld meter in a dark screening room. No emoji, no camera photograph, no purple.
+
+DESCRIPTION
+A cinema light meter whose needle follows pointer speed and whose iris opens on click.
+
+VISUAL TECHNIQUES
+SVG gauge arc and generated ticks, needle transform, CSS six-blade iris, pointer velocity smoothing, shutter click audio.
+
+INTERACTION MODEL
+Move the pointer over the gauge to change the reading; click the iris or press Space to toggle it. Keyboard: arrow keys nudge the needle. Reduced motion fixes the needle at f/5.6.

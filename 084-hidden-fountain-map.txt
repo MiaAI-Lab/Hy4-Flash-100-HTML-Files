@@ -1,0 +1,14 @@
+TITLE
+The Fountain Under the Grid — A Hidden Water Map
+
+PROMPT
+A sage #7C9C8B, parchment #E8E2CE and dark green #273A31 survey map of an imaginary garden. A strict grid of empty squares hides a branching water channel. On load, a first trickle draws itself from the centre in the opening three seconds. Clicking squares reveals more of the buried channel with a drawn line and a faint water sound; clicking dry earth leaves a small stamped X. When enough of the network is found, a fountain rises in the central square and a compass rose turns to point at the source. No emoji, no satellite map, no purple.
+
+DESCRIPTION
+A survey grid where clicking squares reveals a buried water network and finally a fountain.
+
+VISUAL TECHNIQUES
+SVG grid, per-cell path segments, stroke-dash reveal animation, rotating compass rose, Web Audio water plinks, stamped dry marks.
+
+INTERACTION MODEL
+Click squares to dig; the compass button rotates the map by 45 degrees. Keyboard: arrows move a focus square, Enter digs, R rotates. Reduced motion reveals the full network and fountain immediately.

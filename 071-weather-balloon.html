@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weather Balloon 07 — A Paper Observatory Ascending</title>
+<style>
+:root{--sky:#ACD0DF;--red:#C04B3C;--cream:#F2EAD8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--sky);color:#27424F;font-family:Arial,Helvetica,sans-serif}
+body{padding:24px 28px}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #27424F;padding-bottom:10px}
+h1{font:400 clamp(21px,3vw,34px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.wrap{display:grid;grid-template-columns:1fr 260px;gap:24px;margin-top:18px;max-width:1200px}
+.chart{position:relative;border:1px solid #27424F;background:var(--cream);height:560px}
+canvas{width:100%;height:100%;display:block}
+.ruler{margin-top:14px;display:flex;align-items:center;gap:14px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:26px;background:transparent;cursor:ew-resize}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:#27424F}
+input[type=range]::-moz-range-track{height:2px;background:#27424F}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--red);border:3px solid var(--cream);box-shadow:0 0 0 1px var(--red);margin-top:-7px}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--red);border:3px solid var(--cream);box-shadow:0 0 0 1px var(--red)}
+input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.alt{min-width:86px;text-align:right;color:var(--red)}
+.log{border:1px solid #27424F;padding:14px;height:560px;overflow:auto;background:rgba(242,234,216,.4)}
+.log h2{font:9px ui-monospace,Menlo,monospace;letter-spacing:.2em;margin:0 0 12px;font-weight:400;color:var(--red)}
+.row{width:100%;text-align:left;background:none;border:0;border-top:1px solid rgba(39,66,79,.25);padding:10px 0;cursor:pointer;color:inherit;font:inherit}
+.row:hover,.row:focus-visible{background:rgba(192,75,60,.1);outline:none}
+.row b{display:block;font:400 16px Georgia,serif}
+.row span{font:9px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#58707B}
+@media(max-width:800px){body{padding:14px}.wrap{grid-template-columns:1fr}.chart{height:440px}.log{height:auto}.ruler{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Balloon 07: paper observatory</h1><span class="meta">FLIGHT 071 · LAUNCH 04:12 · MAX 32 KM</span></header>
+<div class="wrap"><div><div class="chart" id="chart"><canvas id="cv"></canvas></div><div class="ruler"><span>0 KM</span><input id="alt" type="range" min="0" max="32000" step="100" value="0" aria-label="Altitude in metres"><span>32 KM</span><b class="alt" id="altText">0.0 KM</b></div></div><div class="log"><h2>ASCENT LOG · CLICK TO JUMP</h2><div id="rows"></div></div></div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),chart=document.getElementById('chart'),alt=document.getElementById('alt'),altText=document.getElementById('altText'),rows=document.getElementById('rows'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const log=[
+ [0,'Launch · 04:12','Field 3, north fence. Instrument: folded paper, pencil, one thermometer.'],
+ [5000,'Cumulus deck','Cloud base at 1,900 m. Balloon expands visibly. Pencil writes badly.'],
+ [12000,'Jet stream','Wind 41 m/s from the west. Observatory turns slowly on its cord.'],
+ [19000,'Radiosonde silence','No signal for six minutes. Temperature −61 °C. Paper stiffens.'],
+ [27000,'Black sky',' Horizon below. The sun is still on the envelope.'],
+ [32000,'Burst','Record recovered in a ploughed field, 38 km from launch.']
+];
+log.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b.className='row';b.innerHTML='<b>'+l[0]+' KM · '+l[1]+'</b><span>'+l[2]+'</span>';b.addEventListener('click',()=>{alt.value=l[0]*1000;setAlt()});rows.appendChild(b)});
+let w=0,h=0,windPhase=0;
+function resize(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function drift(a){return Math.sin(a/5200)*.09+Math.sin(a/1700+1)*.035}
+function ptFor(a){const y=h-24-(a/32000)*(h-64),x=w*.32+drift(a)*w*.3+a/32000*w*.12;return{x,y}}
+function setAlt(){altText.textContent=(+alt.value/1000).toFixed(1)+' KM';windPhase=1}
+function frame(t){ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(39,66,79,.14)';ctx.lineWidth=1;for(let i=0;i<=8;i++){const y=24+i*(h-48)/8;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(w-20,y);ctx.stroke();ctx.fillStyle='rgba(39,66,79,.55)';ctx.font='9px ui-monospace,Menlo,monospace';ctx.fillText((32-i*4)+' km',6,y+3)}for(let i=0;i<=6;i++){const x=40+i*(w-60)/6;ctx.beginPath();ctx.moveTo(x,24);ctx.lineTo(x,h-24);ctx.stroke()}
+ const a=+alt.value;
+ ctx.beginPath();for(let s=0;s<=a;s+=200){const p=ptFor(s);s===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)}ctx.setLineDash([4,5]);ctx.strokeStyle='#27424F';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
+ [0,5000,12000,19000,27000,32000].forEach(k=>{const p=ptFor(k),on=k<=a;ctx.fillStyle=on?'#C04B3C':'rgba(39,66,79,.3)';ctx.beginPath();ctx.arc(p.x,p.y,3,0,6.3);ctx.fill();if(on&&k>0&&a-k<5000){const len=Math.min(1,windPhase)*(k===12000?110:55),dir=k>12000?1:-1;ctx.strokeStyle='rgba(192,75,60,.75)';ctx.beginPath();ctx.moveTo(p.x,p.y-18);ctx.lineTo(p.x+dir*len,p.y-18);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x+dir*len,p.y-18);ctx.lineTo(p.x+dir*(len-9),p.y-23);ctx.lineTo(p.x+dir*(len-9),p.y-13);ctx.closePath();ctx.fillStyle='rgba(192,75,60,.75)';ctx.fill()}});
+ const p=ptFor(a);ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle='#C04B3C';ctx.beginPath();ctx.ellipse(0,-17,17,21,0,0,6.3);ctx.fill();ctx.strokeStyle='#8E2F25';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,4);ctx.lineTo(-8,17);ctx.moveTo(0,4);ctx.lineTo(8,17);ctx.stroke();ctx.fillStyle='#F2EAD8';ctx.strokeStyle='#27424F';ctx.beginPath();ctx.moveTo(-7,17);ctx.lineTo(7,17);ctx.lineTo(4,30);ctx.lineTo(-4,30);ctx.closePath();ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(0,18);ctx.lineTo(0,29);ctx.moveTo(-7,24);ctx.lineTo(6,24);ctx.stroke();ctx.restore();windPhase*=.965;requestAnimationFrame(frame)}
+resize();setAlt();requestAnimationFrame(frame);addEventListener('resize',resize);alt.addEventListener('input',setAlt);
+if(!reduce){const t0=performance.now();(function climb(t){const q=Math.min(1,(t-t0)/3400);alt.value=Math.round(32000*(1-Math.pow(1-q,2)));setAlt();if(q<1)requestAnimationFrame(climb)})(t0)}
+</script>
+</body>
+</html>

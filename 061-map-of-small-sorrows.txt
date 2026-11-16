@@ -1,0 +1,14 @@
+TITLE
+Map of Small Sorrows — A City Measured in Tiny Losses
+
+PROMPT
+A dusty-blue #7A91A3 city map on cream #F0E9DA paper, drawn as thin streets and a single river. Seven coral #C96F61 pins mark places where something small was lost: a glove on a tram, a library book returned late, a bench where a friendship ended without an argument, a key dropped down a drain, a birthday candle never blown out, a letter posted unaddressed, a lamp switched off for the last time. Hovering a pin tears a small cream paper note from the map and shows the story in two precise sentences; moving away lets the note fall back. A scale reads “1 CM = ONE THING YOU DID NOT SAY”. Entrance: streets draw themselves in a quick left-to-right sweep, then pins drop in with tiny staggered bounces. Signature moment: the note unfolds from the pin rather than appearing as a floating card, with a jagged paper edge made in CSS. No emoji, no glass, no gradients. Reduced motion shows notes on click instead of hover.
+
+DESCRIPTION
+An emotional atlas where each pin is a small, specific loss. Hover to tear a note from the map and read what happened there.
+
+VISUAL TECHNIQUES
+SVG street grid and river, staggered pin drops, torn-paper clip-path notes, hover state tied to pin position, atlas typography.
+
+INTERACTION MODEL
+Hover or focus a pin to reveal its note. Click pins in reduced-motion mode. Keyboard: pins are buttons.

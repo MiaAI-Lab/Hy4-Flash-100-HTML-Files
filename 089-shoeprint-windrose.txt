@@ -1,0 +1,14 @@
+TITLE
+Where the Wind Walked — A Shoeprint Windrose
+
+PROMPT
+A sand #D8C4A0, charcoal #30322F and chalk #F5EEE0 compass floor. A chalk windrose is drawn on the ground with eight spokes. Instead of an arrow, the prevailing wind is recorded as pairs of drawn shoeprints: on load a trail of six prints appears from the centre toward north, each landing with a small puff of dust. Clicking N, NE, E, SE, S, SW, W or NW lays a fresh trail in that direction, alternating left and right feet, while the old trails fade to faint chalk. No emoji, no footprints photograph, no purple.
+
+DESCRIPTION
+A compass rose where wind direction is recorded as trails of drawn shoeprints.
+
+VISUAL TECHNIQUES
+SVG compass rose, generated sole shapes with alternating offsets, sequential landing animation, dust puff particles, chalk-fade trails.
+
+INTERACTION MODEL
+Click a direction label to lay a trail; press arrow keys or 1–8 to choose directions. Reduced motion shows the north trail immediately without dust.

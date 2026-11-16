@@ -1,0 +1,14 @@
+TITLE
+Hourglass Type — Letterforms Full of Sand
+
+PROMPT
+A charcoal #1E1C19 field holding four enormous sand-coloured #D7B878 letters: H O U R. Each letter is an hourglass: sand grains collect in its upper half and fall through the counters and narrow waists into the lower half. Teal #2E6A65 marks the thin glass outline around each letter. A metal hinge at the top lets the whole word be flipped; clicking FLIP rotates the word 180 degrees with a heavy, slow motion, and the sand that had settled at the bottom begins falling upward through the letters as if gravity had reversed. A small counter reads “SAND REMAINING 74%”. Entrance: letters fill from empty, grain by grain, in a rapid rush that slows to a trickle. Signature moment: during the flip, grains briefly hang motionless in the centre of each letter before choosing a new direction. No emoji, no glassmorphism panels, no gradient text. Reduced motion shows a still half-filled word.
+
+DESCRIPTION
+Four letters that are also hourglasses. Flip the word and the sand hangs, then falls the other way through the counters.
+
+VISUAL TECHNIQUES
+Canvas particle system, offscreen canvas text mask, flip transform, gravity reversal with momentary suspension, live percentage counter.
+
+INTERACTION MODEL
+Click FLIP or the word itself. Space flips. Keyboard focus on the word.

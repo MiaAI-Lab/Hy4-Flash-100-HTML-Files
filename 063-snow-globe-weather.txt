@@ -1,0 +1,14 @@
+TITLE
+Snow Globe Weather — A Storm That Agrees to Settle
+
+PROMPT
+A pale blue #C6DFEA weather station page with a single large glass globe, white #F7F8F4 rim, and a tiny red #B8433B-roofed village inside. On load the globe is in whiteout: hundreds of flakes spin in a hard clockwise storm and the village is invisible. Over four seconds the wind drops in steps, flakes settle along a drawn snowbank, and the village appears with lit square windows. A red tab beneath the globe says SHAKE THE WEATHER; dragging across the globe also restarts the storm. A small report changes from WHITEOUT to LIGHT FALL to CLEAR. Signature moment: the transition from chaotic particle system to a perfectly still illustration, earned by watching the snow find the ground. No emoji, no generic gradient hero.
+
+DESCRIPTION
+A shakeable snow globe whose violent storm settles into a precise little winter landscape.
+
+VISUAL TECHNIQUES
+Canvas particle simulation with damping and settling, SVG village inside circular clip, staged weather-report typography, pointer drag physics.
+
+INTERACTION MODEL
+Click the red tab or drag the globe to shake. Reduced motion begins settled and shake simply toggles the report.

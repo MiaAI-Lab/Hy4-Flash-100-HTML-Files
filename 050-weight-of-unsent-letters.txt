@@ -1,0 +1,14 @@
+TITLE
+The Weight of Unsent Letters — A Postal Balance
+
+PROMPT
+A paper #F0E9DA desk with ink #2E2C29 rules and a single red wax #8C2F2A seal. At left, a stack of five unsent envelopes, each addressed in a different hand: “TO THE VERSION OF ME WHO STAYED”, “TO M., AFTER THE RAIN”, “TO THE LANDLADY, EXPLAINING THE PIANO”, etc. At right, a brass balance scale drawn in thin ink lines, its left pan empty. Dragging an envelope to the pan makes the beam tilt by an amount proportional to the letter’s secret weight (from 12 g to 140 g), and a small counter prints “TOTAL: 012 G / THREE LETTERS STILL HELD”. Dropping two envelopes on the pan stacks them with a slight, satisfying settle. Clicking an envelope opens it: a short, specific unsent letter in a serif hand, with the wax seal cracking into two halves. Entrance: envelopes slide in from the left edge and come to rest with tiny rotations; the balance settles after them. Signature moment: the balance beam overshoots, springs back and holds the exact angle while the pan jitters for a moment under the new weight. No emoji, no glass, no gradients on the paper. Reduced motion places envelopes without animation.
+
+DESCRIPTION
+Five letters were never posted. Each has a weight the postal service would not recognize. Place them on a balance and read what they said.
+
+VISUAL TECHNIQUES
+Drag-and-drop envelopes, spring-animated balance beam, stack offsets, wax seal splitting, handwritten-style labels, paper grain.
+
+INTERACTION MODEL
+Drag envelopes to the pan. Click an envelope to read it. Keyboard: envelopes focusable; Enter reads, Space places on scale.

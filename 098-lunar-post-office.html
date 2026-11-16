@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lunar Post Office — Letters for the Far Side</title>
+<style>
+:root{--night:#0D0E10;--cream:#ECE4D1;--gold:#C7A35C}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--night);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 28px;background-image:radial-gradient(circle at 75% 25%,rgba(199,163,92,.09),transparent 40%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(236,228,209,.35);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.scene{position:relative;height:calc(100vh - 100px);min-height:470px;margin-top:8px;border:1px solid rgba(236,228,209,.2);background-image:radial-gradient(circle at 20% 80%,rgba(236,228,209,.06),transparent 35%)}
+.moon{position:absolute;right:9%;top:9%;width:90px;height:90px;border-radius:50%;background:var(--gold);box-shadow:0 0 50px rgba(199,163,92,.4),inset -14px -8px 0 rgba(13,14,16,.2)}
+.moon:after{content:"";position:absolute;left:22px;top:18px;width:18px;height:18px;border-radius:50%;background:rgba(13,14,16,.12);box-shadow:34px 12px 0 -5px rgba(13,14,16,.1),12px 42px 0 -6px rgba(13,14,16,.12)}
+.env{position:absolute;left:50%;top:55%;width:260px;height:165px;margin:-82px 0 0 -130px;background:var(--cream);border:1px solid #B7AC91;cursor:grab;touch-action:none;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.env:active{cursor:grabbing}.env:focus-visible{outline:2px dashed var(--gold);outline-offset:8px}
+.flap{position:absolute;inset:0;background:linear-gradient(135deg,#F5EEDF 0 49%,#D8CDB4 51% 100%);clip-path:polygon(0 0,100% 0,50% 62%)}
+.fold{position:absolute;inset:0;clip-path:polygon(0 100%,50% 42%,100% 100%);border-top:1px solid rgba(13,14,16,.3)}
+.addr{position:absolute;left:20px;top:78px;font:italic 12px/1.35 Georgia,serif;color:#49443A}
+.stamp{position:absolute;width:38px;height:44px;background:var(--gold);border:2px solid var(--night);box-shadow:0 0 0 2px var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 0,4px 4px,4px 40px,34px 40px,34px 4px);display:flex;align-items:center;justify-content:center;color:var(--night);font:9px ui-monospace,Menlo,monospace;pointer-events:none;transition:opacity .3s}
+.seal{position:absolute;right:16px;top:12px;width:46px;height:46px;border-radius:50% 48% 52% 45%;background:var(--gold);border:2px solid #8D6C32;opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s;box-shadow:inset 0 0 0 4px rgba(13,14,16,.18)}
+.seal.show{opacity:1;transform:scale(1)}
+.seal:after{content:"M";position:absolute;inset:0;display:grid;place-items:center;font:400 20px Georgia,serif;color:#6D5227}
+.caption{position:absolute;left:14px;bottom:12px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:rgba(236,228,209,.6)}
+@media(max-width:600px){body{padding:12px}.env{width:200px;height:126px}.addr{font-size:9px}.moon{width:60px;height:60px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Lunar Post Office</h1><span class="meta">SORTING ROOM No. 098 · NIGHT MAIL</span></header>
+<div class="scene" id="scene">
+ <div class="moon"></div>
+ <div class="env" id="env" tabindex="0" role="button" aria-label="Draggable letter"><div class="flap"></div><div class="fold"></div><div class="addr">TO THE FAR SIDE,<br>VIA THE THIRD QUARTER.</div><div class="seal" id="seal"></div></div>
+ <div class="caption">THREE STAMPS · ONE SEAL · ONE MOON</div>
+</div>
+<script>
+const scene=document.getElementById('scene'),env=document.getElementById('env'),seal=document.getElementById('seal'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let x=0,y=0,ax=0,ay=0,dragging=false,sx=0,sy=0,ox=0,oy=0,phase=0,stamps=[];
+for(let i=0;i<3;i++){const s=document.createElement('div');s.className='stamp';s.textContent=['1¢','2¢','3¢'][i];scene.appendChild(s);stamps.push(s)}
+function place(){env.style.transform='translate('+x+'px,'+y+'px)'}
+function tick(t){if(!dragging){phase=t/1000;const tx=Math.cos(phase*1.5)*120,ty=Math.sin(phase*1.5)*75;ax+=(tx-ax)*.08;ay+=(ty-ay)*.08}const r=env.getBoundingClientRect(),sr=scene.getBoundingClientRect();stamps.forEach((s,i)=>{const px=r.left-sr.left+r.width*.72+ax*Math.cos(i*2.1+phase*.2)-10,py=r.top-sr.top+r.height*.2+ay*Math.sin(i*2.1+phase*.2)-12;s.style.transform='translate('+px+'px,'+py+'px)';s.style.opacity=phase>2.8?0:1});seal.classList.toggle('show',phase>2.6);requestAnimationFrame(tick)}
+env.addEventListener('pointerdown',e=>{dragging=true;sx=e.clientX;sy=e.clientY;ox=x;oy=y;env.setPointerCapture(e.pointerId);phase=0;seal.classList.remove('show')});
+env.addEventListener('pointermove',e=>{if(!dragging)return;x=ox+e.clientX-sx;y=oy+e.clientY-sy;place()});
+env.addEventListener('pointerup',()=>{dragging=false;sx=0;sy=0});
+env.addEventListener('keydown',e=>{const d=18;if(e.key==='ArrowLeft')x-=d;else if(e.key==='ArrowRight')x+=d;else if(e.key==='ArrowUp')y-=d;else if(e.key==='ArrowDown')y+=d;else if(e.key===' '){phase=0;seal.classList.remove('show')}else return;e.preventDefault();place()});
+if(reduce){phase=3;seal.classList.add('show');stamps.forEach(s=>s.style.opacity=0);place()}else requestAnimationFrame(tick);
+</script>
+</body>
+</html>

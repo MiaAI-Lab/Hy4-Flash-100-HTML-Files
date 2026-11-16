@@ -1,0 +1,14 @@
+TITLE
+Null Moon — A Phase Roulette
+
+PROMPT
+A black-stone lunar roulette for an imaginary calendar with twenty-nine named nights. The entire page is a single object in a near-black field: #0B0B0C background, ivory #EDE7D8 moon, brass #C8A45D ticks and numerals. Build a large circular wheel of engraved notches around a central moon disk. The wheel is the primary interface; dragging around it rotates through the phases, and releasing snaps to the nearest of 29 detents with a visible mechanical shudder. The moon itself is drawn with SVG: an ivory disk partially covered by a dark disk that slides across it, producing correct crescent, quarter, gibbous and full silhouettes. Typography: tiny tracked Courier labels around the rim, one enormous Georgia numeral for the night, small italic phase name below. The entrance should feel like a heavy wheel settling into place: a 900ms cubic-bezier rotation overshoot, the brass ticks appearing in sequence, then the moon glow fading up. Hovering a notch previews the phase name; dragging updates the number and the terminator. Keyboard left/right moves one night. Signature moment: the detent snap—when released, the wheel makes a tiny overshoot and the brass pointer rings once before locking. Copy: names such as Ash Moon, Thin Ferry, Half House, Full Lantern, no instructions beyond a small rim engraving “TURN THE NIGHT”.
+
+DESCRIPTION
+A tactile, monolithic moon-phase selector that behaves like a precision instrument carved from obsidian. It turns a familiar astronomical cycle into a satisfying mechanical object with twenty-nine distinct stops.
+
+VISUAL TECHNIQUES
+SVG circles and masking for lunar terminator, generated radial tick marks, CSS radial-gradient stone texture, custom spring easing, pointer-angle math, keyboard accessibility, reduced-motion still mode.
+
+INTERACTION MODEL
+Drag the wheel or use arrow keys to move between nights; hover notches to preview names; release to snap to one of 29 detents. No sound is used.

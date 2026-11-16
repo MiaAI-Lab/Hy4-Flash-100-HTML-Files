@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Tidal Bell — A Bell That Rings for Water</title>
+<style>
+:root{--slate:#5A6B70;--brass:#C6A15B;--foam:#E8E4D8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--slate);color:var(--foam);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:22px 26px;background-image:linear-gradient(180deg,rgba(232,228,216,.08),transparent 50%)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(232,228,216,.45);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.harbour{position:relative;height:calc(100vh - 100px);min-height:470px;margin-top:8px}
+svg{width:100%;height:100%;display:block}
+.wall{fill:#435357;stroke:rgba(232,228,216,.4);stroke-width:2}
+.water{fill:rgba(88,120,129,.75);stroke:var(--foam);stroke-width:2}
+.wave{fill:none;stroke:rgba(232,228,216,.6);stroke-width:2;animation:wave 3s ease-in-out infinite alternate}
+@keyframes wave{to{transform:translateX(30px)}}
+.bell{transform-origin:300px 96px;transition:transform .3s cubic-bezier(.3,1.4,.4,1)}
+.bell.ring{transform:rotate(13deg)}
+.mark{cursor:pointer;stroke:var(--foam);stroke-width:2}
+.mark:hover,.mark:focus-visible{stroke:var(--brass);stroke-width:4;outline:none}
+.mlabel{fill:rgba(232,228,216,.7);font:11px ui-monospace,Menlo,monospace;pointer-events:none}
+.mlabel.active{fill:var(--brass)}
+.hud{position:absolute;left:8px;top:8px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em;line-height:1.9}
+.hud b{color:var(--brass);font-weight:400}
+.note{position:absolute;right:10px;bottom:12px;font:italic 13px Georgia,serif;color:rgba(232,228,216,.75)}
+@media(max-width:600px){body{padding:12px}.hud{font-size:7px}.note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>The Tidal Bell</h1><span class="meta">HARBOUR No. 097 · BELL RINGS AT EACH METRE</span></header>
+<div class="harbour">
+ <svg viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
+  <rect x="0" y="0" width="1000" height="520" fill="rgba(20,38,42,.25)"/>
+  <path class="wall" d="M60 500 V150 H150 V110 H450 V150 H540 V500 Z"/>
+  <path d="M150 110 H450 V150 H150 Z" fill="rgba(198,161,91,.15)" stroke="var(--brass)"/>
+  <line x1="300" y1="96" x2="300" y2="150" stroke="var(--brass)" stroke-width="3"/>
+  <g class="bell" id="bell"><path d="M268 152 Q300 118 332 152 L340 190 H260 Z" fill="var(--brass)" stroke="#8A6C35" stroke-width="2"/><circle cx="300" cy="198" r="8" fill="#8A6C35"/></g>
+  <g id="waterGroup"><path class="water" id="water" d=""/><path class="wave" id="wave" d=""/></g>
+  <g id="marks"></g>
+ </svg>
+ <div class="hud">TIDE <b id="level">0.0</b> M<br>LAST STRIKE <b id="strike">—</b><br>BELLS <b id="bells">00</b></div>
+ <div class="note">Click a metre mark. The water will answer for you.</div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',marks=document.getElementById('marks'),water=document.getElementById('water'),wave=document.getElementById('wave'),bell=document.getElementById('bell'),levelEl=document.getElementById('level'),strike=document.getElementById('strike'),bells=document.getElementById('bells'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let tide=0,target=0,lastCross=0,ringCount=0,ac=null;
+const yFor=v=>490-v*62;
+for(let i=0;i<=5;i++){const y=yFor(i),l=document.createElementNS(NS,'line');l.setAttribute('x1',540);l.setAttribute('x2',1000);l.setAttribute('y1',y);l.setAttribute('y2',y);l.setAttribute('class','mark');l.setAttribute('tabindex','0');l.dataset.i=i;marks.appendChild(l);const t=document.createElementNS(NS,'text');t.setAttribute('x',552);t.setAttribute('y',y-8);t.setAttribute('class','mlabel');t.textContent=i+' M';marks.appendChild(t)}
+function ring(n){if(ac&&ac.state==='running'){const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(220+n*20,t);o.frequency.exponentialRampToValueAtTime(110+n*10,t+1.1);g.gain.setValueAtTime(.11,t);g.gain.exponentialRampToValueAtTime(.0001,t+1.4);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+1.5)}bell.classList.add('ring');setTimeout(()=>bell.classList.remove('ring'),260);strike.textContent=n+' M';bells.textContent=String(++ringCount).padStart(2,'0')}
+function render(){const y=yFor(tide);water.setAttribute('d','M0 '+y+' Q250 '+(y-12)+' 500 '+y+' T1000 '+y+' V520 H0 Z');wave.setAttribute('d','M0 '+(y+16)+' q60 -12 120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0');levelEl.textContent=tide.toFixed(1);[...marks.querySelectorAll('.mark')].forEach(m=>m.nextSibling.classList.toggle('active',+m.dataset.i===Math.round(tide)))}
+function move(){tide+=(target-tide)*.035;const cross=Math.floor(tide);if(cross>lastCross){for(let n=lastCross+1;n<=cross;n++)ring(n);lastCross=cross}else if(cross<lastCross){for(let n=lastCross;n>cross;n--)ring(n-1);lastCross=cross}render();if(!reduce)requestAnimationFrame(move)}
+function setLevel(i){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();target=Math.max(0,Math.min(5,i))}
+marks.addEventListener('click',e=>{if(e.target.dataset.i!==undefined)setLevel(+e.target.dataset.i)});
+marks.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.i!==undefined){e.preventDefault();setLevel(+e.target.dataset.i)}});
+document.addEventListener('keydown',e=>{if(/^[0-5]$/.test(e.key))setLevel(+e.key);if(e.key==='ArrowUp')setLevel(Math.round(target)+1);if(e.key==='ArrowDown')setLevel(Math.round(target)-1)});
+render();
+if(reduce){tide=target=3;lastCross=3;render()}else{const start=performance.now();function rise(t){const k=Math.min(1,(t-start)/2700);tide=k*2.35;const cross=Math.floor(tide);if(cross>lastCross){for(let n=lastCross+1;n<=cross;n++)ring(n);lastCross=cross}render();if(k<1)requestAnimationFrame(rise);else{target=2.35;move()}}requestAnimationFrame(rise)}
+</script>
+</body>
+</html>

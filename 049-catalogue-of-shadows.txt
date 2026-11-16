@@ -1,0 +1,14 @@
+TITLE
+A Catalogue of Shadows — Objects Present by Absence
+
+PROMPT
+A warm grey #D9D2C2 catalogue page with ink #2A2926 typography and rust #A33B2C folio marks. Six objects are represented only by their cast shadows on a plain wall: a kettle, a chair, a key, a bicycle, a feather, a ladder. Each shadow is a flat ink silhouette with a fine hatch texture. A small lamp icon in the upper right follows the pointer horizontally, and every shadow leans away from it: near the lamp a shadow is short and steep; far away it stretches and skews. Clicking a shadow gives it a rust outline and reveals a catalogue entry beneath: “OBJECT 04 / BICYCLE — Owned by someone who left in a hurry. The front wheel was removed so it could fit under a bed.” Entrance: the lamp switches on, shadows grow from their anchor points one at a time. Signature moment: dragging the lamp across the page makes all six shadows turn together as if a single sun were moving. No emoji, no glass, no gradients. Reduced motion keeps shadows static but click still reveals entries.
+
+DESCRIPTION
+A product catalogue that shows only shadows. A movable lamp changes every silhouette at once, and each click tells the story of the absent object.
+
+VISUAL TECHNIQUES
+CSS skewed silhouettes with transform-origin at floor line, pointer-tracked lamp, SVG hatch pattern clip, staggered shadow growth, catalogue typography.
+
+INTERACTION MODEL
+Move pointer to move the lamp and lean shadows. Click a shadow to open its entry. Keyboard: arrows move lamp, Enter opens focused shadow.

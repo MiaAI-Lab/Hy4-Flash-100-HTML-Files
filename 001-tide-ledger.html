@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tide Ledger — Port of St. Oriel</title>
+<style>
+  :root{--paper:#F3EBD8;--ink:#17333A;--brass:#B08A44;--hair:rgba(23,51,58,.22);--red:#A34B38}
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+  body{font-family:"Courier New",Courier,monospace;overflow-x:hidden;
+    background-image:radial-gradient(circle at 18% 12%,rgba(176,138,68,.09),transparent 34%),radial-gradient(circle at 83% 86%,rgba(23,51,58,.06),transparent 40%),repeating-linear-gradient(0deg,transparent 0 3px,rgba(23,51,58,.018) 3px 4px)}
+  .sheet{max-width:1600px;margin:auto;padding:clamp(14px,2.6vw,38px);min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:12px}
+  header{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:10px}
+  .kicker{font-size:10px;letter-spacing:.34em;text-transform:uppercase}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(42px,8.2vw,118px);line-height:.82;margin:8px 0 0;letter-spacing:-.055em;color:transparent;-webkit-text-stroke:1.4px var(--ink);text-shadow:1px 1px 0 rgba(176,138,68,.35)}
+  header aside{text-align:right;font-size:10px;line-height:1.65;letter-spacing:.12em;padding-bottom:4px}
+  .live{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--ink);color:var(--ink);font:inherit;font-size:10px;letter-spacing:.16em;padding:7px 10px;cursor:pointer}
+  .live:hover,.live:focus-visible{background:var(--ink);color:var(--paper);outline:none}
+  .live i{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(163,75,56,.18)}
+  .chart{position:relative;min-height:430px;height:min(68vh,760px);border:1px solid var(--ink);overflow:hidden;background:rgba(255,252,244,.28)}
+  svg{display:block;width:100%;height:100%}
+  .measure-line,.hist-line{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.5s cubic-bezier(.16,.84,.22,1) forwards}
+  .hist-line:nth-child(2){animation-delay:.12s}.hist-line:nth-child(3){animation-delay:.2s}.hist-line:nth-child(4){animation-delay:.28s}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  #waterBody{opacity:0;animation:flood 1.6s .35s cubic-bezier(.2,.8,.2,1) forwards;transform-origin:50% 100%}
+  @keyframes flood{from{opacity:0;transform:scaleY(.72)}to{opacity:1;transform:scaleY(1)}}
+  .hist{cursor:help}.hist line{transition:stroke-width .25s ease,stroke .25s ease}.hist:hover line,.hist:focus line{stroke:var(--red);stroke-width:2}
+  .hist text{font:11px "Courier New",monospace;letter-spacing:.08em;fill:var(--ink)}
+  .hist:hover text,.hist:focus text{fill:var(--red)}
+  .fine{stroke:var(--hair);stroke-width:1;fill:none}
+  .bold{stroke:var(--ink);stroke-width:1.6;fill:none}
+  .mono{font:11px "Courier New",monospace;letter-spacing:.1em;fill:var(--ink)}
+  .small{font-size:9px}.serif{font-family:Georgia,serif}
+  #note{font-family:Georgia,serif;font-size:14px;font-style:italic}
+  footer{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:end;border-top:1px solid var(--hair);padding-top:10px;font-size:10px;letter-spacing:.12em}
+  footer .readings{display:flex;gap:26px;justify-content:center;flex-wrap:wrap}
+  footer b{font-weight:400;color:var(--red);font-size:18px;letter-spacing:0}
+  footer .right{text-align:right}
+  .hint{color:var(--brass);white-space:nowrap}
+  @media (max-width:700px){header{grid-template-columns:1fr}header aside{text-align:left;display:flex;flex-wrap:wrap;gap:10px;align-items:center}h1{font-size:clamp(38px,13vw,72px)}.chart{height:58vh;min-height:360px}footer{grid-template-columns:1fr;gap:8px}footer .readings{justify-content:space-between}footer .right{text-align:left}.hint{white-space:normal}}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div>
+      <div class="kicker">Hydrographic office · sheet 07 · revised 1911</div>
+      <h1>TIDE LEDGER</h1>
+    </div>
+    <aside>
+      <div>51° 42′ N &nbsp; / &nbsp; 003° 18′ W</div>
+      <div>PORT OF ST. ORIEL — INNER REACH</div>
+      <button class="live" id="liveBtn" type="button"><i></i> LIVE TIME</button>
+    </aside>
+  </header>
+
+  <div class="chart" id="chart" tabindex="0" role="application" aria-label="Tide chart. Drag horizontally or use arrow keys to scrub through the day.">
+    <svg viewBox="0 0 1200 680" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#17333A" stop-opacity=".20"/>
+          <stop offset="1" stop-color="#17333A" stop-opacity=".72"/>
+        </linearGradient>
+        <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+          <path d="M0 0V8" stroke="#17333A" stroke-opacity=".13" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <g id="scene">
+        <rect x="0" y="0" width="1200" height="680" fill="url(#hatch)" opacity=".55"/>
+        <g class="fine">
+          <path class="measure-line" d="M60 80H1140M60 140H1140M60 200H1140M60 260H1140M60 320H1140M60 380H1140M60 440H1140M60 500H1140M60 560H1140"/>
+          <path d="M140 60V620M340 60V620M540 60V620M740 60V620M940 60V620M1140 60V620"/>
+        </g>
+        <path d="M0 615 Q80 570 154 590 T310 566 Q370 520 430 548 Q490 576 540 538 L540 680H0Z" fill="#17333A" opacity=".9"/>
+        <path d="M0 633 Q120 594 210 620 T410 590 Q470 560 540 586 L540 680H0Z" fill="#B08A44" opacity=".25"/>
+        <path d="M340 560V480h74v80M356 480v-28h42v28M420 500h100v12H420z" fill="none" stroke="#17333A" stroke-width="2"/>
+        <path d="M305 560h150l-18 18H323z" fill="#17333A" opacity=".75"/>
+        <path d="M620 560V430h18v130M586 452h66l-12 14h-42z" fill="none" stroke="#17333A" stroke-width="2"/>
+        <path d="M638 430V380" stroke="#17333A" stroke-width="2"/>
+        <circle cx="638" cy="374" r="7" fill="#A34B38"/>
+
+        <g class="hist" tabindex="0" role="button" aria-label="1846 tide line, 3.8 metres"><line class="hist-line" x1="60" y1="200" x2="1140" y2="200" stroke="#B08A44" stroke-width="1.2" stroke-dasharray="3 7"/><text x="72" y="192">1846 · SUPERIOR 3.81 M</text></g>
+        <g class="hist" tabindex="0" role="button" aria-label="1902 tide line, 3.2 metres"><line class="hist-line" x1="60" y1="266" x2="1140" y2="266" stroke="#B08A44" stroke-width="1.2" stroke-dasharray="3 7"/><text x="72" y="258">1902 · 3.20 M</text></g>
+        <g class="hist" tabindex="0" role="button" aria-label="1953 tide line, 2.6 metres"><line class="hist-line" x1="60" y1="330" x2="1140" y2="330" stroke="#B08A44" stroke-width="1.2" stroke-dasharray="3 7"/><text x="72" y="322">1953 · 2.64 M</text></g>
+        <g class="hist" tabindex="0" role="button" aria-label="1978 tide line, 2.1 metres"><line class="hist-line" x1="60" y1="398" x2="1140" y2="398" stroke="#B08A44" stroke-width="1.2" stroke-dasharray="3 7"/><text x="72" y="390">1978 · 2.09 M</text></g>
+
+        <path id="waterBody" d="M60 470 Q300 455 540 470 T1020 470 H1140 V680 H60Z" fill="url(#waterGrad)"/>
+        <path id="surface" d="M60 470 Q300 455 540 470 T1020 470 H1140" fill="none" stroke="#17333A" stroke-width="2.4"/>
+
+        <g class="fine bold">
+          <path d="M1090 80V560"/>
+          <g id="gaugeTicks"></g>
+        </g>
+        <path id="marker" d="M1072 300h42l-9 8h-24z" fill="#A34B38"/>
+        <line id="markerLine" x1="1090" y1="304" x2="824" y2="304" stroke="#A34B38" stroke-width="1" stroke-dasharray="4 6"/>
+        <text class="mono small" x="962" y="72" transform="translate(0,0)">METRES ABOVE CHART DATUM</text>
+        <text class="mono small" x="70" y="648">DRAG THE HOUR →</text>
+        <text class="mono small" x="70" y="92">WEST BANK / SOUNDING IN METRES</text>
+        <text id="note" class="serif" x="70" y="126">The harbor keeps its own time; the ledger merely follows.</text>
+      </g>
+    </svg>
+  </div>
+
+  <footer>
+    <div>STATION 07 · NEAP RANGE 2.10 M · SPRING RANGE 3.84 M</div>
+    <div class="readings"><span>TIME <b id="timeOut">00:00</b></span><span>HEIGHT <b id="heightOut">0.00 M</b></span><span>STATE <b id="stateOut">RISING</b></span></div>
+    <div class="right hint">DRAG · ← → KEYS · LIVE</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const svgNS='http://www.w3.org/2000/svg';
+  const ticks=document.getElementById('gaugeTicks');
+  for(let i=0;i<=12;i++){
+    const y=560-i*40;
+    const l=document.createElementNS(svgNS,'path');
+    l.setAttribute('d',`M1090 ${y}h${i%2?10:20}`);
+    l.setAttribute('stroke','#17333A');l.setAttribute('stroke-width',i%2?1:1.6);
+    ticks.appendChild(l);
+    if(i%2===0){const t=document.createElementNS(svgNS,'text');t.setAttribute('x','1120');t.setAttribute('y',y+4);t.setAttribute('class','mono small');t.textContent=(i/2).toFixed(1);ticks.appendChild(t);}
+  }
+  const chart=document.getElementById('chart'),scene=document.getElementById('scene'),water=document.getElementById('waterBody'),surface=document.getElementById('surface'),marker=document.getElementById('marker'),markerLine=document.getElementById('markerLine'),timeOut=document.getElementById('timeOut'),heightOut=document.getElementById('heightOut'),stateOut=document.getElementById('stateOut'),note=document.getElementById('note'),liveBtn=document.getElementById('liveBtn');
+  const notes=['1846: the quay vanished by breakfast.','1902: the brass gauge was installed.','1953: the greatest recorded reach.','1978: the last hand-written entry.'];
+  document.querySelectorAll('.hist').forEach((g,i)=>{
+    const show=()=>note.textContent=notes[i];
+    g.addEventListener('pointerenter',show);g.addEventListener('focus',show);
+    g.addEventListener('pointerleave',()=>note.textContent='The harbor keeps its own time; the ledger merely follows.');
+  });
+  let offset=0,dragging=false,lastX=0,shownHeight=2.5,shownTilt=0;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tide=mins=>2.35+0.72*Math.sin(2*Math.PI*mins/745+.4)+0.19*Math.sin(2*Math.PI*mins/1440+1.2);
+  function displayMinutes(){const d=new Date();return d.getHours()*60+d.getMinutes()+d.getSeconds()/60+offset;}
+  function waveY(mins){const h=tide(mins);return 560-Math.max(.4,Math.min(3.8,h))*104;}
+  function draw(){
+    const mins=displayMinutes(),y=waveY(mins),h=tide(mins),prev=tide(mins-4);
+    shownHeight+=(h-shownHeight)*(reduced?1:.09);
+    const sy=560-shownHeight*104;
+    const phase=mins/9;
+    const d=`M60 ${sy} Q210 ${sy+Math.sin(phase)*5} 360 ${sy+Math.cos(phase*.7)*3} T660 ${sy+Math.sin(phase+1)*4} T960 ${sy+Math.cos(phase)*4} T1140 ${sy}`;
+    water.setAttribute('d',d+' V680 H60Z');surface.setAttribute('d',d);
+    marker.setAttribute('transform',`translate(0 ${sy-300})`);
+    markerLine.setAttribute('y1',sy+4);markerLine.setAttribute('y2',sy+4);
+    const minsMod=((mins%1440)+1440)%1440;
+    timeOut.textContent=String(Math.floor(minsMod/60)%24).padStart(2,'0')+':'+String(Math.floor(minsMod%60)).padStart(2,'0');
+    heightOut.textContent=h.toFixed(2)+' M';
+    stateOut.textContent=h>=prev?'RISING':'FALLING';
+    const target=Math.max(-1,Math.min(1,offset/720));shownTilt+=(target-shownTilt)*(reduced?1:.07);
+    scene.style.transformOrigin='600px 340px';scene.style.transform=`rotate(${shownTilt*.55}deg)`;
+    requestAnimationFrame(draw);
+  }
+  chart.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;chart.setPointerCapture(e.pointerId);});
+  chart.addEventListener('pointermove',e=>{if(!dragging)return;offset=Math.max(-720,Math.min(720,offset-(e.clientX-lastX)/chart.clientWidth*1440));lastX=e.clientX;});
+  chart.addEventListener('pointerup',()=>dragging=false);
+  chart.addEventListener('pointercancel',()=>dragging=false);
+  chart.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){offset=Math.min(720,offset+15);e.preventDefault();}if(e.key==='ArrowLeft'){offset=Math.max(-720,offset-15);e.preventDefault();}});
+  liveBtn.addEventListener('click',()=>offset=0);
+  draw();
+})();
+</script>
+</body>
+</html>

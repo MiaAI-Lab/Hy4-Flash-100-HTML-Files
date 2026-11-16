@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hundredth Horizon — One Hundred Becomes a Sunrise</title>
+<style>
+:root{--cream:#F7F0DF;--black:#1D1B19;--orange:#E2642E}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--black);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{padding:24px 28px;background-image:repeating-linear-gradient(90deg,rgba(29,27,25,.02) 0 1px,transparent 1px 8px)}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--black);padding-bottom:9px}
+h1{font:400 clamp(20px,2.8vw,32px)/1 Georgia,serif;margin:0}
+.meta{font:9px ui-monospace,Menlo,monospace;letter-spacing:.18em}
+.stage{position:relative;height:calc(100vh - 100px);min-height:460px;margin-top:8px;cursor:ew-resize;touch-action:none;overflow:hidden}
+.stage:focus-visible{outline:2px dashed var(--orange);outline-offset:-6px}
+svg{width:100%;height:100%;display:block}
+#numerals{transform-origin:500px 350px}
+#sunWrap{transform-origin:500px 330px}
+.rule{stroke:var(--black);stroke-width:2;vector-effect:non-scaling-stroke}
+.foot{position:absolute;left:12px;bottom:10px;font:italic 13px Georgia,serif;color:rgba(29,27,25,.7)}
+.progress{position:absolute;right:12px;bottom:10px;font:9px ui-monospace,Menlo,monospace;letter-spacing:.16em}
+@media(max-width:600px){body{padding:12px}.foot{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Hundredth Horizon</h1><span class="meta">CLOSING CARD No. 100 · THE LAST PAGE</span></header>
+<div class="stage" id="stage" tabindex="0" role="slider" aria-label="Fold the number into a sunrise" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+ <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <defs><clipPath id="above"><rect x="0" y="0" width="1000" height="332"/></clipPath></defs>
+  <g clip-path="url(#above)"><g id="sunWrap"><circle cx="500" cy="332" r="96" fill="var(--orange)"/><path d="M500 332 v-96 M500 300 l60 -32 M500 300 l-60 -32" stroke="rgba(247,240,223,.3)" stroke-width="3"/></g></g>
+  <g id="numerals"><text x="500" y="350" text-anchor="middle" font-family="Georgia,serif" font-size="250" fill="var(--black)">100</text></g>
+  <g id="folds" opacity="0"><path class="rule" d="M355 120 L355 330"/><path class="rule" d="M645 120 L645 330"/></g>
+  <path id="horizon" d="M500 332 H500" stroke="var(--black)" stroke-width="4"/>
+  <path id="rays" d="" stroke="var(--orange)" stroke-width="2" opacity="0"/>
+  <text x="500" y="480" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" letter-spacing="6" fill="rgba(29,27,25,.55)">ONE HUNDRED · AND STILL MORNING</text>
+ </svg>
+ <div class="foot">Click to fold. Drag to choose the moment.</div><div class="progress" id="progress">000 / 100</div>
+</div>
+<script>
+const stage=document.getElementById('stage'),num=document.getElementById('numerals'),sun=document.getElementById('sunWrap'),horizon=document.getElementById('horizon'),folds=document.getElementById('folds'),rays=document.getElementById('rays'),progress=document.getElementById('progress'),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let p=0,dragging=false,sx=0,sp=0,ac=null;
+function ease(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2}
+function draw(){const q=ease(p);num.style.transform='translateY('+(q*40)+'px) scale('+(1+q*1.5)+','+(1-q*.965)+')';num.style.opacity=1-q*.85;sun.style.transform='translateY('+(-q*140)+'px)';horizon.setAttribute('d','M'+(500-q*470)+' 332 H'+(500+q*470));folds.setAttribute('opacity',Math.sin(Math.PI*q)*.7);rays.setAttribute('opacity',q*.8);rays.setAttribute('d',q>.5?'M240 250 H120 M760 250 H880 M180 200 H110 M820 200 H890':'M240 250 H240 M760 250 H760');stage.setAttribute('aria-valuenow',Math.round(p*100));progress.textContent=String(Math.round(p*100)).padStart(3,'0')+' / 100'}
+function tone(){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(440,t+.8);g.gain.setValueAtTime(.07,t);g.gain.exponentialRampToValueAtTime(.0001,t+1.2);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+1.25)}
+stage.addEventListener('pointerdown',e=>{dragging=true;sx=e.clientX;sp=p;stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointermove',e=>{if(!dragging)return;p=Math.max(0,Math.min(1,sp+(e.clientX-sx)/stage.clientWidth));draw()});
+stage.addEventListener('pointerup',e=>{if(dragging&&Math.abs(e.clientX-sx)<5){p=p>.5?0:1;tone();draw()}dragging=false});
+stage.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();p=p>.5?0:1;tone();draw()}else if(e.key==='ArrowRight'){p=Math.min(1,p+.05);draw()}else if(e.key==='ArrowLeft'){p=Math.max(0,p-.05);draw()}else return});
+if(reduce){p=1;draw()}else{const start=performance.now();function anim(t){const k=Math.min(1,(t-start)/2900);p=k;draw();if(k<1)requestAnimationFrame(anim)}requestAnimationFrame(anim)}
+</script>
+</body>
+</html>

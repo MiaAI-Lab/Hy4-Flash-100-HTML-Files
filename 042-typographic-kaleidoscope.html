@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typographic Kaleidoscope — Eight Mirrors, One Word</title>
+<style>
+:root{--ox:#6B1F2E;--cream:#F2E7D2;--gold:#D6A84C}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ox);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow:hidden;cursor:crosshair}
+svg{width:100%;height:100%;display:block}
+h1{position:absolute;left:26px;top:22px;font:10px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.22em;margin:0;pointer-events:none}
+.read{position:absolute;left:26px;bottom:24px;font:italic 15px/1.4 Georgia,serif;max-width:38ch;pointer-events:none}
+.phrase{position:absolute;right:26px;bottom:24px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--gold);text-align:right;pointer-events:none}
+text{fill:var(--cream);font-family:Georgia,serif}
+.inner{opacity:0;animation:arrive .8s cubic-bezier(.18,1.2,.3,1) forwards;animation-delay:calc(var(--w)*.11s);transform-box:fill-box;transform-origin:center}
+@keyframes arrive{from{opacity:0;transform:scale(.55) rotate(-22deg)}to{opacity:1;transform:none}}
+.centre{fill:var(--gold)}
+.num{font:700 18px ui-monospace,Menlo,monospace;fill:var(--ox);text-anchor:middle;dominant-baseline:middle}
+@media(max-width:600px){h1{font-size:7px}.read{font-size:11px}.phrase{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.inner{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<h1>TYPOGRAPHIC KALEIDOSCOPE / 42<br>MOVE TO TURN · CLICK TO CHANGE THE SENTENCE</h1>
+<div class="read" id="read">Nothing is ever only one thing.</div><div class="phrase" id="label">PHRASE 01 / 05</div>
+<svg id="svg" viewBox="0 0 800 800" tabindex="0" role="application" aria-label="Typographic kaleidoscope. Arrow keys rotate, Enter changes phrase.">
+  <defs>
+    <path id="a1" d="M400 310 A90 90 0 1 1 399.9 310"/><path id="a2" d="M400 260 A140 140 0 1 1 399.9 260"/>
+    <path id="a3" d="M400 210 A190 190 0 1 1 399.9 210"/><path id="a4" d="M400 160 A240 240 0 1 1 399.9 160"/>
+  </defs>
+  <g id="wheel"></g><circle class="centre" cx="400" cy="400" r="34"/><text class="num" id="num" x="400" y="400">01</text>
+</svg>
+<script>
+const NS='http://www.w3.org/2000/svg',svg=document.getElementById('svg'),wheel=document.getElementById('wheel'),read=document.getElementById('read'),label=document.getElementById('label'),num=document.getElementById('num');
+const phrases=['NOTHING IS EVER ONLY ONE THING','A SMALL FURNACE OF YES','THE WORLD IS A VERB','WE MET IN THE MARGIN','COUNT THE QUIET PARTS'];
+const readings=['Nothing is ever only one thing.','A small furnace of yes, kept burning in the left hand.','The world is a verb pretending to be a noun.','We met in the margin and stayed for the footnote.','Count the quiet parts. They are the majority.'];
+let idx=0,angle=0,target=0,held=false,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function build(){wheel.innerHTML='';for(let k=0;k<8;k++){const wedge=document.createElementNS(NS,'g');wedge.setAttribute('transform',`rotate(${k*45} 400 400)`);const inner=document.createElementNS(NS,'g');inner.setAttribute('class','inner');inner.style.setProperty('--w',k);[1,2,3,4].forEach((r,j)=>{const t=document.createElementNS(NS,'text');t.setAttribute('font-size',[10,13,9,18][j]);t.setAttribute('letter-spacing',[3,2,4,1][j]);t.setAttribute('text-anchor','middle');const tp=document.createElementNS(NS,'textPath');tp.setAttribute('href','#a'+r);tp.setAttribute('startOffset','50%');tp.textContent=phrases[idx];t.appendChild(tp);inner.appendChild(t)});wedge.appendChild(inner);wheel.appendChild(wedge)}read.textContent=readings[idx];label.textContent='PHRASE '+String(idx+1).padStart(2,'0')+' / 05';num.textContent=String(idx+1).padStart(2,'0')}
+function frame(){if(!held&&!reduce){let d=target-angle;d=Math.atan2(Math.sin(d),Math.cos(d));angle+=d*.055}wheel.setAttribute('transform',`rotate(${angle} 400 400)`);requestAnimationFrame(frame)}
+svg.addEventListener('pointermove',e=>{if(held)return;const r=svg.getBoundingClientRect(),a=Math.atan2(e.clientY-r.height/2,e.clientX-r.width/2)*180/Math.PI+90;target=a});
+svg.addEventListener('pointerdown',e=>{held=true;svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointerup',e=>{held=false;idx=(idx+1)%phrases.length;build()});
+svg.addEventListener('pointercancel',()=>held=false);
+svg.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){target+=15;e.preventDefault()}else if(e.key==='ArrowLeft'){target-=15;e.preventDefault()}else if(e.key==='Enter'){idx=(idx+1)%phrases.length;build();e.preventDefault()}});
+build();frame();
+</script>
+</body>
+</html>
